@@ -13,6 +13,12 @@ with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) 
 4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
 5. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
+
+docker compose build --pull --no-cache
+docker compose up --wait
+docker compose down --remove-orphans
+
+
 ## Features
 
 * Production, development and CI ready
