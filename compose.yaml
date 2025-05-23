@@ -1,7 +1,7 @@
 services:
   php:
     image: ${IMAGES_PREFIX:-}app-php
-    restart: unless-stopped
+    restart: ${RESTART}
     environment:
       TZ: ${TZ}
       SERVER_NAME: ${SERVER_NAME:-localhost}, php:80
@@ -40,6 +40,7 @@ services:
 ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
+    restart: ${RESTART}
     environment:
       TZ: ${TZ}
       PGTZ: ${TZ}
