@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} - Mél réinitialisation MDP envoyé{% endblock %}
+
+{% block content %}
+    <p>
+        Un lien a été envoyer par mél pour réinitialiser le mot de passe. <br>
+        Ce lien expireras dans 1 heure.
+    </p>
+    <p>Si vous ne recevez pas de mél, vérifiez vos spams ou <a href="{{ path('app_forgot_password_request') }}">réessayer</a>.</p>
+{% endblock %}
