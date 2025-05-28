@@ -14,6 +14,9 @@ with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) 
 5. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
 
+docker compose run --rm php chown -R $(id -u):$(id -g) .
+docker exec -it crm-webapp-php-1 bash
+
 docker compose build --pull --no-cache
 docker compose up --wait
 docker compose down --remove-orphans

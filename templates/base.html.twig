@@ -18,6 +18,49 @@
                     justify-content: row;
                     align-items: center;
                 }
+                .currentUser{
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                }
+                .dropdown {
+                    height: 100%;
+                    margin: auto;
+                    margin-right: 2px;
+                    display: flex;
+                    align-items: center;
+                    position: relative;
+                    display: inline-block;
+                }
+
+                .dropdown-content {
+                    display: none;
+                    position: absolute;
+                    background-color: #f9f9f9;
+                    min-width: 160px;
+                    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                    z-index: 1;
+                    right: 0;
+                }
+
+                .dropdown-content a {
+                    color: black;
+                    padding: 12px 16px;
+                    text-decoration: none;
+                    display: block;
+                }
+
+                .dropdown-content a:hover {background-color: #f1f1f1}
+
+                .dropdown:hover .dropdown-content {
+                    display: block;
+                }
+
+                .dropdown:hover .currentUser {
+                    background-color: rgba(194, 194, 194, 0.2);
+                }
+
                 .menueBtn
                 {
                     font-size: 30px;
@@ -107,8 +150,20 @@
         <div id="banner">
             {% if is_granted('ROLE_USER') %}
                 <span class="menueBtn" onclick="triggerMenue()">&#9776;</span>
+                <div class="dropdown">
+                    <div class="currentUser">
+                        <img src="/img/h.png" style="height:100%">
+                        <span>{{ app.user.name }}</span>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="/user/{{ app.user.id }}">Modifier profile</a>
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
+                    </div>
+                </div>
+            {% else %}
+                <img src="/img/h.png" style="height:100%">
             {% endif %}
-            <img src="/img/h.png" style="height:100%">
         </div>
         
         

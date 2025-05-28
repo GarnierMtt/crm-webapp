@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,10 +15,18 @@ class UserForm extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('roles')
-            ->add('password')
             ->add('name')
-            ->add('isVerified')
+            ->add('roles', CollectionType::class, [
+                // each entry in the array will be an "email" field
+                'entry_type' => TextType::class,
+                // these options are passed to each "email" type
+                'entry_options' => [
+                    'help' => 'You can edit this name here.',
+                ],
+                'prototype_options'  => [
+                    'help' => 'You can enter a new name here.',
+                ],
+            ])
         ;
     }
 
