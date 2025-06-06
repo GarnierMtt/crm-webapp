@@ -4,8 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,17 +15,19 @@ class UserForm extends AbstractType
         $builder
             ->add('email')
             ->add('name')
-            ->add('roles', CollectionType::class, [
-                // each entry in the array will be an "email" field
-                'entry_type' => TextType::class,
-                // these options are passed to each "email" type
-                'entry_options' => [
-                    'help' => 'You can edit this name here.',
-                ],
-                'prototype_options'  => [
-                    'help' => 'You can enter a new name here.',
-                ],
-            ])
+            ->add('roles')
+        ;
+        $builder->get('roles')
+            ->addModelTransformer(new CallbackTransformer(
+                function ($rolesAsArray): string {
+                    // transform the array to a string
+                    return implode(', ', $rolesAsArray);
+                },
+                function ($rolesAsString): array {
+                    // transform the string back to an array
+                    return explode(', ', $rolesAsString);
+                }
+            ))
         ;
     }
 
