@@ -24,18 +24,18 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Entity'
                 prefix: 'App\Entity'
                 alias: App
-            gedmo_loggable:
+            loggable:
                 type: attribute
-                prefix: Gedmo\Loggable\Entity
+                is_bundle: false
                 dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Loggable/Entity"
-                alias: GedmoLoggable # (optional) it will default to the name set for the mapping
-                is_bundle: false
-            gedmo_tree:
+                prefix: Gedmo\Loggable\Entity
+                alias: GedmoLoggable
+            tree:
                 type: attribute
-                prefix: Gedmo\Tree\Entity
-                dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity"
-                alias: GedmoTree # (optional) it will default to the name set for the mapping
                 is_bundle: false
+                dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity"
+                prefix: Gedmo\Tree\Entity
+                alias: GedmoTree
         controller_resolver:
             auto_mapping: false
 

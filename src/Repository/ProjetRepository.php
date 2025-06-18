@@ -3,13 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Projet;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 /**
- * @extends ServiceEntityRepository<Projet>
+ * @extends NestedTreeRepository<Projet>
  */
-class ProjetRepository extends ServiceEntityRepository
+class ProjetRepository extends NestedTreeRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

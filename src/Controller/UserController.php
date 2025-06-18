@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Gedmo\Loggable\LoggableListener;
+use Gedmo\Tool\ActorProviderInterface;
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -61,8 +63,13 @@ final class UserController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, ActorProviderInterface $provider): Response
     {
+        $listener = new LoggableListener();
+        $entityManager->getEventManager()->addEventSubscriber($listener);
+        $listener->setActorProvider($provider);
+
+
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
 
