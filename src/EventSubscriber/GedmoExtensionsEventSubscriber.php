@@ -1,5 +1,5 @@
 <?php
-
+/*
 namespace App\EventSubscriber;
 
 use Gedmo\Loggable\LoggableListener;
@@ -29,7 +29,7 @@ final class GedmoExtensionsEventSubscriber implements EventSubscriberInterface
 
     /**
      * Configures the loggable listener using the currently authenticated user
-     */
+     *//*
     public function configureLoggableListener(RequestEvent $event): void
     {
         // Only applies to the main request
@@ -50,3 +50,4 @@ final class GedmoExtensionsEventSubscriber implements EventSubscriberInterface
         }
     }
 }
+*/

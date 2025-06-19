@@ -39,6 +39,7 @@ services:
             - [ setAnnotationReader, [ '@gedmo.mapping.driver.attribute' ] ]
             # The `annotation_reader` service was deprecated in Symfony 6.4 and removed in Symfony 7.0
             # - [ setAnnotationReader, [ '@annotation_reader' ] ]
+            - [ setActorProvider, [ '@App\Utils\SymfonyActorProvider' ] ]
 
     # Gedmo Tree Extension Listener
     gedmo.listener.tree:
@@ -60,3 +61,4 @@ services:
 
     # Alias for autowiring
     Gedmo\Loggable\LoggableListener: '@gedmo.listener.loggable'
+    Gedmo\Tool\ActorProviderInterface: '@App\Utils\SymfonyActorProvider'
