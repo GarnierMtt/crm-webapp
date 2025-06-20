@@ -1,0 +1,22 @@
+#indexTable {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#indexTable td, #indexTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#indexTable tr:nth-child(even){background-color: #f2f2f2;}
+
+#indexTable tr:hover {background-color: #ddd;}
+
+#indexTable th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #2183f3;
+  color: white;
+}

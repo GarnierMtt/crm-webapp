@@ -3,17 +3,20 @@
 namespace App\Repository;
 
 use App\Entity\Projet;
-use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @extends NestedTreeRepository<Projet>
  */
 class ProjetRepository extends NestedTreeRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(EntityManagerInterface $em)
     {
-        parent::__construct($registry, Projet::class);
+        parent::__construct(
+            $em, 
+            $em->getClassMetadata(Projet::class)
+        );
     }
 
     //    /**

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Projet{% endblock %}
+{% block title %} - Projet{% endblock %}
 
 {% block content %}
     <h1>Projet</h1>
@@ -15,8 +15,19 @@
                 <th>Name</th>
                 <td>{{ projet.name }}</td>
             </tr>
+            <tr>
+                <th>StartDate</th>
+                <td>{{ projet.startDate ? projet.startDate|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateEnd</th>
+                <td>{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}</td>
+            </tr>
         </tbody>
     </table>
+
+    <h2>Tree for Root Project: {{ root.name }}</h2>
+    {{ htmlTree|raw }}
 
     <a href="{{ path('app_projet_index') }}">back to list</a>
 

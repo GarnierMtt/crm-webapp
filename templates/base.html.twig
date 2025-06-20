@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>- CRM{% block title %}{% endblock %}</title>
-        <link rel="icon" href="/img/hFull.png">
+        <link rel="icon" href="{{ asset('img/hFull.png') }}">
+        {% block head %}{% endblock %}
         <style>
                 body
                 {
@@ -12,7 +13,7 @@
                 }
                 #banner 
                 {
-                    background-color:rgb(133, 96, 1);
+                    background-color:rgb(117, 151, 237);
                     height: 36px;
                     display: flex;
                     justify-content: row;
@@ -152,7 +153,7 @@
                 <span class="menueBtn" onclick="triggerMenue()">&#9776;</span>
                 <div class="dropdown">
                     <div class="currentUser">
-                        <img src="/img/h.png" style="height:100%">
+                        <img src="{{ asset('img/h.png') }}" style="height:100%">
                         <span>{{ app.user.name }}</span>
                     </div>
                     <div class="dropdown-content">
@@ -162,7 +163,7 @@
                     </div>
                 </div>
             {% else %}
-                <img src="/img/h.png" style="height:100%">
+                <img src="{{ asset('img/h.png') }}" style="height:100%">
             {% endif %}
         </div>
         

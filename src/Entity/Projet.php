@@ -2,14 +2,15 @@
 
 namespace App\Entity;
 
+use App\Repository\ProjetRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-#[ORM\Entity(repositoryClass: NestedTreeRepository::class)]
+#[ORM\Entity(repositoryClass: ProjetRepository::class)]
+#[Gedmo\Loggable]
 #[Gedmo\Tree(type: 'nested')]
 class Projet
 {
@@ -19,32 +20,41 @@ class Projet
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Gedmo\Versioned]
     private ?\DateTime $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Gedmo\Versioned]
     private ?\DateTime $dateEnd = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     #[Gedmo\TreeLeft]
     private ?int $lft = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     #[Gedmo\TreeRight]
     private ?int $rgt = null;
 
     #[ORM\ManyToOne(inversedBy: 'children')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[Gedmo\Versioned]
     #[Gedmo\TreeParent]
     private ?Projet $parent = null;
 
-    #[ORM\Column]
+    #[ORM\ManyToOne(targetEntity: Projet::class)]
+    #[ORM\JoinColumn(name: 'tree_root', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Gedmo\Versioned]
     #[Gedmo\TreeRoot]
-    private ?int $root = null;
+    private ?Projet $root = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     #[Gedmo\TreeLevel]
     private ?int $level = null;
 
@@ -52,6 +62,7 @@ class Projet
      * @var Collection<int, Projet>
      */
     #[ORM\OneToMany(targetEntity: Projet::class, mappedBy: 'parent')]
+    #[ORM\OrderBy(['lft' => 'ASC'])]
     private Collection $children;
 
     public function __construct()
@@ -124,15 +135,14 @@ class Projet
         return $this;
     }
 
-    public function getRoot(): ?int
+    public function getRoot(): ?self
     {
         return $this->root;
     }
 
-    public function setRoot(int $root): static
+    public function setRoot(?self $root): static
     {
         $this->root = $root;
-
         return $this;
     }
 
@@ -153,9 +163,11 @@ class Projet
         return $this->parent;
     }
 
-    public function setParent(?self $parent = null): void
+    public function setParent(?self $parent = null): static
     {
         $this->parent = $parent;
+
+        return $this;
     }
 
     /**

@@ -130,7 +130,7 @@ class ResetPasswordController extends AbstractController
             ;
             $mailer->send($email);
 
-            return $this->redirectToRoute('app_login');
+            return $this->redirectToRoute('app_home_index');
         }
 
         return $this->render('reset_password/reset.html.twig', [

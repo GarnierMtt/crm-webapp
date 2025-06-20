@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use App\Repository\ResetPasswordRequestRepository;
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -80,9 +81,10 @@ final class UserController extends AbstractController
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, User $user, EntityManagerInterface $entityManager, ResetPasswordRequestRepository $resetPasswordRequestRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
+            $resetPasswordRequestRepository->removeRequests($user);
             $entityManager->remove($user);
             $entityManager->flush();
         }

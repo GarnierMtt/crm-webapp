@@ -1,35 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} - Projet index{% endblock %}
+{% block title %} - Index projet{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ asset('css/indexTable.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/buttons.css') }}">
+{% endblock %}
 
 {% block content %}
     <h1>Projet index</h1>
 
-    <table class="table">
+    <table id="indexTable">
         <thead>
             <tr>
-                <th>Id</th>
                 <th>Name</th>
+                <th>StartDate</th>
+                <th>DateEnd</th>
+                <th>Id</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for projet in projets %}
             <tr>
-                <td>{{ projet.id }}</td>
                 <td>{{ projet.name }}</td>
+                <td>{{ projet.startDate ? projet.startDate|date('Y-m-d') : '' }}</td>
+                <td>{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}</td>
+                <td>{{ projet.id }}</td>
                 <td>
                     <a href="{{ path('app_projet_show', {'id': projet.id}) }}">show</a>
-                    <a href="{{ path('app_projet_edit', {'id': projet.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_projet_new') }}">Create new</a>
+    <a class="createButton" href="{{ path('app_projet_new') }}">Créer nouveau projet</a>
 {% endblock %}
