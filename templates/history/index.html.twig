@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} - History Index{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{ asset('styles/indexTable.css') }}">
+{% endblock %}
+
+{% block content %}
+    <table id="indexTable">
+        <thead>
+            <tr>
+                <th>timestamp</th>
+                <th>Object class</th>
+                <th>Object ID</th>
+                <th>Version</th>
+                <th>action</th>
+                <th>Data</th>
+                <th>Actor</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for log in logEntries %}
+            <tr>
+                    <td>{{ log.loggedAt ? log.loggedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ log.objectClass }}</td>
+                    <td>{{ log.objectId }}</td>
+                    <td>{{ log.version }}</td>
+                    <td>{{ log.action }}</td>
+                    <td>{{ log.data|json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES')) }}</td>
+                    <td>{{ log.username }}</td>
+            </tr>
+        {% else %}
+            <p>No history records found.</p>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

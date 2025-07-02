@@ -18,7 +18,7 @@ final class ProjetController extends AbstractController
     {
         $name = htmlspecialchars($node['name']);
         $url = $this->generateUrl('app_projet_new', ['parent' => $node['id']]);
-        return $name . ' <a href="' . $url . '">[+ Add Child]</a>';
+        return $name . ' <a href="' . $url . '">[+]</a>';
     }
 
     #[Route(name: 'app_projet_index', methods: ['GET'])]
@@ -66,6 +66,10 @@ final class ProjetController extends AbstractController
     {
         // Find the root ancestor
         $root = $projet->getRoot() ?? $projet;
+        $id = $projet->getId() ?? $projet;
+        $deleteFormHtml = $this->renderView('projet/_delete_form.html.twig', [
+            'projet' => $projet, // or the current node if needed
+        ]);
 
         // Get the HTML tree for this root
         $htmlTree = $projetRepository->childrenHierarchy(
@@ -73,18 +77,36 @@ final class ProjetController extends AbstractController
             false,
             [
                 'decorate' => true,
-                'includeNode' => true,
-                'rootOpen' => '<ul>',
-                'rootClose' => '</ul>',
-                'childOpen' => '<li>',
-                'childClose' => '</li>',
-                'nodeDecorator' => [$this, 'nodeDecorator'],
-            ]
+                'representationField' => 'slug',
+                'html' => true,
+                //'rootOpen' => '<ul style="float: right;">',
+                'nodeDecorator' => function($node) use ($id, $deleteFormHtml) {
+                    $name = htmlspecialchars($node['name']);
+                    if ($id == $node['id']) {
+                        $newUrl = $this->generateUrl('app_projet_new', ['parent' => $node['id']]);
+                        return '
+                            <div style=" display: flex; flex-direction: row; flex-wrap: nowrap;">
+                                <div>
+                                    <a class="regularButton">' . $name . '</a>
+                                </div>
+                                <div>
+                                    <a class="createButton" href="' . $newUrl . '">[+]</a>
+                                </div>
+                                <div>
+                                    ' . $deleteFormHtml . '
+                                </div>
+                            </div>
+                        ';
+                    }
+                    $url = $this->generateUrl('app_projet_show', ['id' => $node['id']]);
+                    return '<a class="regularButton" href="' . $url . '">' . $name . '</a>';
+                },
+            ],
+            true
         );
 
         return $this->render('projet/show.html.twig', [
             'projet' => $projet,
-            'root' => $root,
             'htmlTree' => $htmlTree,
         ]);
     }

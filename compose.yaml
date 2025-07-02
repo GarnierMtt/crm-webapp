@@ -41,6 +41,7 @@ services:
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
     restart: ${RESTART}
+    command: ["postgres", "-c", "log_statement=all"]
     environment:
       TZ: ${TZ}
       PGTZ: ${TZ}
