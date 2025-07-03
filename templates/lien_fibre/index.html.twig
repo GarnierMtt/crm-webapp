@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}LienFibre index{% endblock %}
+
+{% block body %}
+    <h1>LienFibre index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>NombreFibres</th>
+                <th>Distance</th>
+                <th>Attenuation</th>
+                <th>ReferenceFibre</th>
+                <th>ReferenceOperateur</th>
+                <th>ReferenceLiaison</th>
+                <th>DateLivraison</th>
+                <th>DateActivation</th>
+                <th>LienActive</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for lien_fibre in lien_fibres %}
+            <tr>
+                <td>{{ lien_fibre.id }}</td>
+                <td>{{ lien_fibre.nombreFibres }}</td>
+                <td>{{ lien_fibre.distance }}</td>
+                <td>{{ lien_fibre.attenuation }}</td>
+                <td>{{ lien_fibre.referenceFibre }}</td>
+                <td>{{ lien_fibre.referenceOperateur }}</td>
+                <td>{{ lien_fibre.referenceLiaison }}</td>
+                <td>{{ lien_fibre.dateLivraison ? lien_fibre.dateLivraison|date('Y-m-d') : '' }}</td>
+                <td>{{ lien_fibre.dateActivation ? lien_fibre.dateActivation|date('Y-m-d') : '' }}</td>
+                <td>{{ lien_fibre.lienActive ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_lien_fibre_show', {'id': lien_fibre.id}) }}">show</a>
+                    <a href="{{ path('app_lien_fibre_edit', {'id': lien_fibre.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_lien_fibre_new') }}">Create new</a>
+{% endblock %}

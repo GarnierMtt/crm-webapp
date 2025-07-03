@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}LienFibre{% endblock %}
+
+{% block body %}
+    <h1>LienFibre</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ lien_fibre.id }}</td>
+            </tr>
+            <tr>
+                <th>NombreFibres</th>
+                <td>{{ lien_fibre.nombreFibres }}</td>
+            </tr>
+            <tr>
+                <th>Distance</th>
+                <td>{{ lien_fibre.distance }}</td>
+            </tr>
+            <tr>
+                <th>Attenuation</th>
+                <td>{{ lien_fibre.attenuation }}</td>
+            </tr>
+            <tr>
+                <th>ReferenceFibre</th>
+                <td>{{ lien_fibre.referenceFibre }}</td>
+            </tr>
+            <tr>
+                <th>ReferenceOperateur</th>
+                <td>{{ lien_fibre.referenceOperateur }}</td>
+            </tr>
+            <tr>
+                <th>ReferenceLiaison</th>
+                <td>{{ lien_fibre.referenceLiaison }}</td>
+            </tr>
+            <tr>
+                <th>DateLivraison</th>
+                <td>{{ lien_fibre.dateLivraison ? lien_fibre.dateLivraison|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>DateActivation</th>
+                <td>{{ lien_fibre.dateActivation ? lien_fibre.dateActivation|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>LienActive</th>
+                <td>{{ lien_fibre.lienActive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_lien_fibre_index') }}">back to list</a>
+
+    <a href="{{ path('app_lien_fibre_edit', {'id': lien_fibre.id}) }}">edit</a>
+
+    {{ include('lien_fibre/_delete_form.html.twig') }}
+{% endblock %}

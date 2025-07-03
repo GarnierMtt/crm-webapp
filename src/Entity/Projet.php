@@ -65,9 +65,23 @@ class Projet
     #[ORM\OrderBy(['lft' => 'ASC'])]
     private Collection $children;
 
+    /**
+     * @var Collection<int, RelationProjetSociete>
+     */
+    #[ORM\OneToMany(targetEntity: RelationProjetSociete::class, mappedBy: 'projet', orphanRemoval: true)]
+    private Collection $societes;
+
+    /**
+     * @var Collection<int, LienFibre>
+     */
+    #[ORM\OneToMany(targetEntity: LienFibre::class, mappedBy: 'projet')]
+    private Collection $lienFibres;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
+        $this->societes = new ArrayCollection();
+        $this->lienFibres = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,6 +208,66 @@ class Projet
             // set the owning side to null (unless already changed)
             if ($child->getParent() === $this) {
                 $child->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RelationProjetSociete>
+     */
+    public function getSocietes(): Collection
+    {
+        return $this->societes;
+    }
+
+    public function addSociete(RelationProjetSociete $societe): static
+    {
+        if (!$this->societes->contains($societe)) {
+            $this->societes->add($societe);
+            $societe->setProjet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSociete(RelationProjetSociete $societe): static
+    {
+        if ($this->societes->removeElement($societe)) {
+            // set the owning side to null (unless already changed)
+            if ($societe->getProjet() === $this) {
+                $societe->setProjet(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LienFibre>
+     */
+    public function getLienFibres(): Collection
+    {
+        return $this->lienFibres;
+    }
+
+    public function addLienFibre(LienFibre $lienFibre): static
+    {
+        if (!$this->lienFibres->contains($lienFibre)) {
+            $this->lienFibres->add($lienFibre);
+            $lienFibre->setProjet($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLienFibre(LienFibre $lienFibre): static
+    {
+        if ($this->lienFibres->removeElement($lienFibre)) {
+            // set the owning side to null (unless already changed)
+            if ($lienFibre->getProjet() === $this) {
+                $lienFibre->setProjet(null);
             }
         }
 
