@@ -9,40 +9,41 @@
 {% endblock %}
 
 {% block content %}
-
-    <aside class="page-rightbar">
-        <div class="item">
-            <div style="margin: 10px;">
-                <h2>Arborescence du projet</h2>
-                {{ htmlTree|raw }}
+    <div class="grid">
+        <div class="page-rightbar">
+            <div class="item">
+                <div style="margin: 10px;">
+                    <h2 style="margin: 10px;">Arborescence du projet</h2>
+                    {{ htmlTree|raw }}
+                </div>
             </div>
         </div>
-    </aside>
 
-    <div class="page-header">
-        <div class="item">
-            <div class="proj-head" style="margin: 10px;">
-                <div>
-                    <h1>{{ projet.name }}</h1>
-                </div>
-                <div style="margin-top: 10px;">
-                    <div class="cal-container">
-                        <div>
-                            <span>Débute le :</span><input type="date" value="{{ projet.startDate ? projet.startDate|date('Y-m-d') : '' }}"/>
-                        </div>
-                        <div>
-                            <span>Fini le :</span><input type="date" value="{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}"/>
-                        </div>
+        <div class="page-header">
+            <div class="item">
+                <div class="proj-head" style="margin: 10px;">
+                    <div>
+                        <h1>{{ projet.name }}</h1>
                     </div>
-                    <span>Id : {{ projet.id }}</span>
+                    <div style="margin-top: 10px;">
+                        <div class="cal-container">
+                            <div>
+                                <span>Débute le :</span><input type="date" value="{{ projet.startDate ? projet.startDate|date('Y-m-d') : '' }}"/>
+                            </div>
+                            <div>
+                                <span>Fini le :</span><input type="date" value="{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}"/>
+                            </div>
+                        </div>
+                        <span>Id : {{ projet.id }}</span>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="page-main">
-        <div class="item">
-            
+        <div class="page-main">
+            <div class="item">
+                
+            </div>
         </div>
     </div>
 {% endblock %}

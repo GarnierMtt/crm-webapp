@@ -24,7 +24,10 @@ final class HistoryController extends AbstractController
         $repo = $em->getRepository(LogEntry::class);
 
         return $this->render('history/index.html.twig', [
-            'logEntries' => $repo->findAll(),
+            'logEntries' => $repo->findBy(
+                [],
+                ['loggedAt' => 'DESC'],
+            ),
         ]);
     }
 }

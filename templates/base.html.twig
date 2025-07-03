@@ -46,7 +46,7 @@
                         <span>{{ app.user.name }}</span>
                     </div>
                     <div class="dropdown-content">
-                        <a href="/user/{{ app.user.id }}">Modifier profile</a>
+                        <a href="{{ path('app_user_show', {'id': app.user.id}) }}">Modifier profile</a>
                         <a href="#">Link 2</a>
                         <a href="#">Link 3</a>
                     </div>
@@ -60,11 +60,11 @@
         {% if is_granted('ROLE_USER') %}
             <div id="sideMenue">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeMenue()">&times;</a>
-                <a href="/">Tableau de bord</a>
-                <a href="/projet">Projets</a>
-                <a href="#">Clients</a>
-                <a href="#">Contact</a>
-                <a href="/historique">Historique</a>
+                <a href="{{ path('app_home_index') }}">Tableau de bord</a>
+                <a href="{{ path('app_projet_index') }}">Projets</a>
+                <a href="{{ path('app_societe_index') }}">Société</a>
+                <a href="{{ path('app_contact_index') }}">Contact</a>
+                <a href="{{ path('app_history_index') }}">Historique</a>
             
             </div>
         {% endif %}

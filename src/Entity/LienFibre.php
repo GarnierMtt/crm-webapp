@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\LienFibreRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: LienFibreRepository::class)]
+#[Gedmo\Loggable]
 class LienFibre
 {
     #[ORM\Id]
@@ -16,40 +18,52 @@ class LienFibre
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Gedmo\Versioned]
     private ?Adresse $pointA = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Gedmo\Versioned]
     private ?Adresse $pointB = null;
 
     #[ORM\Column(type: Types::SMALLINT)]
+    #[Gedmo\Versioned]
     private ?int $nombreFibres = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private ?int $distance = null;
 
     #[ORM\Column(nullable: true)]
+    #[Gedmo\Versioned]
     private ?float $attenuation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $referenceFibre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $referenceOperateur = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $referenceLiaison = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Gedmo\Versioned]
     private ?\DateTime $dateLivraison = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Gedmo\Versioned]
     private ?\DateTime $dateActivation = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private ?bool $lienActive = null;
 
     #[ORM\ManyToOne(inversedBy: 'lienFibres')]
+    #[Gedmo\Versioned]
     private ?Projet $projet = null;
 
     public function getId(): ?int

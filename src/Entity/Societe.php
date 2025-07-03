@@ -6,8 +6,10 @@ use App\Repository\SocieteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: SocieteRepository::class)]
+#[Gedmo\Loggable]
 class Societe
 {
     #[ORM\Id]
@@ -16,12 +18,15 @@ class Societe
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $telephoneStandard = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $siret = null;
 
     /**
@@ -178,5 +183,12 @@ class Societe
         }
 
         return $this;
+    }
+
+
+
+    public function __toString(): string
+    {
+        return $this->name;
     }
 }

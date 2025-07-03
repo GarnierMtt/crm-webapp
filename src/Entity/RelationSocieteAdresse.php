@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\RelationSocieteAdresseRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: RelationSocieteAdresseRepository::class)]
+#[Gedmo\Loggable]
 class RelationSocieteAdresse
 {
     #[ORM\Id]
@@ -23,7 +25,12 @@ class RelationSocieteAdresse
     private ?Adresse $adresse = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $description = null;
+
+    #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
+    private ?string $nomsite = null;
 
     public function getId(): ?int
     {
@@ -62,6 +69,18 @@ class RelationSocieteAdresse
     public function setDescription(?string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getNomSite(): ?string
+    {
+        return $this->nomsite;
+    }
+
+    public function setNomSite(?string $nomsite): static
+    {
+        $this->nomsite = $nomsite;
 
         return $this;
     }

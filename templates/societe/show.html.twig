@@ -1,31 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Societe{% endblock %}
+{% block title %} - Société{% endblock %}
 
-{% block body %}
-    <h1>Societe</h1>
+{% block content %}
+    <h1>Société - {{ societe.name }}</h1>
+    <h2>Téléphone standard: {{ societe.telephoneStandard }} </h2>
+    <h2>SIRET: {{ societe.siret }}</h2>
+    
+    <div>
+        <h3> Contacts </h3>
+        {% for contact in societe.contacts %}
+            <div>{{ contact }}</div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ societe.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
-                <td>{{ societe.name }}</td>
-            </tr>
-            <tr>
-                <th>TelephoneStandard</th>
-                <td>{{ societe.telephoneStandard }}</td>
-            </tr>
-            <tr>
-                <th>Siret</th>
-                <td>{{ societe.siret }}</td>
-            </tr>
-        </tbody>
-    </table>
 
+        {% endfor %}
+    </div>
+    <div>
+        <h3> Projets </h3>
+        {% for projet in societe.projets %}
+            <div>{{ projet }}</div>
+        {% endfor %}
+    </div>
     <a href="{{ path('app_societe_index') }}">back to list</a>
 
     <a href="{{ path('app_societe_edit', {'id': societe.id}) }}">edit</a>

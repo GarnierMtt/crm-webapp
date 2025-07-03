@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}LienFibre{% endblock %}
+{% block title %} - LienFibre{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>LienFibre</h1>
 
     <table class="table">
@@ -12,7 +12,7 @@
                 <td>{{ lien_fibre.id }}</td>
             </tr>
             <tr>
-                <th>NombreFibres</th>
+                <th>Nombre de fibres</th>
                 <td>{{ lien_fibre.nombreFibres }}</td>
             </tr>
             <tr>
@@ -24,28 +24,28 @@
                 <td>{{ lien_fibre.attenuation }}</td>
             </tr>
             <tr>
-                <th>ReferenceFibre</th>
+                <th>Référence Fibre</th>
                 <td>{{ lien_fibre.referenceFibre }}</td>
             </tr>
             <tr>
-                <th>ReferenceOperateur</th>
+                <th>Référence Operateur</th>
                 <td>{{ lien_fibre.referenceOperateur }}</td>
             </tr>
             <tr>
-                <th>ReferenceLiaison</th>
+                <th>Référence Liaison</th>
                 <td>{{ lien_fibre.referenceLiaison }}</td>
             </tr>
             <tr>
-                <th>DateLivraison</th>
+                <th>Date de livraison</th>
                 <td>{{ lien_fibre.dateLivraison ? lien_fibre.dateLivraison|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>DateActivation</th>
+                <th>Date d'activation</th>
                 <td>{{ lien_fibre.dateActivation ? lien_fibre.dateActivation|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>LienActive</th>
-                <td>{{ lien_fibre.lienActive ? 'Yes' : 'No' }}</td>
+                <th>Lien activé</th>
+                <td>{{ lien_fibre.lienActive ? 'Oui' : 'Non' }}</td>
             </tr>
         </tbody>
     </table>

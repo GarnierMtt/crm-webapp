@@ -1,35 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contact{% endblock %}
+{% block title %} - Contact{% endblock %}
 
-{% block body %}
+{% block content %}
     <h1>Contact</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ contact.id }}</td>
-            </tr>
-            <tr>
                 <th>Nom</th>
                 <td>{{ contact.nom }}</td>
             </tr>
             <tr>
-                <th>Prenom</th>
+                <th>Prénom</th>
                 <td>{{ contact.prenom }}</td>
             </tr>
             <tr>
-                <th>Mel</th>
+                <th>Mél</th>
                 <td>{{ contact.mel }}</td>
             </tr>
             <tr>
-                <th>Telephone</th>
+                <th>Téléphone</th>
                 <td>{{ contact.telephone }}</td>
             </tr>
             <tr>
-                <th>Post</th>
+                <th>Pôst</th>
                 <td>{{ contact.post }}</td>
+            </tr>
+                <th>Société</th>
+                <td>{{ contact.societe }}</td>
             </tr>
         </tbody>
     </table>

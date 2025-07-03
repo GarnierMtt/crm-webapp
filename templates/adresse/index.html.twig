@@ -1,8 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Adresse index{% endblock %}
+{% block title %} - Adresse index{% endblock %}
 
-{% block body %}
+{% block head %}
+    <link rel="stylesheet" href="{{ asset('styles/indexTable.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/buttons.css') }}">
+{% endblock %}
+
+{% block content %}
     <h1>Adresse index</h1>
 
     <table class="table">
@@ -11,10 +16,10 @@
                 <th>Id</th>
                 <th>Pays</th>
                 <th>Commune</th>
-                <th>CodePostal</th>
-                <th>NomVoie</th>
-                <th>NumeroVoie</th>
-                <th>Complement</th>
+                <th>Code Postal</th>
+                <th>Nom de la voie</th>
+                <th>Numéro de la voie</th>
+                <th>Complément</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -41,5 +46,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_adresse_new') }}">Create new</a>
+    <a class="createButton" href="{{ path('app_adresse_new') }}">Create new</a>
 {% endblock %}

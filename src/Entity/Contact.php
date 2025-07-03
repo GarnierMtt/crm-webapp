@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\ContactRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
+#[Gedmo\Loggable]
 class Contact
 {
     #[ORM\Id]
@@ -14,21 +16,27 @@ class Contact
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $prenom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $mel = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $post = null;
 
     #[ORM\ManyToOne(inversedBy: 'contacts')]
+    #[Gedmo\Versioned]
     private ?Societe $societe = null;
 
     public function getId(): ?int
@@ -106,5 +114,12 @@ class Contact
         $this->societe = $societe;
 
         return $this;
+    }
+
+
+
+    public function __toString(): string
+    {
+        return $this->nom . " " . $this->prenom;
     }
 }

@@ -1,23 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}LienFibre index{% endblock %}
+{% block title %} - LienFibre index{% endblock %}
 
-{% block body %}
+{% block head %}
+    <link rel="stylesheet" href="{{ asset('styles/indexTable.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/buttons.css') }}">
+{% endblock %}
+
+{% block content %}
     <h1>LienFibre index</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
-                <th>NombreFibres</th>
+                <th>Nombre de fibres</th>
                 <th>Distance</th>
                 <th>Attenuation</th>
-                <th>ReferenceFibre</th>
-                <th>ReferenceOperateur</th>
-                <th>ReferenceLiaison</th>
-                <th>DateLivraison</th>
-                <th>DateActivation</th>
-                <th>LienActive</th>
+                <th>Référence Fibre</th>
+                <th>Référence Operateur</th>
+                <th>Référence Liaison</th>
+                <th>Date de livraison</th>
+                <th>Date d'activation</th>
+                <th>Lien activé</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -47,5 +52,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_lien_fibre_new') }}">Create new</a>
+    <a class="createButton" href="{{ path('app_lien_fibre_new') }}">Create new</a>
 {% endblock %}
