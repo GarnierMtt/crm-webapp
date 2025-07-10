@@ -37,6 +37,12 @@
             </tr>
         </tbody>
     </table>
+    <div>
+        <h3> Utilisée par : </h3>
+        {% for pair in adresse.societes %}
+            <div>{{ pair.relation }} de {{ pair.societe }}</div>
+        {% endfor %}
+    </div>
 
     <a href="{{ path('app_adresse_index') }}">back to list</a>
 

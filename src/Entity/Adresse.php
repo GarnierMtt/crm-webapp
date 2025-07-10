@@ -129,7 +129,11 @@ class Adresse
      */
     public function getSocietes(): Collection
     {
-        return $this->Societes;
+        return $this->Societes->map(
+            fn($relation) => [
+                'relation' => $relation,
+                'societe' => $relation->getSociete(),
+        ]);
     }
 
     public function addSociete(RelationSocieteAdresse $societe): static

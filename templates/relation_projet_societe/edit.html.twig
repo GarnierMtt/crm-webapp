@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit RelationProjetSociete{% endblock %}
+
+{% block content %}
+    <h1>Edit RelationProjetSociete</h1>
+
+    {{ include('relation_projet_societe/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_relation_projet_societe_index') }}">back to list</a>
+
+    {{ include('relation_projet_societe/_delete_form.html.twig') }}
+{% endblock %}

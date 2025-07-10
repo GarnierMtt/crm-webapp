@@ -219,7 +219,11 @@ class Projet
      */
     public function getSocietes(): Collection
     {
-        return $this->societes;
+        return $this->societes->map(
+            fn($relation) => [
+                'relation' => $relation,
+                'societe' => $relation->getSociete(),
+        ]);
     }
 
     public function addSociete(RelationProjetSociete $societe): static

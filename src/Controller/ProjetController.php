@@ -92,9 +92,7 @@ final class ProjetController extends AbstractController
                                 <div>
                                     <a class="createButton" href="' . $newUrl . '">[+]</a>
                                 </div>
-                                <div>
-                                    ' . $deleteFormHtml . '
-                                </div>
+                                ' . $deleteFormHtml . '
                             </div>
                         ';
                     }

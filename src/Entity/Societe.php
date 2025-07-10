@@ -130,7 +130,11 @@ class Societe
      */
     public function getAdresses(): Collection
     {
-        return $this->Adresses;
+        return $this->Adresses->map(
+            fn($relation) => [
+                'relation' => $relation,
+                'adresse' => $relation->getAdresse(),
+        ]);
     }
 
     public function addAdress(RelationSocieteAdresse $adress): static
@@ -160,7 +164,11 @@ class Societe
      */
     public function getProjets(): Collection
     {
-        return $this->Projets;
+        return $this->Projets->map(
+            fn($relation) => [
+                'relation' => $relation,
+                'projet' => $relation->getProjet(),
+        ]);
     }
 
     public function addProjet(RelationProjetSociete $projet): static

@@ -9,7 +9,7 @@
         <script>
             {% if is_granted('ROLE_USER') %}
                 /* Set the width of the side navigation to 250px */
-                var menueFlag = 0;
+                var menueFlag = 1;
                 function openMenue() {
                     document.getElementById("sideMenue").style.width = "250px";
                     document.getElementById("main").style.marginLeft = "250px";
@@ -72,7 +72,10 @@
 
         <div id="main">
             <div class="content">{% block content %}{% endblock %}</div>
-            <div id="footer">{% block footer %}{% endblock %}</div>
+
+            <!--
+            <div id="footer"> {% block footer %}{% endblock %}</div>
+            !-->
         </div>
         
     </body>

@@ -17,8 +17,14 @@
     </div>
     <div>
         <h3> Projets </h3>
-        {% for projet in societe.projets %}
-            <div>{{ projet }}</div>
+        {% for pair in societe.projets %}
+            <div>{{ pair.relation }} de {{ pair.projet }}</div>
+        {% endfor %}
+    </div>
+    <div>
+        <h3> Adresses </h3>
+        {% for pair in societe.adresses %}
+            <div>{{ pair.relation }}</div>
         {% endfor %}
     </div>
     <a href="{{ path('app_societe_index') }}">back to list</a>

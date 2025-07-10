@@ -14,8 +14,8 @@
 .table tr:hover {background-color: #ddd;}
 
 .table th {
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   text-align: left;
   background-color: #2183f3;
   color: white;
@@ -37,4 +37,8 @@
 .table a:hover {
     background-color: #a4a4a4; 
     color: black; 
+}
+
+.objTable th{
+  text-align-last: justify;
 }
