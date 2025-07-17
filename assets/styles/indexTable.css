@@ -1,3 +1,4 @@
+/* BASE TABLE FORMAT */
 .table {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
@@ -9,9 +10,11 @@
   padding: 8px;
 }
 
-.table tr:nth-child(even){background-color: #f2f2f2;}
-
-.table tr:hover {background-color: #ddd;}
+.table tr{
+  background-color: #fff;
+}.table tr:nth-child(even){
+  background-color: #f2f2f2;
+}
 
 .table th {
   padding-top: 3px;
@@ -21,24 +24,30 @@
   color: white;
 }
 
-.table a {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #c7c7c7; 
-    border: none;
-    color: rgb(0, 0, 0);
-    padding: 2px 5px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    transition-duration: 0.4s;
-    cursor: pointer;
-}
 
-.table a:hover {
-    background-color: #a4a4a4; 
-    color: black; 
-}
 
+/* OBJECT TABLE */
 .objTable th{
   text-align-last: justify;
+}
+
+.table.objTable tr{
+  background-color: #fff;
+}.objTable tr:nth-child(4n){
+  background-color: #f2f2f2;
+}
+
+
+
+
+/* OVERRIDES */
+.table tr:hover {
+  background-color: #ddd;
+}.active{
+  background-color: #ddd !important;
+}
+
+.table.objTable .collContent{
+  display: none;
+  background-color: #fff;
 }

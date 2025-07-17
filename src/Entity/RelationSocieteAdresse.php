@@ -18,10 +18,12 @@ class RelationSocieteAdresse
 
     #[ORM\ManyToOne(inversedBy: 'Adresses')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Gedmo\Versioned]
     private ?Societe $societe = null;
 
     #[ORM\ManyToOne(inversedBy: 'Societes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Gedmo\Versioned]
     private ?Adresse $adresse = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

@@ -18,9 +18,11 @@ class RelationProjetSociete
 
     #[ORM\ManyToOne(inversedBy: 'societes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Gedmo\Versioned]
     private ?Projet $projet = null;
 
     #[ORM\ManyToOne(inversedBy: 'Projets')]
+    #[Gedmo\Versioned]
     private ?Societe $societe = null;
 
     #[ORM\Column(length: 255)]

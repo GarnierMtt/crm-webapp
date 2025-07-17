@@ -28,20 +28,6 @@ services:
     gedmo.mapping.driver.attribute:
         class: Gedmo\Mapping\Driver\AttributeReader
 
-    # Gedmo Loggable Extension Listener
-    gedmo.listener.loggable:
-        class: Gedmo\Loggable\LoggableListener
-        tags:
-            - { name: doctrine.event_listener, event: 'onFlush' }
-            - { name: doctrine.event_listener, event: 'loadClassMetadata' }
-            - { name: doctrine.event_listener, event: 'postPersist' }
-        calls:
-            # Uncomment the below call if using attributes, and comment the call for the annotation reader
-            - [ setAnnotationReader, [ '@gedmo.mapping.driver.attribute' ] ]
-            # The `annotation_reader` service was deprecated in Symfony 6.4 and removed in Symfony 7.0
-            # - [ setAnnotationReader, [ '@annotation_reader' ] ]
-            - [ setActorProvider, [ '@App\Utils\SymfonyActorProvider' ] ]
-
     # Gedmo Tree Extension Listener
     gedmo.listener.tree:
         class: Gedmo\Tree\TreeListener
@@ -59,6 +45,20 @@ services:
             - [ setAnnotationReader, [ '@gedmo.mapping.driver.attribute' ] ]
             # The `annotation_reader` service was deprecated in Symfony 6.4 and removed in Symfony 7.0
             # - [ setAnnotationReader, [ '@annotation_reader' ] ]
+
+    # Gedmo Loggable Extension Listener
+    gedmo.listener.loggable:
+        class: Gedmo\Loggable\LoggableListener
+        tags:
+            - { name: doctrine.event_listener, event: 'onFlush'}
+            - { name: doctrine.event_listener, event: 'loadClassMetadata'}
+            - { name: doctrine.event_listener, event: 'postPersist'}
+        calls:
+            # Uncomment the below call if using attributes, and comment the call for the annotation reader
+            - [ setAnnotationReader, [ '@gedmo.mapping.driver.attribute' ] ]
+            # The `annotation_reader` service was deprecated in Symfony 6.4 and removed in Symfony 7.0
+            # - [ setAnnotationReader, [ '@annotation_reader' ] ]
+            - [ setActorProvider, [ '@App\Utils\SymfonyActorProvider' ] ]
 
     #
     #

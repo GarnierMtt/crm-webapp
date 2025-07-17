@@ -10,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ProjetRepository::class)]
-#[Gedmo\Loggable]
 #[Gedmo\Tree(type: 'nested')]
+#[Gedmo\Loggable]
 class Projet
 {
     #[ORM\Id]
@@ -32,30 +32,30 @@ class Projet
     private ?\DateTime $dateEnd = null;
 
     #[ORM\Column]
-    #[Gedmo\Versioned]
     #[Gedmo\TreeLeft]
+    #[Gedmo\Versioned]
     private ?int $lft = null;
 
     #[ORM\Column]
-    #[Gedmo\Versioned]
     #[Gedmo\TreeRight]
+    #[Gedmo\Versioned]
     private ?int $rgt = null;
 
     #[ORM\ManyToOne(inversedBy: 'children')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[Gedmo\Versioned]
     #[Gedmo\TreeParent]
+    #[Gedmo\Versioned]
     private ?Projet $parent = null;
 
     #[ORM\ManyToOne(targetEntity: Projet::class)]
     #[ORM\JoinColumn(name: 'tree_root', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[Gedmo\Versioned]
     #[Gedmo\TreeRoot]
+    #[Gedmo\Versioned]
     private ?Projet $root = null;
 
     #[ORM\Column]
-    #[Gedmo\Versioned]
     #[Gedmo\TreeLevel]
+    #[Gedmo\Versioned]
     private ?int $level = null;
 
     /**

@@ -11,7 +11,7 @@
     <div class="grid">
         <div class="page-rightbar">
             <div class="item">
-                <div style="margin-top: 10px;">
+                <div>
                     <div class="cal-container">
                         <div>
                             <span>Débute le :</span>
@@ -28,13 +28,16 @@
                         <tr>
                             <th colspan="2">
                                 <span>Sociétés</span>
-                                <a onclick="menueNvlSte()">[+]</a>
+                                <a class="regularButton" onclick="menueNvlSte()">[+]</a>
                             </th>
                         </tr>
                         {% for pair in projet.societes %}
-                            <tr>
+                            <tr class="collapsible" onclick="colaps(this)">
                                 <td>{{ pair.relation }}</td>
                                 <td>{{ pair.societe }}</td>
+                            </tr>
+                            <tr class="collContent">
+                                <td colspan="2">esfsefsqe</td>
                             </tr>
                         {% else %}
                             <tr>
@@ -68,8 +71,35 @@
                     <h2>Arborescence du projet</h2>
                     {{ htmlTree|raw }}
                 </div>
+
+                <div>
+                    {% include 'history/logsTable.twig' %}
+                </div>
                 
             </div>
         </div>
     </div>
+
+    <script>
+        function colaps(coll) {
+            var content = coll.nextElementSibling;
+            if (content.style.display === "table-row") {
+                coll.classList.toggle("active");
+                content.style.display = "none";
+            } else {
+                var allColl = document.getElementsByClassName("collapsible");
+                for (i = 0; i < allColl.length; i++) {
+                    allColl[i].classList.remove("active");
+                    allColl[i].nextElementSibling.style.display = "none";
+                }
+                coll.classList.toggle("active");
+                content.style.display = "table-row";
+            }
+        }
+
+
+        function menueNvlSte(){
+            
+        }
+    </script>
 {% endblock %}

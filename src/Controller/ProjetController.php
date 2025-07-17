@@ -10,6 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Gedmo\Loggable\Entity\LogEntry;
+use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
+use Gedmo\Loggable\LoggableListener;
 
 #[Route('/projet')]
 final class ProjetController extends AbstractController
@@ -40,8 +43,10 @@ final class ProjetController extends AbstractController
         $parentId = $request->query->get('parent');
         if ($parentId) {
             $parent = $projetRepository->find($parentId);
+            $root = $parent->getRoot();
             if ($parent) {
                 $projet->setParent($parent);
+                $projet->setRoot($root);
             }
         }
 
@@ -62,7 +67,7 @@ final class ProjetController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_projet_show', methods: ['GET'])]
-    public function show(Projet $projet, ProjetRepository $projetRepository): Response
+    public function show(Projet $projet, ProjetRepository $projetRepository, EntityManagerInterface $em): Response
     {
         // Find the root ancestor
         $root = $projet->getRoot() ?? $projet;
@@ -103,9 +108,76 @@ final class ProjetController extends AbstractController
             true
         );
 
+        // object history
+        /*
+        $repo = $em->getRepository(LogEntry::class);
+        $logs = $repo->getLogEntries($projet);
+        foreach ($projetRepository->findby(['root' => $id]) as $child){
+            $logs = array_merge($logs, $repo->getLogEntries($child));
+        }
+            
+        $qb->select('l')
+            ->from(, 'l')
+                ->add('where', $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('l.objectId', ':id'),
+                        $qb->expr()->orX(
+                            $qb->expr()->eq('l.objectId', ':id'),
+                            $qb->expr()->like('u.data', '')
+                        )
+                    )
+                
+                ))
+            
+            ->orderBy('l.loggedAt', 'DESC');
+
+         $qb = $em->createQuery(
+            "SELECT l FROM Gedmo\Loggable\Entity\LogEntry l 
+                WHERE (l.objectId = :id OR l.data LIKE :rootId) 
+                    AND l.objectClass = 'App\Entity\Projet' 
+                ORDER BY l.loggedAt DESC
+        ");
+        $qb->setParameters([
+            'id' => $id,
+            'rootId' => '%["root"]=> {"id":'. $id .'}%',
+        ]);
+
+        */
+       
+        $qb = $em->createQuery(
+            "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
+                WHERE l.objectClass = 'App\Entity\Projet'
+        ");
+        $projetIds[0] = $id;
+        foreach($qb->getResult() as $proj){
+            if(isset($proj["data"]["root"]["id"])){
+                if($proj["data"]["root"]["id"] == $id){
+                    $projetIds[] = $proj["objectId"];
+                }
+            }
+        }
+        $projetIds = array_unique($projetIds);
+
+        $qb = $em->createQuery(
+            "SELECT l FROM Gedmo\Loggable\Entity\LogEntry l 
+                WHERE l.objectClass = 'App\Entity\Projet'
+                    AND l.objectId in (:projetIds)
+                ORDER BY l.loggedAt DESC
+        ");
+        $qb->setParameters([
+            'projetIds' => $projetIds,
+        ]);
+
+
+        /*
+        var_dump($qb->getResult());
+
+        return null;
+        //*/
         return $this->render('projet/show.html.twig', [
             'projet' => $projet,
             'htmlTree' => $htmlTree,
+            'logEntries' => $qb->getResult(),
         ]);
     }
 
