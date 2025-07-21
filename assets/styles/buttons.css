@@ -1,61 +1,32 @@
-.createButton {
+.btn{
     font-family: Arial, Helvetica, sans-serif;
-    background-color: #04AA6D; 
-    border: 1px;
-    color: white;
+    background-color: #c7c7c7; 
+    border: none;
+    color: black;
     padding: 2px 5px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    margin: 4px 2px;
     transition-duration: 0.4s;
     cursor: pointer;
-  box-sizing: border-box;
+    box-sizing: border-box;
+}.btn:hover {
+    background-color: #a4a4a4; 
 }
 
-.createButton:hover {
+
+.btn.create {
+    background-color: #04AA6D; 
+    color: white;
+}.btn.create:hover {
     background-color: #d5f6ea; 
     color: black; 
 }
 
-
-.regularButton {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #c7c7c7; 
-    border: none;
-    color: rgb(0, 0, 0);
-    padding: 2px 5px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-    box-sizing: border-box;
-}
-
-.regularButton:hover {
-    background-color: #a4a4a4; 
-    color: black; 
-}
-
-
-.deleteButton {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #f44336; 
-    border: none;
+.btn.delete {
+    background-color: #f44336;
     color: white;
-    padding: 2px 5px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-    font-weight: bold;
-  box-sizing: border-box;
-}
-.deleteButton:hover {
+}.btn.delete:hover {
     background-color: #ffffff; 
     color: #f44336; 
 }

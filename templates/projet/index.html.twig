@@ -24,7 +24,7 @@
                     <td>{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}</td>
                     <td>{{ projet.id }}</td>
                     <td>
-                        <a href="{{ path('app_projet_show', {'id': projet.id}) }}">show</a>
+                        <a class="btn" href="{{ path('app_projet_show', {'id': projet.id}) }}">show</a>
                     </td>
                 </tr>
             {% else %}
@@ -35,7 +35,7 @@
             </tbody>
         </table>
 
-        <a class="createButton" href="{{ path('app_projet_new') }}">Créer nouveau projet</a>
+        <a class="btn create" href="{{ path('app_projet_new') }}">Créer nouveau projet</a>
 
     </div>
 {% endblock %}

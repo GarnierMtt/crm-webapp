@@ -1,8 +1,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>timestamp</th>
-            <th>Object class</th>
+            <th>Timestamp</th>
             <th>Object ID</th>
             <th>Version</th>
             <th>action</th>
@@ -14,8 +13,7 @@
     {% for log in logEntries %}
         <tr>
                 <td>{{ log.loggedAt ? log.loggedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ log.objectClass }}</td>
-                <td>{{ log.objectId }}</td>
+                <td>{{ log.objectClass }}-{{ log.objectId }}</td>
                 <td>{{ log.version }}</td>
                 <td>{{ log.action }}</td>
                 <td style="word-break: break-all;">

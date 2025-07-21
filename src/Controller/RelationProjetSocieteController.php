@@ -38,7 +38,7 @@ final class RelationProjetSocieteController extends AbstractController
 
         return $this->render('relation_projet_societe/new.html.twig', [
             'relation_projet_societe' => $relationProjetSociete,
-            'form' => $form,
+            'formRelProjSte' => $form,
         ]);
     }
 

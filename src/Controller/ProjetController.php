@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Projet;
 use App\Form\ProjetForm;
+use App\Form\RelationProjetSocieteForm;
 use App\Repository\ProjetRepository;
+use App\Entity\RelationProjetSociete;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,6 +35,8 @@ final class ProjetController extends AbstractController
             'projets' => $rootProjets,
         ]);
     }
+
+
 
     #[Route('/new', name: 'app_projet_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ProjetRepository $projetRepository, EntityManagerInterface $entityManager): Response
@@ -66,8 +70,10 @@ final class ProjetController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_projet_show', methods: ['GET'])]
-    public function show(Projet $projet, ProjetRepository $projetRepository, EntityManagerInterface $em): Response
+
+
+    #[Route('/{id}', name: 'app_projet_show', methods: ['GET', 'POST'])]
+    public function show(Projet $projet, Request $request, ProjetRepository $projetRepository, EntityManagerInterface $em): Response
     {
         // Find the root ancestor
         $root = $projet->getRoot() ?? $projet;
@@ -92,58 +98,24 @@ final class ProjetController extends AbstractController
                         return '
                             <div style=" display: flex; flex-direction: row; flex-wrap: nowrap;">
                                 <div>
-                                    <a class="regularButton">' . $name . '</a>
+                                    <a class="btn">' . $name . '</a>
                                 </div>
                                 <div>
-                                    <a class="createButton" href="' . $newUrl . '">[+]</a>
+                                    <a class="btn create" href="' . $newUrl . '">[+]</a>
                                 </div>
                                 ' . $deleteFormHtml . '
                             </div>
                         ';
                     }
                     $url = $this->generateUrl('app_projet_show', ['id' => $node['id']]);
-                    return '<a class="regularButton" href="' . $url . '">' . $name . '</a>';
+                    return '<a class="btn" href="' . $url . '">' . $name . '</a>';
                 },
             ],
             true
         );
 
         // object history
-        /*
-        $repo = $em->getRepository(LogEntry::class);
-        $logs = $repo->getLogEntries($projet);
-        foreach ($projetRepository->findby(['root' => $id]) as $child){
-            $logs = array_merge($logs, $repo->getLogEntries($child));
-        }
-            
-        $qb->select('l')
-            ->from(, 'l')
-                ->add('where', $qb->expr()->orX(
-                    $qb->expr()->andX(
-                        $qb->expr()->eq('l.objectId', ':id'),
-                        $qb->expr()->orX(
-                            $qb->expr()->eq('l.objectId', ':id'),
-                            $qb->expr()->like('u.data', '')
-                        )
-                    )
-                
-                ))
-            
-            ->orderBy('l.loggedAt', 'DESC');
-
-         $qb = $em->createQuery(
-            "SELECT l FROM Gedmo\Loggable\Entity\LogEntry l 
-                WHERE (l.objectId = :id OR l.data LIKE :rootId) 
-                    AND l.objectClass = 'App\Entity\Projet' 
-                ORDER BY l.loggedAt DESC
-        ");
-        $qb->setParameters([
-            'id' => $id,
-            'rootId' => '%["root"]=> {"id":'. $id .'}%',
-        ]);
-
-        */
-       
+            //under projects seletion
         $qb = $em->createQuery(
             "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
                 WHERE l.objectClass = 'App\Entity\Projet'
@@ -158,26 +130,59 @@ final class ProjetController extends AbstractController
         }
         $projetIds = array_unique($projetIds);
 
+            //associated companies selection
+        $qb = $em->createQuery(
+            "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
+                WHERE l.objectClass = 'App\Entity\RelationProjetSociete'
+        ");
+        $steIds = [];
+        foreach($qb->getResult() as $steProj){
+            if(isset($steProj["data"]["projet"]["id"])){
+                if($steProj["data"]["projet"]["id"] == $id){
+                    $steIds[] = $steProj["objectId"];
+                }
+            }
+        }
+        $steIds = array_unique($steIds);
+
+            //return query
         $qb = $em->createQuery(
             "SELECT l FROM Gedmo\Loggable\Entity\LogEntry l 
-                WHERE l.objectClass = 'App\Entity\Projet'
-                    AND l.objectId in (:projetIds)
+                WHERE 
+                    ( l.objectClass = 'App\Entity\Projet'
+                        AND l.objectId in (:projetIds)) 
+                    OR ( l.objectClass = 'App\Entity\RelationProjetSociete'
+                        AND l.objectId in (:steIds))
                 ORDER BY l.loggedAt DESC
         ");
         $qb->setParameters([
             'projetIds' => $projetIds,
+            'steIds' => $steIds,
         ]);
 
 
-        /*
-        var_dump($qb->getResult());
+        // RELATION PROJ STE
+        $relationProjetSociete = new RelationProjetSociete();
 
-        return null;
-        //*/
+        $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
+        $form->handleRequest($request);
+
+        $relationProjetSociete->setProjet($projet);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->persist($relationProjetSociete);
+            $em->flush();
+
+            return $this->redirectToRoute('app_projet_show', ['id' => $id], Response::HTTP_SEE_OTHER);
+        }
+
+
+        //   ####  RENDER  ####   //
         return $this->render('projet/show.html.twig', [
             'projet' => $projet,
             'htmlTree' => $htmlTree,
             'logEntries' => $qb->getResult(),
+            'relation_projet_societe' => $relationProjetSociete,
+            'formRelProjSte' => $form,
         ]);
     }
 

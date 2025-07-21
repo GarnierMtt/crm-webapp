@@ -5,6 +5,8 @@
 {% block head %}
     <link rel="stylesheet" href="{{ asset('styles/calendar.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/projet.css') }}">
+    <script type="text/javascript" src="{{ asset('scripts/draggableWindow.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('styles/draggableWindow.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -28,7 +30,7 @@
                         <tr>
                             <th colspan="2">
                                 <span>Sociétés</span>
-                                <a class="regularButton" onclick="menueNvlSte()">[+]</a>
+                                <a class="btn" onclick="menueNvlSte(this)">[+]</a>
                             </th>
                         </tr>
                         {% for pair in projet.societes %}
@@ -45,6 +47,25 @@
                             </tr>
                         {% endfor %}
                     </table>
+                    <div class="draggableWindow visibleWindow" id="menueNvlSte">
+                        <div class="window-top">
+                            <div>Click here to move</div>
+                            <a class="btn deleate" onclick="menueNvlSte(this)">Close</a>
+                        </div>
+                        <h2>Associer une sociétée au projet {{ projet.name }}</h2>
+
+                        {{ form_errors(formRelProjSte) }}
+
+                        {{ form_start(formRelProjSte) }}
+                            {{ form_row(formRelProjSte.societe, {placeholder: "choisire une ste"} ) }}
+                            {{ form_row(formRelProjSte.role) }}
+                            {{ form_row(formRelProjSte.notes) }}
+                            {{ form_row(formRelProjSte._token) }}
+                            
+
+                            <button type="submit" class="btn">Save</button>
+                        {{ form_end(formRelProjSte, {render_rest: false}) }}
+                    </div>
                 </div>
             </div>
         </div>
@@ -73,14 +94,23 @@
                 </div>
 
                 <div>
-                    {% include 'history/logsTable.twig' %}
+                    <div style="width: 100%" class="btn" onclick="unwrap(this)">Historique</div>
+                    <div class="wrapper">
+                        <div class="inner">
+                            {% include 'history/logsTable.twig' %}
+                        </div>
+                    </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
 
     <script>
+
+        makeDraggable(document.querySelector('#menueNvlSte'));
+
+
         function colaps(coll) {
             var content = coll.nextElementSibling;
             if (content.style.display === "table-row") {
@@ -98,8 +128,14 @@
         }
 
 
-        function menueNvlSte(){
-            
+        function menueNvlSte(btn){
+            var window = document.getElementById("menueNvlSte");
+            window.classList.toggle("visibleWindow");
+            btnRect = btn.getBoundingClientRect();
+            wndoRect = window.getBoundingClientRect();
+            window.style.top = btnRect.top + "px";
+            var diff = btnRect.right + wndoRect.left - wndoRect.right;
+            window.style.left = diff + "px";
         }
     </script>
 {% endblock %}

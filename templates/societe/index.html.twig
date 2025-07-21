@@ -26,8 +26,8 @@
                 <td>{{ societe.telephoneStandard }}</td>
                 <td>{{ societe.siret }}</td>
                 <td>
-                    <a href="{{ path('app_societe_show', {'id': societe.id}) }}">show</a>
-                    <a href="{{ path('app_societe_edit', {'id': societe.id}) }}">edit</a>
+                    <a class="btn" href="{{ path('app_societe_show', {'id': societe.id}) }}">show</a>
+                    <a class="btn" href="{{ path('app_societe_edit', {'id': societe.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -38,5 +38,5 @@
         </tbody>
     </table>
 
-    <a class="createButton" href="{{ path('app_societe_new') }}">Create new</a>
+    <a class="btn create" href="{{ path('app_societe_new') }}">Create new</a>
 {% endblock %}

@@ -1,6 +1,7 @@
 body{
     margin: 0;
     height: 100%;
+    overflow-x: hidden;
 }
 
 #banner{
@@ -117,4 +118,28 @@ body{
     position: relative;
     bottom: 0;
     z-index: 10;
+}
+
+
+.wrapperSwitch{
+    width: 100%;
+    color: white;
+    background-color: darkturquoise;
+    padding: 3px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s ease-out;
+}
+
+.wrapper.is-open {
+  grid-template-rows: 1fr;
+}
+
+.inner {
+  overflow: hidden;
 }

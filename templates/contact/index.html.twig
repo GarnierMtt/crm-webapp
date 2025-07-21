@@ -30,8 +30,8 @@
                 <td>{{ contact.telephone }}</td>
                 <td>{{ contact.post }}</td>
                 <td>
-                    <a href="{{ path('app_contact_show', {'id': contact.id}) }}">show</a>
-                    <a href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
+                    <a class="btn" href="{{ path('app_contact_show', {'id': contact.id}) }}">show</a>
+                    <a class="btn" href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -42,5 +42,5 @@
         </tbody>
     </table>
 
-    <a class="createButton" href="{{ path('app_contact_new') }}">Create new</a>
+    <a class="btn create" href="{{ path('app_contact_new') }}">Create new</a>
 {% endblock %}

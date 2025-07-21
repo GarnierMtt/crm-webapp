@@ -34,6 +34,13 @@
                         
                 }
             {% endif %}
+            
+            // unwrap function (history)
+            function unwrap(coll) {
+                var content = coll.nextElementSibling;
+                content.classList.toggle("is-open");
+            }
+
         </script>
     </head>
     <body>
@@ -73,9 +80,7 @@
         <div id="main">
             <div class="content">{% block content %}{% endblock %}</div>
 
-            <!--
-            <div id="footer"> {% block footer %}{% endblock %}</div>
-            !-->
+            <!--div id="footer"> {% block footer %}{% endblock %}</div-->
         </div>
         
     </body>
