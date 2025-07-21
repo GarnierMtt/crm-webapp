@@ -2,23 +2,22 @@
 <html>
     <head>
         <meta charset="UTF-8">
+
         <title>- CRM{% block title %}{% endblock %}</title>
+
         <link rel="icon" href="{{ asset('img/hFull.png') }}">
         {% block head %}{% endblock %}
         {{ importmap('app') }}
         <script>
             {% if is_granted('ROLE_USER') %}
-                /* Set the width of the side navigation to 250px */
                 var menueFlag = 1;
+
                 function openMenue() {
                     document.getElementById("sideMenue").style.width = "250px";
                     document.getElementById("main").style.marginLeft = "250px";
                     document.getElementById("main").style.width = "calc(100% - 250px)";
                     menueFlag = 1;
-                }
-
-                /* Set the width of the side navigation to 0 */
-                function closeMenue() {
+                }function closeMenue() {
                     document.getElementById("sideMenue").style.width = "0";
                     document.getElementById("main").style.marginLeft = "0";
                     document.getElementById("main").style.width = "100%";
@@ -31,8 +30,8 @@
                     }else{
                         closeMenue();
                     }
-                        
                 }
+
             {% endif %}
             
             // unwrap function (history)
@@ -40,48 +39,60 @@
                 var content = coll.nextElementSibling;
                 content.classList.toggle("is-open");
             }
-
         </script>
+
     </head>
+
+
+
+
+
+
     <body>
-        <div id="banner">
+        <div id="banner"> <!-- BANDEAU -->
             {% if is_granted('ROLE_USER') %}
-                <span class="menueBtn" onclick="triggerMenue()">&#9776;</span>
-                <div class="dropdown">
+
+                <span class="menueBtn" onclick="triggerMenue()">&#9776;</span> <!-- bouton du menue navigation -->
+
+                <div class="dropdown"> <!-- menue utilisateur -->
                     <div class="currentUser">
                         <img src="{{ asset('img/h.png') }}" style="height:100%">
                         <span>{{ app.user.name }}</span>
                     </div>
-                    <div class="dropdown-content">
+
+                    <div class="dropdown-content"> <!-- options -->
                         <a href="{{ path('app_user_show', {'id': app.user.id}) }}">Modifier profile</a>
                         <a href="#">Link 2</a>
                         <a href="#">Link 3</a>
                     </div>
                 </div>
+
             {% else %}
                 <img src="{{ asset('img/h.png') }}" style="height:100%">
             {% endif %}
+
         </div>
         
         
-        {% if is_granted('ROLE_USER') %}
+        {% if is_granted('ROLE_USER') %} <!-- MENUE NAVIGATION -->
             <div id="sideMenue">
                 <a href="javascript:void(0)" class="closebtn" onclick="closeMenue()">&times;</a>
-                <a href="{{ path('app_home_index') }}">Tableau de bord</a>
-                <a href="{{ path('app_projet_index') }}">Projets</a>
-                <a href="{{ path('app_societe_index') }}">Société</a>
-                <a href="{{ path('app_contact_index') }}">Contact</a>
-                <a href="{{ path('app_history_index') }}">Historique</a>
-            
+                    <a href="{{ path('app_home_index') }}">Tableau de bord</a>
+                    <a href="{{ path('app_projet_index') }}">Projets</a>
+                    <a href="{{ path('app_societe_index') }}">Société</a>
+                    <a href="{{ path('app_contact_index') }}">Contact</a>
+                    <a href="{{ path('app_history_index') }}">Historique</a>
             </div>
+
         {% endif %}
 
 
-        <div id="main">
+        <div id="main"> <!-- ZONE CONTENUS -->
             <div class="content">{% block content %}{% endblock %}</div>
-
             <!--div id="footer"> {% block footer %}{% endblock %}</div-->
+
         </div>
         
     </body>
+
 </html>

@@ -26,10 +26,19 @@ final class ProjetController extends AbstractController
         return $name . ' <a href="' . $url . '">[+]</a>';
     }
 
+
+
+
+
+
+
+
     #[Route(name: 'app_projet_index', methods: ['GET'])]
     public function index(ProjetRepository $projetRepository): Response
     {
         $rootProjets = $projetRepository->findBy(['parent' => null]);
+
+
 
         return $this->render('projet/index.html.twig', [
             'projets' => $rootProjets,
@@ -38,10 +47,17 @@ final class ProjetController extends AbstractController
 
 
 
+
+
+
+
+
     #[Route('/new', name: 'app_projet_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ProjetRepository $projetRepository, EntityManagerInterface $entityManager): Response
     {
         $projet = new Projet();
+        $form = $this->createForm(ProjetForm::class, $projet);
+        $form->handleRequest($request);
 
         // Set parent if provided
         $parentId = $request->query->get('parent');
@@ -54,15 +70,14 @@ final class ProjetController extends AbstractController
             }
         }
 
-        $form = $this->createForm(ProjetForm::class, $projet);
-        $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($projet);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_projet_index', [], Response::HTTP_SEE_OTHER);
         }
+
+
 
         return $this->render('projet/new.html.twig', [
             'projet' => $projet,
@@ -71,6 +86,11 @@ final class ProjetController extends AbstractController
     }
 
 
+
+
+
+
+    
 
     #[Route('/{id}', name: 'app_projet_show', methods: ['GET', 'POST'])]
     public function show(Projet $projet, Request $request, ProjetRepository $projetRepository, EntityManagerInterface $em): Response
@@ -114,69 +134,72 @@ final class ProjetController extends AbstractController
             true
         );
 
-        // object history
-            //under projects seletion
-        $qb = $em->createQuery(
-            "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
-                WHERE l.objectClass = 'App\Entity\Projet'
-        ");
-        $projetIds[0] = $id;
-        foreach($qb->getResult() as $proj){
-            if(isset($proj["data"]["root"]["id"])){
-                if($proj["data"]["root"]["id"] == $id){
-                    $projetIds[] = $proj["objectId"];
+        // OBJECT HISTORY
+            //associated projects seletion
+                $qb = $em->createQuery(
+                    "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
+                        WHERE l.objectClass = 'App\Entity\Projet'
+                ");
+
+                $projetIds[0] = $id;
+                foreach($qb->getResult() as $proj){
+                    if(isset($proj["data"]["root"]["id"])){
+                        if($proj["data"]["root"]["id"] == $id){
+                            $projetIds[] = $proj["objectId"];
+                        }
+                    }
                 }
-            }
-        }
-        $projetIds = array_unique($projetIds);
+                $projetIds = array_unique($projetIds);
+
 
             //associated companies selection
-        $qb = $em->createQuery(
-            "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
-                WHERE l.objectClass = 'App\Entity\RelationProjetSociete'
-        ");
-        $steIds = [];
-        foreach($qb->getResult() as $steProj){
-            if(isset($steProj["data"]["projet"]["id"])){
-                if($steProj["data"]["projet"]["id"] == $id){
-                    $steIds[] = $steProj["objectId"];
+                $qb = $em->createQuery(
+                    "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
+                        WHERE l.objectClass = 'App\Entity\RelationProjetSociete'
+                ");
+
+                $steIds = [];
+                foreach($qb->getResult() as $steProj){
+                    if(isset($steProj["data"]["projet"]["id"])){
+                        if($steProj["data"]["projet"]["id"] == $id){
+                            $steIds[] = $steProj["objectId"];
+                        }
+                    }
                 }
-            }
-        }
-        $steIds = array_unique($steIds);
+                $steIds = array_unique($steIds);
+
 
             //return query
-        $qb = $em->createQuery(
-            "SELECT l FROM Gedmo\Loggable\Entity\LogEntry l 
-                WHERE 
-                    ( l.objectClass = 'App\Entity\Projet'
-                        AND l.objectId in (:projetIds)) 
-                    OR ( l.objectClass = 'App\Entity\RelationProjetSociete'
-                        AND l.objectId in (:steIds))
-                ORDER BY l.loggedAt DESC
-        ");
-        $qb->setParameters([
-            'projetIds' => $projetIds,
-            'steIds' => $steIds,
-        ]);
-
+                $qb = $em->createQuery(
+                    "SELECT l FROM Gedmo\Loggable\Entity\LogEntry l 
+                        WHERE 
+                            ( l.objectClass = 'App\Entity\Projet'
+                                AND l.objectId in (:projetIds)) 
+                            OR ( l.objectClass = 'App\Entity\RelationProjetSociete'
+                                AND l.objectId in (:steIds))
+                        ORDER BY l.loggedAt DESC
+                ");
+                $qb->setParameters([
+                    'projetIds' => $projetIds,
+                    'steIds' => $steIds,
+                ]);
+        // END OBJEC HISTORY
 
         // RELATION PROJ STE
-        $relationProjetSociete = new RelationProjetSociete();
+            $relationProjetSociete = new RelationProjetSociete();
+            $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
+            $form->handleRequest($request);
 
-        $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
-        $form->handleRequest($request);
-
-        $relationProjetSociete->setProjet($projet);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($relationProjetSociete);
-            $em->flush();
-
-            return $this->redirectToRoute('app_projet_show', ['id' => $id], Response::HTTP_SEE_OTHER);
-        }
+            $relationProjetSociete->setProjet($projet);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $em->persist($relationProjetSociete);
+                $em->flush();
+                return $this->redirectToRoute('app_projet_show', ['id' => $id], Response::HTTP_SEE_OTHER);
+            }
+        // END RELATION PROJ STE
 
 
-        //   ####  RENDER  ####   //
+
         return $this->render('projet/show.html.twig', [
             'projet' => $projet,
             'htmlTree' => $htmlTree,
@@ -186,6 +209,13 @@ final class ProjetController extends AbstractController
         ]);
     }
 
+
+
+
+
+
+    
+
     #[Route('/{id}/edit', name: 'app_projet_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Projet $projet, EntityManagerInterface $entityManager): Response
     {
@@ -194,15 +224,23 @@ final class ProjetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
             return $this->redirectToRoute('app_projet_index', [], Response::HTTP_SEE_OTHER);
         }
+
+
 
         return $this->render('projet/edit.html.twig', [
             'projet' => $projet,
             'form' => $form,
         ]);
     }
+
+
+
+
+
+
+
 
     #[Route('/{id}', name: 'app_projet_delete', methods: ['POST'])]
     public function delete(Request $request, Projet $projet, EntityManagerInterface $entityManager): Response
@@ -212,6 +250,8 @@ final class ProjetController extends AbstractController
             $entityManager->flush();
         }
 
+
+        
         return $this->redirectToRoute('app_projet_index', [], Response::HTTP_SEE_OTHER);
     }
 }

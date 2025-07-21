@@ -1,7 +1,8 @@
 <h1>Coucou!</h1>
 
-<p>Pour réinitialiser votre mot de passe, cliquer sur le lien suivant:</p>
-
+<p>
+    Pour réinitialiser votre mot de passe, cliquer sur le lien suivant:
+</p>
 <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
 
 <p>Ce lien expireras dans 1 heure.</p>

@@ -1,43 +1,43 @@
 <table class="table">
     <thead>
-        <tr>
-            <th>Timestamp</th>
-            <th>Object ID</th>
-            <th>Version</th>
-            <th>action</th>
-            <th>Data</th>
-            <th>Actor</th>
-        </tr>
+            <tr>
+                <th>Timestamp</th>
+                <th>Object ID</th>
+                <th>Version</th>
+                <th>action</th>
+                <th>Data</th>
+                <th>Actor</th>
+            </tr>
     </thead>
     <tbody>
-    {% for log in logEntries %}
-        <tr>
-                <td>{{ log.loggedAt ? log.loggedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ log.objectClass }}-{{ log.objectId }}</td>
-                <td>{{ log.version }}</td>
-                <td>{{ log.action }}</td>
-                <td style="word-break: break-all;">
-                    <ul>
-                        {% for key, data in log.data %}
-                            <li style="word-break: break-all;">
-                                {{ key }} => 
-                                {% if data is iterable %}
-                                    {{ data|json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES'))}}
-                                {% else %}
-                                    {% if data.timestamp is defined %}
-                                        {{ data ? data|date('Y-m-d H:i:s') : '' }}
-                                    {% else %}
-                                        {{ data }}
-                                    {% endif %}
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </td>
-                <td>{{ log.username }}</td>
-        </tr>
-    {% else %}
-        <p>No history records found.</p>
-    {% endfor %}
+            {% for log in logEntries %}
+                <tr>
+                    <td>{{ log.loggedAt ? log.loggedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    <td>{{ log.objectClass }}-{{ log.objectId }}</td>
+                    <td>{{ log.version }}</td>
+                    <td>{{ log.action }}</td>
+                    <td style="word-break: break-all;">
+                        <ul>
+                            {% for key, data in log.data %}
+                                <li style="word-break: break-all;">
+                                    {{ key }} => 
+                                        {% if data is iterable %}
+                                            {{ data|json_encode(constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES'))}}
+                                        {% else %}
+                                            {% if data.timestamp is defined %}
+                                                {{ data ? data|date('Y-m-d H:i:s') : '' }}
+                                            {% else %}
+                                                {{ data }}
+                                            {% endif %}
+                                        {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>{{ log.username }}</td>
+                </tr>
+            {% else %}
+                <p>No history records found.</p>
+            {% endfor %}
     </tbody>
 </table>

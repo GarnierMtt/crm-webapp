@@ -28,6 +28,13 @@ class RegistrationController extends AbstractController
         $this->resetPasswordController = $resetPasswordController;
     }
 
+
+
+
+
+
+
+
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
@@ -69,10 +76,19 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_user_index');
         }
 
+
+
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
         ]);
     }
+
+
+
+
+
+
+
 
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, UserRepository $userRepository, MailerInterface $mailer): Response
@@ -103,6 +119,8 @@ class RegistrationController extends AbstractController
 
         $email = $user->getEmail();
 
+
+        
         return $this->resetPasswordController->processSendingPasswordResetEmail($email, $mailer);
     }
 }

@@ -2,12 +2,12 @@
 
 {% block title %} - Index projet{% endblock %}
 
-{% block content %}
-    <div>
-        <h1>Projet index</h1>
 
-        <table class="table">
-            <thead>
+{% block content %}
+    <h1>Projet index</h1>
+
+    <table class="table">
+        <thead>
                 <tr>
                     <th>Name</th>
                     <th>StartDate</th>
@@ -15,27 +15,26 @@
                     <th>Id</th>
                     <th>actions</th>
                 </tr>
-            </thead>
-            <tbody>
-            {% for projet in projets %}
-                <tr>
-                    <td>{{ projet.name }}</td>
-                    <td>{{ projet.startDate ? projet.startDate|date('Y-m-d') : '' }}</td>
-                    <td>{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}</td>
-                    <td>{{ projet.id }}</td>
-                    <td>
-                        <a class="btn" href="{{ path('app_projet_show', {'id': projet.id}) }}">show</a>
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="5">no records found</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        </thead>
+        <tbody>
+                {% for projet in projets %}
+                    <tr>
+                        <td>{{ projet.name }}</td>
+                        <td>{{ projet.startDate ? projet.startDate|date('Y-m-d') : '' }}</td>
+                        <td>{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}</td>
+                        <td>{{ projet.id }}</td>
+                        <td>
+                            <a class="btn" href="{{ path('app_projet_show', {'id': projet.id}) }}">show</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
+        </tbody>
+    </table>
 
-        <a class="btn create" href="{{ path('app_projet_new') }}">Créer nouveau projet</a>
+    <a class="btn create" href="{{ path('app_projet_new') }}">Créer nouveau projet</a>
 
-    </div>
 {% endblock %}

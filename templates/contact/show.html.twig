@@ -2,40 +2,40 @@
 
 {% block title %} - Contact{% endblock %}
 
+
 {% block content %}
     <h1>Contact</h1>
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Nom</th>
-                <td>{{ contact.nom }}</td>
-            </tr>
-            <tr>
-                <th>Prénom</th>
-                <td>{{ contact.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Mél</th>
-                <td>{{ contact.mel }}</td>
-            </tr>
-            <tr>
-                <th>Téléphone</th>
-                <td>{{ contact.telephone }}</td>
-            </tr>
-            <tr>
-                <th>Pôst</th>
-                <td>{{ contact.post }}</td>
-            </tr>
-                <th>Société</th>
-                <td>{{ contact.societe }}</td>
-            </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ contact.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Prénom</th>
+                    <td>{{ contact.prenom }}</td>
+                </tr>
+                <tr>
+                    <th>Mél</th>
+                    <td>{{ contact.mel }}</td>
+                </tr>
+                <tr>
+                    <th>Téléphone</th>
+                    <td>{{ contact.telephone }}</td>
+                </tr>
+                <tr>
+                    <th>Pôst</th>
+                    <td>{{ contact.post }}</td>
+                </tr>
+                    <th>Société</th>
+                    <td>{{ contact.societe }}</td>
+                </tr>
         </tbody>
     </table>
 
     <a class="btn" href="{{ path('app_contact_index') }}">back to list</a>
-
     <a class="btn" href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
-
     {{ include('contact/_delete_form.html.twig') }}
+    
 {% endblock %}

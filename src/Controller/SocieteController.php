@@ -14,13 +14,31 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/societe')]
 final class SocieteController extends AbstractController
 {
+
+
+
+
+
+
+
+
     #[Route(name: 'app_societe_index', methods: ['GET'])]
     public function index(SocieteRepository $societeRepository): Response
     {
+
+
+
         return $this->render('societe/index.html.twig', [
             'societes' => $societeRepository->findAll(),
         ]);
     }
+
+
+
+
+
+
+
 
     #[Route('/new', name: 'app_societe_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -36,19 +54,38 @@ final class SocieteController extends AbstractController
             return $this->redirectToRoute('app_societe_index', [], Response::HTTP_SEE_OTHER);
         }
 
+
+
         return $this->render('societe/new.html.twig', [
             'societe' => $societe,
             'form' => $form,
         ]);
     }
 
+
+
+
+
+
+
+
     #[Route('/{id}', name: 'app_societe_show', methods: ['GET'])]
     public function show(Societe $societe): Response
     {
+
+
+
         return $this->render('societe/show.html.twig', [
             'societe' => $societe,
         ]);
     }
+
+
+
+
+
+
+
 
     #[Route('/{id}/edit', name: 'app_societe_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Societe $societe, EntityManagerInterface $entityManager): Response
@@ -62,11 +99,20 @@ final class SocieteController extends AbstractController
             return $this->redirectToRoute('app_societe_index', [], Response::HTTP_SEE_OTHER);
         }
 
+
+
         return $this->render('societe/edit.html.twig', [
             'societe' => $societe,
             'form' => $form,
         ]);
     }
+
+
+
+
+
+
+
 
     #[Route('/{id}', name: 'app_societe_delete', methods: ['POST'])]
     public function delete(Request $request, Societe $societe, EntityManagerInterface $entityManager): Response
@@ -75,6 +121,8 @@ final class SocieteController extends AbstractController
             $entityManager->remove($societe);
             $entityManager->flush();
         }
+
+
 
         return $this->redirectToRoute('app_societe_index', [], Response::HTTP_SEE_OTHER);
     }

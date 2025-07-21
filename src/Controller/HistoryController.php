@@ -16,13 +16,22 @@ use App\Entity\Projet;
 #[Route('/historique')]
 final class HistoryController extends AbstractController
 {
+
+
+
+
+
+
+
+
     #[Route(name: 'app_history_index', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function index(EntityManagerInterface $em): Response
     {
-
         $repo = $em->getRepository(LogEntry::class);
 
+
+        
         return $this->render('history/index.html.twig', [
             'logEntries' => $repo->findBy(
                 [],

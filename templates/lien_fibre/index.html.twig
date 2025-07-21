@@ -2,55 +2,52 @@
 
 {% block title %} - LienFibre index{% endblock %}
 
-{% block head %}
-    <link rel="stylesheet" href="{{ asset('styles/indexTable.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/buttons.css') }}">
-{% endblock %}
 
 {% block content %}
     <h1>LienFibre index</h1>
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nombre de fibres</th>
-                <th>Distance</th>
-                <th>Attenuation</th>
-                <th>Référence Fibre</th>
-                <th>Référence Operateur</th>
-                <th>Référence Liaison</th>
-                <th>Date de livraison</th>
-                <th>Date d'activation</th>
-                <th>Lien activé</th>
-                <th>actions</th>
-            </tr>
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre de fibres</th>
+                    <th>Distance</th>
+                    <th>Attenuation</th>
+                    <th>Référence Fibre</th>
+                    <th>Référence Operateur</th>
+                    <th>Référence Liaison</th>
+                    <th>Date de livraison</th>
+                    <th>Date d'activation</th>
+                    <th>Lien activé</th>
+                    <th>actions</th>
+                </tr>
         </thead>
         <tbody>
-        {% for lien_fibre in lien_fibres %}
-            <tr>
-                <td>{{ lien_fibre.id }}</td>
-                <td>{{ lien_fibre.nombreFibres }}</td>
-                <td>{{ lien_fibre.distance }}</td>
-                <td>{{ lien_fibre.attenuation }}</td>
-                <td>{{ lien_fibre.referenceFibre }}</td>
-                <td>{{ lien_fibre.referenceOperateur }}</td>
-                <td>{{ lien_fibre.referenceLiaison }}</td>
-                <td>{{ lien_fibre.dateLivraison ? lien_fibre.dateLivraison|date('Y-m-d') : '' }}</td>
-                <td>{{ lien_fibre.dateActivation ? lien_fibre.dateActivation|date('Y-m-d') : '' }}</td>
-                <td>{{ lien_fibre.lienActive ? 'Yes' : 'No' }}</td>
-                <td>
-                    <a href="{{ path('app_lien_fibre_show', {'id': lien_fibre.id}) }}">show</a>
-                    <a href="{{ path('app_lien_fibre_edit', {'id': lien_fibre.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
-        {% endfor %}
+                {% for lien_fibre in lien_fibres %}
+                    <tr>
+                        <td>{{ lien_fibre.id }}</td>
+                        <td>{{ lien_fibre.nombreFibres }}</td>
+                        <td>{{ lien_fibre.distance }}</td>
+                        <td>{{ lien_fibre.attenuation }}</td>
+                        <td>{{ lien_fibre.referenceFibre }}</td>
+                        <td>{{ lien_fibre.referenceOperateur }}</td>
+                        <td>{{ lien_fibre.referenceLiaison }}</td>
+                        <td>{{ lien_fibre.dateLivraison ? lien_fibre.dateLivraison|date('Y-m-d') : '' }}</td>
+                        <td>{{ lien_fibre.dateActivation ? lien_fibre.dateActivation|date('Y-m-d') : '' }}</td>
+                        <td>{{ lien_fibre.lienActive ? 'Yes' : 'No' }}</td>
+                        <td>
+                            <a href="{{ path('app_lien_fibre_show', {'id': lien_fibre.id}) }}">show</a>
+                            <a href="{{ path('app_lien_fibre_edit', {'id': lien_fibre.id}) }}">edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="11">no records found</td>
+                    </tr>
+                {% endfor %}
         </tbody>
     </table>
 
     <a class="btn create" href="{{ path('app_lien_fibre_new') }}">Create new</a>
+    
 {% endblock %}

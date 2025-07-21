@@ -16,14 +16,33 @@ use App\Repository\ResetPasswordRequestRepository;
 #[Route('/user')]
 final class UserController extends AbstractController
 {
+
+
+
+
+
+
+
+
     #[Route(name: 'app_user_index', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function index(UserRepository $userRepository): Response
     {
+
+
+
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
         ]);
     }
+
+
+
+
+
+
+
+
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
@@ -40,11 +59,20 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
+
+
         return $this->render('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
     }
+
+
+
+
+
+
+
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
@@ -55,10 +83,20 @@ final class UserController extends AbstractController
         if ($user->getId() !== $userId->getId()) {
             $this->denyAccessUnlessGranted('ROLE_ADMIN');
         }
+
+
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
         ]);
     }
+
+
+
+
+
+
+
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_ADMIN')]
@@ -73,11 +111,20 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
+
+
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);
     }
+
+
+
+
+
+
+
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
@@ -89,6 +136,8 @@ final class UserController extends AbstractController
             $entityManager->flush();
         }
 
+
+        
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 }

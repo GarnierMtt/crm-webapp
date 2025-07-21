@@ -2,41 +2,38 @@
 
 {% block title %} - Societe index{% endblock %}
 
-{% block head %}
-    <link rel="stylesheet" href="{{ asset('styles/indexTable.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/buttons.css') }}">
-{% endblock %}
 
 {% block content %}
     <h1>Societe index</h1>
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Téléphone standard</th>
-                <th>SIRET</th>
-                <th>actions</th>
-            </tr>
+                <tr>
+                    <th>Nom</th>
+                    <th>Téléphone standard</th>
+                    <th>SIRET</th>
+                    <th>actions</th>
+                </tr>
         </thead>
         <tbody>
-        {% for societe in societes %}
-            <tr>
-                <td>{{ societe.name }}</td>
-                <td>{{ societe.telephoneStandard }}</td>
-                <td>{{ societe.siret }}</td>
-                <td>
-                    <a class="btn" href="{{ path('app_societe_show', {'id': societe.id}) }}">show</a>
-                    <a class="btn" href="{{ path('app_societe_edit', {'id': societe.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
+                {% for societe in societes %}
+                    <tr>
+                        <td>{{ societe.name }}</td>
+                        <td>{{ societe.telephoneStandard }}</td>
+                        <td>{{ societe.siret }}</td>
+                        <td>
+                            <a class="btn" href="{{ path('app_societe_show', {'id': societe.id}) }}">show</a>
+                            <a class="btn" href="{{ path('app_societe_edit', {'id': societe.id}) }}">edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">no records found</td>
+                    </tr>
+                {% endfor %}
         </tbody>
     </table>
 
     <a class="btn create" href="{{ path('app_societe_new') }}">Create new</a>
+
 {% endblock %}

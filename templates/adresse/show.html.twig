@@ -2,41 +2,43 @@
 
 {% block title %} - Adresse{% endblock %}
 
+
 {% block content %}
     <h1>Adresse</h1>
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ adresse.id }}</td>
-            </tr>
-            <tr>
-                <th>Pays</th>
-                <td>{{ adresse.Pays }}</td>
-            </tr>
-            <tr>
-                <th>Commune</th>
-                <td>{{ adresse.commune }}</td>
-            </tr>
-            <tr>
-                <th>Code Postal</th>
-                <td>{{ adresse.codePostal }}</td>
-            </tr>
-            <tr>
-                <th>Nom de la voie</th>
-                <td>{{ adresse.nomVoie }}</td>
-            </tr>
-            <tr>
-                <th>Numero de la voie</th>
-                <td>{{ adresse.numeroVoie }}</td>
-            </tr>
-            <tr>
-                <th>Complément</th>
-                <td>{{ adresse.complement }}</td>
-            </tr>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ adresse.id }}</td>
+                </tr>
+                <tr>
+                    <th>Pays</th>
+                    <td>{{ adresse.Pays }}</td>
+                </tr>
+                <tr>
+                    <th>Commune</th>
+                    <td>{{ adresse.commune }}</td>
+                </tr>
+                <tr>
+                    <th>Code Postal</th>
+                    <td>{{ adresse.codePostal }}</td>
+                </tr>
+                <tr>
+                    <th>Nom de la voie</th>
+                    <td>{{ adresse.nomVoie }}</td>
+                </tr>
+                <tr>
+                    <th>Numero de la voie</th>
+                    <td>{{ adresse.numeroVoie }}</td>
+                </tr>
+                <tr>
+                    <th>Complément</th>
+                    <td>{{ adresse.complement }}</td>
+                </tr>
         </tbody>
     </table>
+
     <div>
         <h3> Utilisée par : </h3>
         {% for pair in adresse.societes %}
@@ -45,8 +47,7 @@
     </div>
 
     <a href="{{ path('app_adresse_index') }}">back to list</a>
-
     <a href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>
-
     {{ include('adresse/_delete_form.html.twig') }}
+    
 {% endblock %}

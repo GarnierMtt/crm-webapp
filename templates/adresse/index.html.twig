@@ -2,49 +2,46 @@
 
 {% block title %} - Adresse index{% endblock %}
 
-{% block head %}
-    <link rel="stylesheet" href="{{ asset('styles/indexTable.css') }}">
-    <link rel="stylesheet" href="{{ asset('styles/buttons.css') }}">
-{% endblock %}
 
 {% block content %}
     <h1>Adresse index</h1>
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Pays</th>
-                <th>Commune</th>
-                <th>Code Postal</th>
-                <th>Nom de la voie</th>
-                <th>Numéro de la voie</th>
-                <th>Complément</th>
-                <th>actions</th>
-            </tr>
+                <tr>
+                    <th>Id</th>
+                    <th>Pays</th>
+                    <th>Commune</th>
+                    <th>Code Postal</th>
+                    <th>Nom de la voie</th>
+                    <th>Numéro de la voie</th>
+                    <th>Complément</th>
+                    <th>actions</th>
+                </tr>
         </thead>
         <tbody>
-        {% for adresse in adresses %}
-            <tr>
-                <td>{{ adresse.id }}</td>
-                <td>{{ adresse.Pays }}</td>
-                <td>{{ adresse.commune }}</td>
-                <td>{{ adresse.codePostal }}</td>
-                <td>{{ adresse.nomVoie }}</td>
-                <td>{{ adresse.numeroVoie }}</td>
-                <td>{{ adresse.complement }}</td>
-                <td>
-                    <a href="{{ path('app_adresse_show', {'id': adresse.id}) }}">show</a>
-                    <a href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">no records found</td>
-            </tr>
-        {% endfor %}
+                {% for adresse in adresses %}
+                    <tr>
+                        <td>{{ adresse.id }}</td>
+                        <td>{{ adresse.Pays }}</td>
+                        <td>{{ adresse.commune }}</td>
+                        <td>{{ adresse.codePostal }}</td>
+                        <td>{{ adresse.nomVoie }}</td>
+                        <td>{{ adresse.numeroVoie }}</td>
+                        <td>{{ adresse.complement }}</td>
+                        <td>
+                            <a href="{{ path('app_adresse_show', {'id': adresse.id}) }}">show</a>
+                            <a href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8">no records found</td>
+                    </tr>
+                {% endfor %}
         </tbody>
     </table>
 
     <a class="btn create" href="{{ path('app_adresse_new') }}">Create new</a>
+    
 {% endblock %}
