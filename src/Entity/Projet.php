@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ProjetRepository::class)]
-#[Gedmo\Tree(type: 'nested')]
+//#[Gedmo\Tree(type: 'nested')]
 #[Gedmo\Loggable]
 class Projet
 {
@@ -31,6 +31,7 @@ class Projet
     #[Gedmo\Versioned]
     private ?\DateTime $dateEnd = null;
 
+    /*
     #[ORM\Column]
     #[Gedmo\TreeLeft]
     #[Gedmo\Versioned]
@@ -60,10 +61,11 @@ class Projet
 
     /**
      * @var Collection<int, Projet>
-     */
+     /
     #[ORM\OneToMany(targetEntity: Projet::class, mappedBy: 'parent')]
     #[ORM\OrderBy(['lft' => 'ASC'])]
     private Collection $children;
+    */
 
     /**
      * @var Collection<int, RelationProjetSociete>
@@ -79,7 +81,7 @@ class Projet
 
     public function __construct()
     {
-        $this->children = new ArrayCollection();
+        //$this->children = new ArrayCollection();
         $this->societes = new ArrayCollection();
         $this->lienFibres = new ArrayCollection();
     }
@@ -125,6 +127,7 @@ class Projet
         return $this;
     }
 
+    /*
     public function getLft(): ?int
     {
         return $this->lft;
@@ -186,7 +189,7 @@ class Projet
 
     /**
      * @return Collection<int, Projet>
-     */
+     /
     public function getChildren(): Collection
     {
         return $this->children;
@@ -213,6 +216,7 @@ class Projet
 
         return $this;
     }
+    //*/
 
     /**
      * @return Collection<int, RelationProjetSociete>

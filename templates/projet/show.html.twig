@@ -13,6 +13,54 @@
 {% block content %}
     <div class="grid">
 
+        <div class="page-header"> <!-- ENTÊTE -->
+            <div class="item">
+
+
+                <div class="proj-head">
+                    <div>
+                        <h1>- {{ projet.name }}</h1>
+                        <span>- Id: {{ projet.id }}</span>
+                        {{ include('projet/_delete_form.html.twig') }}
+                    </div>
+                    <div style="margin-top: 50px; width: 50%;">
+                        <label>Description :</label>
+                        <textarea>rgr
+                        </textarea>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+
+        <div class="page-main"> <!-- CORPS -->
+            <div class="item">
+
+                {# 
+                <div class="treeView">
+                    <h2>Arborescence du projet</h2>
+                    {{ htmlTree|raw }}
+                </div>
+                #}
+
+                <div> <!-- historique -->
+                    <div style="width: 100%" class="btn" onclick="unwrap(this)">Historique</div>
+                    <div class="wrapper">
+                        <div class="inner">
+                            {% include 'history/logsTable.twig' %}
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        
+        
+        
         <div class="page-rightbar"> <!-- BARE DE DROITE -->
             <div class="item">
 
@@ -41,8 +89,8 @@
                         </tr>
                         {% for pair in projet.societes %}
                             <tr class="collapsible" onclick="colaps(this)">
-                                <td>{{ pair.relation }}</td>
                                 <td>{{ pair.societe }}</td>
+                                <td>{{ pair.relation }}</td>
                             </tr>
                             <tr class="collContent">
                                 <td colspan="2">
@@ -65,61 +113,18 @@
                         <h2>Associer une sociétée au projet {{ projet.name }}</h2>
 
                         {{ form_errors(formRelProjSte) }}
-                        {{ form_start(formRelProjSte) }}
+                        {{ form_start(formRelProjSte, {
+                            'action': path('app_relation_projet_societe_new', {'projet': projet.id}),
+                            'method': 'POST'
+                        }) }}
                             {{ form_row(formRelProjSte.societe, {placeholder: "choisire une ste"} ) }}
                             {{ form_row(formRelProjSte.role) }}
                             {{ form_row(formRelProjSte.notes) }}
                             {{ form_row(formRelProjSte._token) }}
-                            <button type="submit" class="btn">Save</button>
+                            <button class="btn">Save</button>
                         {{ form_end(formRelProjSte, {render_rest: false}) }}
                     </div>
 
-                </div>
-
-
-            </div>
-        </div>
-
-
-
-        <div class="page-header"> <!-- ENTÊTE -->
-            <div class="item">
-
-
-                <div class="proj-head">
-                    <div>
-                        <h1>- {{ projet.name }}</h1>
-                        <span>- Id: {{ projet.id }}</span>
-                    </div>
-                    <div style="margin-top: 50px; width: 50%;">
-                        <label>Description :</label>
-                        <textarea>rgr
-                        </textarea>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-
-
-
-        <div class="page-main"> <!-- CORPS -->
-            <div class="item">
-
-
-                <div class="treeView">
-                    <h2>Arborescence du projet</h2>
-                    {{ htmlTree|raw }}
-                </div>
-
-                <div> <!-- historique -->
-                    <div style="width: 100%" class="btn" onclick="unwrap(this)">Historique</div>
-                    <div class="wrapper">
-                        <div class="inner">
-                            {% include 'history/logsTable.twig' %}
-                        </div>
-                    </div>
                 </div>
 
 

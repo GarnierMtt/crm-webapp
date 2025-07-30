@@ -21,6 +21,10 @@ docker compose build --pull --no-cache
 docker compose up --wait
 docker compose down --remove-orphans
 
+php bin/console doctrine:migrations:diff
+php bin/console doctrine:migrations:migrate
+php bin/console cache:clear
+
 
 ## Features
 

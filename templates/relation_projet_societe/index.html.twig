@@ -9,6 +9,8 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Projet</th>
+                <th>Societe</th>
                 <th>Role</th>
                 <th>Notes</th>
                 <th>actions</th>
@@ -18,6 +20,8 @@
         {% for relation_projet_societe in relation_projet_societes %}
             <tr>
                 <td>{{ relation_projet_societe.id }}</td>
+                <td>{{ relation_projet_societe.projet }}</td>
+                <td>{{ relation_projet_societe.societe }}</td>
                 <td>{{ relation_projet_societe.role }}</td>
                 <td>{{ relation_projet_societe.notes }}</td>
                 <td>

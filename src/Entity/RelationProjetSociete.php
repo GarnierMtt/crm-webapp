@@ -17,7 +17,7 @@ class RelationProjetSociete
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'societes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Gedmo\Versioned]
     private ?Projet $projet = null;
 

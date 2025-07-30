@@ -36,12 +36,11 @@ final class ProjetController extends AbstractController
     #[Route(name: 'app_projet_index', methods: ['GET'])]
     public function index(ProjetRepository $projetRepository): Response
     {
-        $rootProjets = $projetRepository->findBy(['parent' => null]);
 
 
 
         return $this->render('projet/index.html.twig', [
-            'projets' => $rootProjets,
+            'projets' => $projetRepository->findAll(),
         ]);
     }
 
@@ -53,22 +52,11 @@ final class ProjetController extends AbstractController
 
 
     #[Route('/new', name: 'app_projet_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ProjetRepository $projetRepository, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $projet = new Projet();
         $form = $this->createForm(ProjetForm::class, $projet);
         $form->handleRequest($request);
-
-        // Set parent if provided
-        $parentId = $request->query->get('parent');
-        if ($parentId) {
-            $parent = $projetRepository->find($parentId);
-            $root = $parent->getRoot();
-            if ($parent) {
-                $projet->setParent($parent);
-                $projet->setRoot($root);
-            }
-        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($projet);
@@ -92,16 +80,18 @@ final class ProjetController extends AbstractController
 
     
 
-    #[Route('/{id}', name: 'app_projet_show', methods: ['GET', 'POST'])]
+    #[Route('/{id}', name: 'app_projet_show', methods: ['GET'])]
     public function show(Projet $projet, Request $request, ProjetRepository $projetRepository, EntityManagerInterface $em): Response
     {
         // Find the root ancestor
-        $root = $projet->getRoot() ?? $projet;
+        //$root = $projet->getRoot() ?? $projet;
         $id = $projet->getId() ?? $projet;
+        /*
         $deleteFormHtml = $this->renderView('projet/_delete_form.html.twig', [
             'projet' => $projet, // or the current node if needed
         ]);
 
+        /*
         // Get the HTML tree for this root
         $htmlTree = $projetRepository->childrenHierarchy(
             $root,
@@ -133,6 +123,7 @@ final class ProjetController extends AbstractController
             ],
             true
         );
+        */
 
         // OBJECT HISTORY
             //associated projects seletion
@@ -188,21 +179,13 @@ final class ProjetController extends AbstractController
         // RELATION PROJ STE
             $relationProjetSociete = new RelationProjetSociete();
             $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
-            $form->handleRequest($request);
-
-            $relationProjetSociete->setProjet($projet);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $em->persist($relationProjetSociete);
-                $em->flush();
-                return $this->redirectToRoute('app_projet_show', ['id' => $id], Response::HTTP_SEE_OTHER);
-            }
         // END RELATION PROJ STE
 
 
 
         return $this->render('projet/show.html.twig', [
             'projet' => $projet,
-            'htmlTree' => $htmlTree,
+            //'htmlTree' => $htmlTree,
             'logEntries' => $qb->getResult(),
             'relation_projet_societe' => $relationProjetSociete,
             'formRelProjSte' => $form,

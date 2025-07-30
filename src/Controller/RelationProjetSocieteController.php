@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\RelationProjetSociete;
 use App\Form\RelationProjetSocieteForm;
 use App\Repository\RelationProjetSocieteRepository;
+use App\Repository\ProjetRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,17 +24,29 @@ final class RelationProjetSocieteController extends AbstractController
     }
 
     #[Route('/new', name: 'app_relation_projet_societe_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, ProjetRepository $projetRepository, EntityManagerInterface $entityManager): Response
     {
         $relationProjetSociete = new RelationProjetSociete();
         $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
         $form->handleRequest($request);
+        $path = $this->redirectToRoute('app_relation_projet_societe_index', [], Response::HTTP_SEE_OTHER);
+
+
+        // Set parent if provided
+        $projetId = $request->query->get('projet');
+        if ($projetId) {
+            $path = $this->redirectToRoute('app_projet_show', ['id' => $projetId], Response::HTTP_SEE_OTHER);
+            $projet = $projetRepository->find($projetId);
+            if ($projet) {
+                $relationProjetSociete->setProjet($projet);
+            }
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($relationProjetSociete);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_relation_projet_societe_index', [], Response::HTTP_SEE_OTHER);
+            return $path;
         }
 
         return $this->render('relation_projet_societe/new.html.twig', [
