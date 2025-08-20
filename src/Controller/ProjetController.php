@@ -209,15 +209,11 @@ final class ProjetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return $this->redirectToRoute('app_projet_show', ['id' => $projet->getId()], Response::HTTP_SEE_OTHER);
         }
 
 
-
-        return $this->render('projet/edit.html.twig', [
-            'projet' => $projet,
-            'formProj' => $form,
-        ]);
+        
+        return $this->redirectToRoute('app_projet_show', ['id' => $projet->getId()], Response::HTTP_SEE_OTHER);
     }
 
 
