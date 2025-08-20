@@ -32,7 +32,7 @@ final class RelationProjetSocieteController extends AbstractController
         $path = $this->redirectToRoute('app_relation_projet_societe_index', [], Response::HTTP_SEE_OTHER);
 
 
-        // Set parent if provided
+        // Set projet if provided
         $projetId = $request->query->get('projet');
         if ($projetId) {
             $path = $this->redirectToRoute('app_projet_show', ['id' => $projetId], Response::HTTP_SEE_OTHER);
@@ -64,20 +64,34 @@ final class RelationProjetSocieteController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_relation_projet_societe_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, RelationProjetSociete $relationProjetSociete, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, RelationProjetSociete $relationProjetSociete, ProjetRepository $projetRepository, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
         $form->handleRequest($request);
+        $path = $this->redirectToRoute('app_relation_projet_societe_index', [], Response::HTTP_SEE_OTHER);
+
+        $msg = $request->query->get('msg');
+
+        // Set projet if provided
+        $projetId = $request->query->get('projet');
+        if ($projetId) {
+            $path = $this->redirectToRoute('app_projet_show', ['id' => $projetId], Response::HTTP_SEE_OTHER);
+            $projet = $projetRepository->find($projetId);
+            if ($projet) {
+                $relationProjetSociete->setProjet($projet);
+            }
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_relation_projet_societe_index', [], Response::HTTP_SEE_OTHER);
+            return $path;
         }
 
         return $this->render('relation_projet_societe/edit.html.twig', [
+            'msg' => $msg,
             'relation_projet_societe' => $relationProjetSociete,
-            'form' => $form,
+            'formRelProjSte' => $form,
         ]);
     }
 

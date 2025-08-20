@@ -3,6 +3,10 @@
 {% block title %} - Adresse{% endblock %}
 
 
+{% block path %}
+    <a href="{{ path('app_adresse_index') }}">Adresses/</a>
+    <a href="{{ path('app_adresse_show', {'id': adresse.id}) }}">{{ adresse.numeroVoie }} {{ adresse.nomVoie }} à {{ adresse.commune }}</a>
+{% endblock %}
 {% block content %}
     <h1>Adresse</h1>
 
@@ -46,8 +50,7 @@
         {% endfor %}
     </div>
 
-    <a href="{{ path('app_adresse_index') }}">back to list</a>
-    <a href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>
+    <a class="btn" href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>
     {{ include('adresse/_delete_form.html.twig') }}
     
 {% endblock %}

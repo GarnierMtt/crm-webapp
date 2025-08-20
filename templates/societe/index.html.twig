@@ -3,28 +3,24 @@
 {% block title %} - Societe index{% endblock %}
 
 
+{% block path %}
+    <a href="{{ path('app_societe_index') }}">Sociétés</a>
+{% endblock %}
 {% block content %}
-    <h1>Societe index</h1>
-
     <table class="table">
         <thead>
                 <tr>
                     <th>Nom</th>
                     <th>Téléphone standard</th>
                     <th>SIRET</th>
-                    <th>actions</th>
                 </tr>
         </thead>
         <tbody>
                 {% for societe in societes %}
-                    <tr>
+                    <tr onclick="window.location.href = '{{ path('app_societe_show', {'id': societe.id}) }}'">
                         <td>{{ societe.name }}</td>
                         <td>{{ societe.telephoneStandard }}</td>
                         <td>{{ societe.siret }}</td>
-                        <td>
-                            <a class="btn" href="{{ path('app_societe_show', {'id': societe.id}) }}">show</a>
-                            <a class="btn" href="{{ path('app_societe_edit', {'id': societe.id}) }}">edit</a>
-                        </td>
                     </tr>
                 {% else %}
                     <tr>

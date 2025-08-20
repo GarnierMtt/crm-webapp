@@ -30,3 +30,20 @@
     background-color: #ffffff; 
     color: #f44336; 
 }
+
+
+
+
+
+.navigator > a{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 2em;
+    cursor: pointer;
+    margin-left: 10px;
+    color: #000322;
+    text-decoration: none;
+    font-weight: bold;
+}
+.navigator > a:hover:nth-child(n + 2) {
+    text-decoration: underline;
+}

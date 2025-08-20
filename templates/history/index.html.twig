@@ -3,6 +3,9 @@
 {% block title %} - History Index{% endblock %}
 
 
+{% block path %}
+    <a href="{{ path('app_history_index') }}">Historique</a>
+{% endblock %}
 {% block content %}
     {% include 'history/logsTable.twig' %}
     

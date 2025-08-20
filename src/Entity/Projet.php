@@ -31,6 +31,10 @@ class Projet
     #[Gedmo\Versioned]
     private ?\DateTime $dateEnd = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Gedmo\Versioned]
+    private ?string $description = null;
+
     /*
     #[ORM\Column]
     #[Gedmo\TreeLeft]
@@ -287,5 +291,17 @@ class Projet
     public function __toString(): string
     {
         return $this->name;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+
+        return $this;
     }
 }

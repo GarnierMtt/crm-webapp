@@ -69,7 +69,7 @@ final class ProjetController extends AbstractController
 
         return $this->render('projet/new.html.twig', [
             'projet' => $projet,
-            'form' => $form,
+            'formProj' => $form,
         ]);
     }
 
@@ -86,6 +86,7 @@ final class ProjetController extends AbstractController
         // Find the root ancestor
         //$root = $projet->getRoot() ?? $projet;
         $id = $projet->getId() ?? $projet;
+        $formProj = $this->createForm(ProjetForm::class, $projet);
         /*
         $deleteFormHtml = $this->renderView('projet/_delete_form.html.twig', [
             'projet' => $projet, // or the current node if needed
@@ -178,7 +179,7 @@ final class ProjetController extends AbstractController
 
         // RELATION PROJ STE
             $relationProjetSociete = new RelationProjetSociete();
-            $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
+            $formRelProjSte = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
         // END RELATION PROJ STE
 
 
@@ -188,7 +189,8 @@ final class ProjetController extends AbstractController
             //'htmlTree' => $htmlTree,
             'logEntries' => $qb->getResult(),
             'relation_projet_societe' => $relationProjetSociete,
-            'formRelProjSte' => $form,
+            'formRelProjSte' => $formRelProjSte,
+            'formProj' => $formProj,
         ]);
     }
 
@@ -207,14 +209,14 @@ final class ProjetController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return $this->redirectToRoute('app_projet_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_projet_show', ['id' => $projet->getId()], Response::HTTP_SEE_OTHER);
         }
 
 
 
         return $this->render('projet/edit.html.twig', [
             'projet' => $projet,
-            'form' => $form,
+            'formProj' => $form,
         ]);
     }
 

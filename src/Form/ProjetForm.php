@@ -13,6 +13,7 @@ class ProjetForm extends AbstractType
     {
         $builder
             ->add('name')
+            ->add('description')
             ->add('startDate')
             ->add('dateEnd')
         ;

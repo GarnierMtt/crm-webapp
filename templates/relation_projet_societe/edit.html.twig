@@ -1,13 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit RelationProjetSociete{% endblock %}
+{% block title %} - Edit{% endblock %}
 
 {% block content %}
-    <h1>Edit RelationProjetSociete</h1>
+    <button class="btn" onClick="window.close()">Annuler</button>
+    <h1>{{ msg }}</h1>
 
-    {{ include('relation_projet_societe/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a class="btn" href="{{ path('app_relation_projet_societe_index') }}">back to list</a>
+
+    {{ include('relation_projet_societe/_form.html.twig', {'button_label': 'Modifier'}) }}
 
     {{ include('relation_projet_societe/_delete_form.html.twig') }}
+
+
+
+    <script>
+        document.getElementById("banner").style.display = "none";
+    </script>
 {% endblock %}

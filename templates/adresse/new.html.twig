@@ -3,11 +3,13 @@
 {% block title %} - New Adresse{% endblock %}
 
 
+{% block path %}
+    <a href="{{ path('app_adresse_index') }}">Adresses/</a>
+    <a href="{{ path('app_adresse_new') }}">Nouveau</a>
+{% endblock %}
 {% block content %}
     <h1>Create new Adresse</h1>
 
     {{ include('adresse/_form.html.twig') }}
 
-    <a href="{{ path('app_adresse_index') }}">back to list</a>
-    
 {% endblock %}

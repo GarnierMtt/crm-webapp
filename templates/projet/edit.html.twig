@@ -3,12 +3,15 @@
 {% block title %} - Edit Projet{% endblock %}
 
 
+{% block path %}
+    <a href="{{ path('app_projet_index') }}">Projets/</a>
+    <a href="{{ path('app_projet_show', {'id': projet.id}) }}">{{ projet.name }}/</a>
+    <a href="{{ path('app_projet_edit', {'id': projet.id}) }}">Edit</a>
+{% endblock %}
 {% block content %}
-    <h1>Edit Projet</h1>
 
     {{ include('projet/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_projet_index') }}">back to list</a>
     {{ include('projet/_delete_form.html.twig') }}
     
 {% endblock %}

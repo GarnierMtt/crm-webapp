@@ -3,9 +3,10 @@
 {% block title %} - Contact index{% endblock %}
 
 
+{% block path %}
+    <a href="{{ path('app_contact_index') }}">Contacts</a>
+{% endblock %}
 {% block content %}
-    <h1>Contact index</h1>
-
     <table class="table">
         <thead>
                 <tr>
@@ -14,21 +15,16 @@
                     <th>Mél</th>
                     <th>Téléphone</th>
                     <th>Pôst</th>
-                    <th>actions</th>
                 </tr>
         </thead>
         <tbody>
                 {% for contact in contacts %}
-                    <tr>
+                    <tr onclick="window.location.href = '{{ path('app_contact_show', {'id': contact.id}) }}'">
                         <td>{{ contact.nom }}</td>
                         <td>{{ contact.prenom }}</td>
                         <td>{{ contact.mel }}</td>
                         <td>{{ contact.telephone }}</td>
                         <td>{{ contact.post }}</td>
-                        <td>
-                            <a class="btn" href="{{ path('app_contact_show', {'id': contact.id}) }}">show</a>
-                            <a class="btn" href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
-                        </td>
                     </tr>
                 {% else %}
                     <tr>

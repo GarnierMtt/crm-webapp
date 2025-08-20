@@ -19,7 +19,7 @@
 }
 
 .item{
-    background-color:rgb(255, 250, 157);
+    background-color:rgb(255, 255, 255);
     height: calc(100% - 20px);
     padding: 10px;
 }

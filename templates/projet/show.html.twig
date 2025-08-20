@@ -10,6 +10,10 @@
 {% endblock %}
 
 
+{% block path %}
+    <a href="{{ path('app_projet_index') }}">Projets/</a>
+    <a href="{{ path('app_projet_show', {'id': projet.id}) }}">{{ projet.name }}</a>
+{% endblock %}
 {% block content %}
     <div class="grid">
 
@@ -19,17 +23,37 @@
 
                 <div class="proj-head">
                     <div>
-                        <h1>- {{ projet.name }}</h1>
                         <span>- Id: {{ projet.id }}</span>
-                        {{ include('projet/_delete_form.html.twig') }}
+                        <a class="btn" onClick="editProj(this)">Edit</a>
                     </div>
-                    <div style="margin-top: 50px; width: 50%;">
-                        <label>Description :</label>
-                        <textarea>rgr
-                        </textarea>
+                    <div style="width: 50%;">
+                        <span>Description :</span>
+                        <p>{{ projet.description|nl2br }}</p>
                     </div>
                 </div>
 
+
+                <div class="draggableWindow visibleWindow" id="editProj"> <!-- Edit PROJ -->
+                    <div class="window-top">
+                        <div>Clique ici pour déplacer</div>
+                        <a class="btn deleate" onclick="editProj(this)">Close</a>
+                    </div>
+                    <h2>Editer le projet</h2>
+
+                    {{ form_errors(formProj) }}
+                    {{ form_start(formProj, {
+                        'action': path('app_projet_edit', {'id': projet.id}),
+                        'method': 'POST'
+                    }) }}
+                        {{ form_row(formProj.name) }}
+                        {{ form_row(formProj.description) }}
+                        {{ form_row(formProj.startDate) }}
+                        {{ form_row(formProj.dateEnd) }}
+                        {{ form_row(formProj._token) }}
+                        <button class="btn">Save</button>
+                    {{ form_end(formProj, {render_rest: false}) }}
+                    {{ include('projet/_delete_form.html.twig') }}
+                </div>
 
             </div>
         </div>
@@ -69,11 +93,11 @@
 
                     <div>
                         <span>Débute le :</span>
-                        <input type="date" value="{{ projet.startDate ? projet.startDate|date('Y-m-d') : '' }}"/>
+                        <span>{{ projet.startDate ? projet.startDate|date('Y/m/d') : '' }}</span>
                     </div>
                     <div>
                         <span>Fini le :</span>
-                        <input type="date" value="{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}"/>
+                        <span>{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}</span>
                     </div>
 
                 </div>
@@ -84,7 +108,7 @@
                         <tr>
                             <th colspan="2">
                                 <span>Sociétés</span>
-                                <a class="btn" onclick="menueNvlSte(this)">[+]</a>
+                                <a class="btn" onclick="menueSte(this)">[+]</a>
                             </th>
                         </tr>
                         {% for pair in projet.societes %}
@@ -94,8 +118,11 @@
                             </tr>
                             <tr class="collContent">
                                 <td colspan="2">
-                                    <div>Notes:</div>
-                                    <p>{{ pair.relation.notes }}</p>
+                                    <div style="text-align-last: justify;">
+                                        <span>Notes:</span>
+                                        <a class="btn" href="{{ path('app_relation_projet_societe_edit', {'id': pair.relation.id, 'msg': 'Modifier la relation sociétée projet entre ' ~ pair.societe ~ ' et ' ~ projet.name}) }}" target="_blank">edit</a>
+                                    </div>
+                                    <p>{{ pair.relation.notes|nl2br }}</p>
                                 </td>
                             </tr>
                         {% else %}
@@ -105,10 +132,10 @@
                         {% endfor %}
                     </table>
 
-                    <div class="draggableWindow visibleWindow" id="menueNvlSte"> <!-- création -->
+                    <div class="draggableWindow visibleWindow" id="menueSte"> <!-- Menue STE -->
                         <div class="window-top">
-                            <div>Click here to move</div>
-                            <a class="btn deleate" onclick="menueNvlSte(this)">Close</a>
+                            <div>Clique ici pour déplacer</div>
+                            <a class="btn deleate" onclick="menueSte(this)">Close</a>
                         </div>
                         <h2>Associer une sociétée au projet {{ projet.name }}</h2>
 
@@ -123,6 +150,7 @@
                             {{ form_row(formRelProjSte._token) }}
                             <button class="btn">Save</button>
                         {{ form_end(formRelProjSte, {render_rest: false}) }}
+                        
                     </div>
 
                 </div>
@@ -138,7 +166,8 @@
 
 
     <script>
-        makeDraggable(document.querySelector('#menueNvlSte'));
+        makeDraggable(document.querySelector('#menueSte'));
+        makeDraggable(document.querySelector('#editProj'));
 
 
 
@@ -159,8 +188,8 @@
         }
 
 
-        function menueNvlSte(btn){
-            var window = document.getElementById("menueNvlSte");
+        function menueSte(btn){
+            var window = document.getElementById("menueSte");
             window.classList.toggle("visibleWindow");
             btnRect = btn.getBoundingClientRect();
             wndoRect = window.getBoundingClientRect();
@@ -168,6 +197,15 @@
             var diff = btnRect.right + wndoRect.left - wndoRect.right;
             window.style.left = diff + "px";
         }
+
+        function editProj(btn){
+            var window = document.getElementById("editProj");
+            window.classList.toggle("visibleWindow");
+            btnRect = btn.getBoundingClientRect();
+            window.style.top = btnRect.top + "px";
+            window.style.left = btnRect.right + "px";
+        }
+
 
     </script>
 {% endblock %}

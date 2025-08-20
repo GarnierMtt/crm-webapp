@@ -3,36 +3,30 @@
 {% block title %} - Adresse index{% endblock %}
 
 
+{% block path %}
+    <a href="{{ path('app_adresse_index') }}">Adresses</a>
+{% endblock %}
 {% block content %}
-    <h1>Adresse index</h1>
-
     <table class="table">
         <thead>
                 <tr>
-                    <th>Id</th>
                     <th>Pays</th>
                     <th>Commune</th>
                     <th>Code Postal</th>
                     <th>Nom de la voie</th>
                     <th>Numéro de la voie</th>
                     <th>Complément</th>
-                    <th>actions</th>
                 </tr>
         </thead>
         <tbody>
                 {% for adresse in adresses %}
-                    <tr>
-                        <td>{{ adresse.id }}</td>
+                    <tr onclick="window.location.href = '{{ path('app_adresse_show', {'id': adresse.id}) }}'">
                         <td>{{ adresse.Pays }}</td>
                         <td>{{ adresse.commune }}</td>
                         <td>{{ adresse.codePostal }}</td>
                         <td>{{ adresse.nomVoie }}</td>
                         <td>{{ adresse.numeroVoie }}</td>
                         <td>{{ adresse.complement }}</td>
-                        <td>
-                            <a href="{{ path('app_adresse_show', {'id': adresse.id}) }}">show</a>
-                            <a href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>
-                        </td>
                     </tr>
                 {% else %}
                     <tr>
