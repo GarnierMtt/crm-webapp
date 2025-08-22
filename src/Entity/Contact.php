@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ContactRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -38,6 +40,17 @@ class Contact
     #[ORM\ManyToOne(inversedBy: 'contacts')]
     #[Gedmo\Versioned]
     private ?Societe $societe = null;
+
+    /**
+     * @var Collection<int, RelationContactAdresse>
+     */
+    #[ORM\OneToMany(targetEntity: RelationContactAdresse::class, mappedBy: 'contact')]
+    private Collection $relationContactAdresses;
+
+    public function __construct()
+    {
+        $this->relationContactAdresses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -112,6 +125,36 @@ class Contact
     public function setSociete(?Societe $societe): static
     {
         $this->societe = $societe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RelationContactAdresse>
+     */
+    public function getRelationContactAdresses(): Collection
+    {
+        return $this->relationContactAdresses;
+    }
+
+    public function addRelationContactAdress(RelationContactAdresse $relationContactAdress): static
+    {
+        if (!$this->relationContactAdresses->contains($relationContactAdress)) {
+            $this->relationContactAdresses->add($relationContactAdress);
+            $relationContactAdress->setContact($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRelationContactAdress(RelationContactAdresse $relationContactAdress): static
+    {
+        if ($this->relationContactAdresses->removeElement($relationContactAdress)) {
+            // set the owning side to null (unless already changed)
+            if ($relationContactAdress->getContact() === $this) {
+                $relationContactAdress->setContact(null);
+            }
+        }
 
         return $this;
     }

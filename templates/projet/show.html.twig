@@ -12,7 +12,7 @@
 
 {% block path %}
     <a href="{{ path('app_projet_index') }}">Projets/</a>
-    <a href="{{ path('app_projet_show', {'id': projet.id}) }}">{{ projet.name }}</a>
+    <a href="{{ path('app_projet_show', {'id': projet.id}) }}">{{ projet.nom }}</a>
 {% endblock %}
 {% block content %}
     <div class="grid">
@@ -46,10 +46,10 @@
                         'action': path('app_projet_edit', {'id': projet.id}),
                         'method': 'POST'
                     }) }}
-                        {{ form_row(formProj.name) }}
+                        {{ form_row(formProj.nom) }}
                         {{ form_row(formProj.description) }}
-                        {{ form_row(formProj.startDate) }}
-                        {{ form_row(formProj.dateEnd) }}
+                        {{ form_row(formProj.dateDeb) }}
+                        {{ form_row(formProj.dateFin) }}
                         {{ form_row(formProj._token) }}
                         <button class="btn">Save</button>
                     {{ form_end(formProj, {render_rest: false}) }}
@@ -93,11 +93,11 @@
 
                     <div>
                         <span>Débute le :</span>
-                        <span>{{ projet.startDate ? projet.startDate|date('Y/m/d') : '' }}</span>
+                        <span>{{ projet.dateDeb ? projet.dateDeb|date('Y/m/d') : '' }}</span>
                     </div>
                     <div>
                         <span>Fini le :</span>
-                        <span>{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}</span>
+                        <span>{{ projet.dateFin ? projet.dateFin|date('Y-m-d') : '' }}</span>
                     </div>
 
                 </div>
@@ -120,7 +120,7 @@
                                 <td colspan="2">
                                     <div style="text-align-last: justify;">
                                         <span>Notes:</span>
-                                        <a class="btn" href="{{ path('app_relation_projet_societe_edit', {'id': pair.relation.id, 'msg': 'Modifier la relation sociétée projet entre ' ~ pair.societe ~ ' et ' ~ projet.name}) }}" target="_blank">edit</a>
+                                        <a class="btn" href="{{ path('app_relation_projet_societe_edit', {'id': pair.relation.id, 'msg': 'Modifier la relation sociétée projet entre ' ~ pair.societe ~ ' et ' ~ projet.nom}) }}" target="_blank">edit</a>
                                     </div>
                                     <p>{{ pair.relation.notes|nl2br }}</p>
                                 </td>
@@ -137,7 +137,7 @@
                             <div>&#10021;</div>
                             <a class="btn deleate" onclick="menueSte(this)">Close</a>
                         </div>
-                        <h2>Associer une sociétée au projet {{ projet.name }}</h2>
+                        <h2>Associer une sociétée au projet {{ projet.nom }}</h2>
 
                         {{ form_errors(formRelProjSte) }}
                         {{ form_start(formRelProjSte, {

@@ -10,7 +10,7 @@
 
 {% block path %}
     <a href="{{ path('app_societe_index') }}">Sociétés/</a>
-    <a href="{{ path('app_societe_show', {'id': societe.id}) }}">{{ societe.name }}</a>
+    <a href="{{ path('app_societe_show', {'id': societe.id}) }}">{{ societe.nom }}</a>
 {% endblock %}
 {% block content %}
     <div class="grid">
@@ -37,29 +37,24 @@
                             <a class="btn" onclick="menueAdresse(this)">[+]</a>
                         </th>
                     </tr>
-                    {% for pair in societe.adresses %}
+                    {% for adresse in societe.adresses %}
                         <tr class="collapsible" onclick="colaps(this)">
-                            <td>{{ pair.relation }}</td>
+                            <td>{{ adresse }}</td>
                         </tr>
                         <tr class="collContent">
                             <td>
                                 <div>
                                     <div style="text-align: right;">
-                                        <a class="btn" href="{{ path('app_relation_societe_adresse_edit', {'id': pair.relation.id, 'msg': 'Modifier la relation adresse sociétée entre ' ~ pair.adresse.nomVoie ~ ' et ' ~ societe.name}) }}" target="_blank">edit</a>
+                                        <a class="btn" href="{{ path('app_adresse_edit', {'id': adresse.id, 'msg': 'Modifier l\'adresse relation adresse associer à la sociétée ' ~ societe.nom}) }}" target="_blank">edit</a>
                                     </div>
                                     
-                                    Description :
-                                    <ul>
-                                        {{ pair.relation.description|nl2br }}
-                                    </ul>
-
                                     Adresse :
                                     <ul>
-                                        {{ pair.adresse.numeroVoie }} {{ pair.adresse.nomVoie }}<br>
-                                        {{ pair.adresse.codePostal }} {{ pair.adresse.commune }}, {{ pair.adresse.Pays }}<br>
+                                        {{ adresse.numeroVoie }} {{ adresse.nomVoie }}<br>
+                                        {{ adresse.codePostal }} {{ adresse.commune }}, {{ adresse.Pays }}<br>
                                         Complément :
                                         <ul>
-                                            {{ pair.adresse.complement|nl2br }}
+                                            {{ adresse.complement|nl2br }}
                                         </ul>
                                     </ul>
 
@@ -68,7 +63,7 @@
                         </tr>
                     {% else %}
                         <tr>
-                            <td colspan="2">aucune adresse associée</td>
+                            <td colspan="2">aucun site associé</td>
                         </tr>
                     {% endfor %}
                 </table>
@@ -136,8 +131,8 @@
                                     </div>
                                     Date de début/fin :
                                     <ul>
-                                        <li>{{ pair.projet.startDate ? pair.projet.startDate|date('Y/m/d') : '' }}</li>
-                                        <li>{{ pair.projet.dateEnd ? pair.projet.dateEnd|date('Y/m/d') : '' }}</li>
+                                        <li>{{ pair.projet.dateDeb ? pair.projet.dateDeb|date('Y/m/d') : '' }}</li>
+                                        <li>{{ pair.projet.dateFin ? pair.projet.dateFin|date('Y/m/d') : '' }}</li>
                                     </ul>
                                     Déscription :
                                     <ul>
@@ -169,7 +164,7 @@
                     'action': path('app_societe_edit', {'id': societe.id}),
                     'method': 'POST'
                 }) }}
-                    {{ form_row(formSte.name) }}
+                    {{ form_row(formSte.nom) }}
                     {{ form_row(formSte.telephoneStandard) }}
                     {{ form_row(formSte.siret) }}
                     {{ form_row(formSte._token) }}
@@ -178,24 +173,28 @@
             </div>
 
             
-            <div class="draggableWindow visibleWindow" id="menueAdresse"> <!-- popup Menue STE ADRESSE -->
+            <div class="draggableWindow visibleWindow" id="menueAdresse"> <!-- popup NVL adresse -->
                 <div class="window-top">
                     <div>&#10021;</div>
                     <a class="btn deleate" onclick="menueAdresse(this)">Fermer</a>
                 </div>
-                <h2>Associer une adresse a la societe {{ societe.name }}</h2>
+                <h2>Nouveau site associer à la societe {{ societe.nom }}</h2>
 
-                {{ form_errors(formRelSteAdresse) }}
-                {{ form_start(formRelSteAdresse, {
-                    'action': path('app_relation_societe_adresse_new', {'societe': societe.id}),
+                {{ form_errors(formAdresse) }}
+                {{ form_start(formAdresse, {
+                    'action': path('app_adresse_new', {'societe': societe.id}),
                     'method': 'POST'
                 }) }}
-                    {{ form_row(formRelSteAdresse.adresse, {placeholder: "choisire une ste"} ) }}
-                    {{ form_row(formRelSteAdresse.nomsite) }}
-                    {{ form_row(formRelSteAdresse.description) }}
-                    {{ form_row(formRelSteAdresse._token) }}
+                    {{ form_row(formAdresse.nomSite) }}
+                    {{ form_row(formAdresse.pays) }}
+                    {{ form_row(formAdresse.commune) }}
+                    {{ form_row(formAdresse.codePostal) }}
+                    {{ form_row(formAdresse.nomVoie) }}
+                    {{ form_row(formAdresse.numeroVoie) }}
+                    {{ form_row(formAdresse.complement) }}
+                    {{ form_row(formAdresse._token) }}
                     <button class="btn">Save</button>
-                {{ form_end(formRelSteAdresse, {render_rest: false}) }}
+                {{ form_end(formAdresse, {render_rest: false}) }}
                 
             </div>
 
@@ -205,7 +204,7 @@
                     <div>&#10021;</div>
                     <a class="btn deleate" onclick="nvxContact(this)">Fermer</a>
                 </div>
-                <h2>Créer un contact associer a la société {{ societe.name }}</h2>
+                <h2>Créer un contact associer a la société {{ societe.nom }}</h2>
 
                 {{ form_errors(formContact) }}
                 {{ form_start(formContact, {
@@ -229,16 +228,16 @@
                     <div>&#10021;</div>
                     <a class="btn deleate" onclick="nvxProjet(this)">Fermer</a>
                 </div>
-                <h2>Créer un projet associer a la société {{ societe.name }}</h2>
+                <h2>Créer un projet associer a la société {{ societe.nom }}</h2>
 
                 {{ form_errors(formProj) }}
                 {{ form_start(formProj, {
                     'action': path('app_projet_new', {'societe': societe.id}),
                     'method': 'POST'
                 }) }}
-                    {{ form_row(formProj.name) }}
-                    {{ form_row(formProj.startDate) }}
-                    {{ form_row(formProj.dateEnd) }}
+                    {{ form_row(formProj.nom) }}
+                    {{ form_row(formProj.dateDeb) }}
+                    {{ form_row(formProj.dateFin) }}
                     {{ form_row(formProj.description) }}
                     {{ form_row(formProj._token) }}
                     <button class="btn">Save</button>

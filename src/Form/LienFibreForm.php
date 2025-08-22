@@ -26,15 +26,15 @@ class LienFibreForm extends AbstractType
             ->add('lienActive')
             ->add('pointA', EntityType::class, [
                 'class' => Adresse::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nomSite',
             ])
             ->add('pointB', EntityType::class, [
                 'class' => Adresse::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nomSite',
             ])
             ->add('projet', EntityType::class, [
                 'class' => Projet::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom',
             ])
         ;
     }

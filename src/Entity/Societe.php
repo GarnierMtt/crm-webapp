@@ -19,7 +19,7 @@ class Societe
 
     #[ORM\Column(length: 255)]
     #[Gedmo\Versioned]
-    private ?string $name = null;
+    private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Gedmo\Versioned]
@@ -36,22 +36,22 @@ class Societe
     private Collection $contacts;
 
     /**
-     * @var Collection<int, RelationSocieteAdresse>
-     */
-    #[ORM\OneToMany(targetEntity: RelationSocieteAdresse::class, mappedBy: 'societe', orphanRemoval: true)]
-    private Collection $Adresses;
-
-    /**
      * @var Collection<int, RelationProjetSociete>
      */
     #[ORM\OneToMany(targetEntity: RelationProjetSociete::class, mappedBy: 'societe')]
     private Collection $Projets;
 
+    /**
+     * @var Collection<int, Adresse>
+     */
+    #[ORM\OneToMany(targetEntity: Adresse::class, mappedBy: 'societe')]
+    private Collection $adresses;
+
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
-        $this->Adresses = new ArrayCollection();
         $this->Projets = new ArrayCollection();
+        $this->adresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,14 +59,14 @@ class Societe
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
-    public function setName(string $name): static
+    public function setNom(string $nom): static
     {
-        $this->name = $name;
+        $this->nom = $nom;
 
         return $this;
     }
@@ -126,40 +126,6 @@ class Societe
     }
 
     /**
-     * @return Collection<int, RelationSocieteAdresse>
-     */
-    public function getAdresses(): Collection
-    {
-        return $this->Adresses->map(
-            fn($relation) => [
-                'relation' => $relation,
-                'adresse' => $relation->getAdresse(),
-        ]);
-    }
-
-    public function addAdress(RelationSocieteAdresse $adress): static
-    {
-        if (!$this->Adresses->contains($adress)) {
-            $this->Adresses->add($adress);
-            $adress->setSociete($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAdress(RelationSocieteAdresse $adress): static
-    {
-        if ($this->Adresses->removeElement($adress)) {
-            // set the owning side to null (unless already changed)
-            if ($adress->getSociete() === $this) {
-                $adress->setSociete(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, RelationProjetSociete>
      */
     public function getProjets(): Collection
@@ -197,6 +163,36 @@ class Societe
 
     public function __toString(): string
     {
-        return $this->name;
+        return $this->nom;
+    }
+
+    /**
+     * @return Collection<int, Adresse>
+     */
+    public function getAdresses(): Collection
+    {
+        return $this->adresses;
+    }
+
+    public function addAdress(Adresse $adress): static
+    {
+        if (!$this->adresses->contains($adress)) {
+            $this->adresses->add($adress);
+            $adress->setSociete($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdress(Adresse $adress): static
+    {
+        if ($this->adresses->removeElement($adress)) {
+            // set the owning side to null (unless already changed)
+            if ($adress->getSociete() === $this) {
+                $adress->setSociete(null);
+            }
+        }
+
+        return $this;
     }
 }

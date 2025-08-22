@@ -19,7 +19,7 @@ class Adresse
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $Pays = null;
+    private ?string $pays = null;
 
     #[ORM\Column(length: 255)]
     private ?string $commune = null;
@@ -36,15 +36,22 @@ class Adresse
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $complement = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $nomSite = null;
+
+    #[ORM\ManyToOne(inversedBy: 'adresses')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Societe $societe = null;
+
     /**
-     * @var Collection<int, RelationSocieteAdresse>
+     * @var Collection<int, RelationContactAdresse>
      */
-    #[ORM\OneToMany(targetEntity: RelationSocieteAdresse::class, mappedBy: 'adresse', orphanRemoval: true)]
-    private Collection $Societes;
+    #[ORM\OneToMany(targetEntity: RelationContactAdresse::class, mappedBy: 'adresse', orphanRemoval: true)]
+    private Collection $relationContactAdresses;
 
     public function __construct()
     {
-        $this->Societes = new ArrayCollection();
+        $this->relationContactAdresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -54,12 +61,12 @@ class Adresse
 
     public function getPays(): ?string
     {
-        return $this->Pays;
+        return $this->pays;
     }
 
-    public function setPays(string $Pays): static
+    public function setPays(string $pays): static
     {
-        $this->Pays = $Pays;
+        $this->pays = $pays;
 
         return $this;
     }
@@ -124,38 +131,64 @@ class Adresse
         return $this;
     }
 
-    /**
-     * @return Collection<int, RelationSocieteAdresse>
-     */
-    public function getSocietes(): Collection
+    public function getNomSite(): ?string
     {
-        return $this->Societes->map(
-            fn($relation) => [
-                'relation' => $relation,
-                'societe' => $relation->getSociete(),
-        ]);
+        return $this->nomSite;
     }
 
-    public function addSociete(RelationSocieteAdresse $societe): static
+    public function setNomSite(string $nomSite): static
     {
-        if (!$this->Societes->contains($societe)) {
-            $this->Societes->add($societe);
-            $societe->setAdresse($this);
+        $this->nomSite = $nomSite;
+
+        return $this;
+    }
+
+    public function getSociete(): ?Societe
+    {
+        return $this->societe;
+    }
+
+    public function setSociete(?Societe $societe): static
+    {
+        $this->societe = $societe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RelationContactAdresse>
+     */
+    public function getRelationContactAdresses(): Collection
+    {
+        return $this->relationContactAdresses;
+    }
+
+    public function addRelationContactAdress(RelationContactAdresse $relationContactAdress): static
+    {
+        if (!$this->relationContactAdresses->contains($relationContactAdress)) {
+            $this->relationContactAdresses->add($relationContactAdress);
+            $relationContactAdress->setAdresse($this);
         }
 
         return $this;
     }
 
-    public function removeSociete(RelationSocieteAdresse $societe): static
+    public function removeRelationContactAdress(RelationContactAdresse $relationContactAdress): static
     {
-        if ($this->Societes->removeElement($societe)) {
+        if ($this->relationContactAdresses->removeElement($relationContactAdress)) {
             // set the owning side to null (unless already changed)
-            if ($societe->getAdresse() === $this) {
-                $societe->setAdresse(null);
+            if ($relationContactAdress->getAdresse() === $this) {
+                $relationContactAdress->setAdresse(null);
             }
         }
 
         return $this;
     }
 
+
+
+    public function __toString(): string
+    {
+        return $this->nomSite;
+    }
 }

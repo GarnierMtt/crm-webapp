@@ -4,11 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Societe;
 use App\Form\SocieteForm;
-use App\Form\RelationSocieteAdresseForm;
+use App\Form\AdresseForm;
 use App\Form\ContactForm;
 use App\Form\ProjetForm;
 use App\Repository\SocieteRepository;
-use App\Entity\RelationSocieteAdresse;
+use App\Entity\Adresse;
 use App\Entity\Contact;
 use App\Entity\Projet;
 use Doctrine\ORM\EntityManagerInterface;
@@ -116,7 +116,7 @@ final class SocieteController extends AbstractController
         // END OBJEC HISTORY
 
         // RELATION STE ADRESSE
-            $formRelSteAdresse = $this->createForm(RelationSocieteAdresseForm::class, new RelationSocieteAdresse());
+            $formAdresse = $this->createForm(AdresseForm::class, new Adresse());
         // END RELATION STE ADRESSE
 
         // FORM CONTACT
@@ -133,7 +133,7 @@ final class SocieteController extends AbstractController
             'societe' => $societe,
             'logEntries' => $qb->getResult(),
             'formSte' => $formSte,
-            'formRelSteAdresse' => $formRelSteAdresse,
+            'formAdresse' => $formAdresse,
             'formContact' => $formContact,
             'formProj' => $formProj,
         ]);

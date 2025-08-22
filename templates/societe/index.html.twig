@@ -18,7 +18,7 @@
         <tbody>
                 {% for societe in societes %}
                     <tr onclick="window.location.href = '{{ path('app_societe_show', {'id': societe.id}) }}'">
-                        <td>{{ societe.name }}</td>
+                        <td>{{ societe.nom }}</td>
                         <td>{{ societe.telephoneStandard }}</td>
                         <td>{{ societe.siret }}</td>
                     </tr>

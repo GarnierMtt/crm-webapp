@@ -19,11 +19,11 @@ class RelationProjetSocieteForm extends AbstractType
             ->add('notes')
             ->add('projet', EntityType::class, [
                 'class' => Projet::class,
-                'choice_label' => 'name',
+                'choice_label' => 'nom',
             ])
             ->add('societe', EntityType::class, [
                 'class' => Societe::class,
-                'choice_label' => 'name',
+                'choice_label' => 'nom',
             ])
         ;
     }

@@ -45,9 +45,9 @@
 
     <div>
         <h3> Utilisée par : </h3>
-        {% for pair in adresse.societes %}
+        {#% for pair in adresse.societes %}
             <div>{{ pair.relation }} de {{ pair.societe }}</div>
-        {% endfor %}
+        {% endfor %#}
     </div>
 
     <a class="btn" href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>

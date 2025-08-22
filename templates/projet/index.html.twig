@@ -11,18 +11,18 @@
     <table class="table">
         <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>StartDate</th>
-                    <th>DateEnd</th>
+                    <th>nom</th>
+                    <th>Date début</th>
+                    <th>Date Fin</th>
                     <th>Id</th>
                 </tr>
         </thead>
         <tbody>
                 {% for projet in projets %}
                     <tr onclick="window.location.href = '{{ path('app_projet_show', {'id': projet.id}) }}'">
-                        <td>{{ projet.name }}</td>
-                        <td>{{ projet.startDate ? projet.startDate|date('Y-m-d') : '' }}</td>
-                        <td>{{ projet.dateEnd ? projet.dateEnd|date('Y-m-d') : '' }}</td>
+                        <td>{{ projet.nom }}</td>
+                        <td>{{ projet.dateDeb ? projet.dateDeb|date('Y-m-d') : '' }}</td>
+                        <td>{{ projet.dateFin ? projet.dateFin|date('Y-m-d') : '' }}</td>
                         <td>{{ projet.id }}</td>
                     </tr>
                 {% else %}

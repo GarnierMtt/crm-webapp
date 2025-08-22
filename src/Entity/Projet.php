@@ -21,15 +21,15 @@ class Projet
 
     #[ORM\Column(length: 255)]
     #[Gedmo\Versioned]
-    private ?string $name = null;
+    private ?string $nom = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Gedmo\Versioned]
-    private ?\DateTime $startDate = null;
+    private ?\DateTime $dateDeb = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Gedmo\Versioned]
-    private ?\DateTime $dateEnd = null;
+    private ?\DateTime $dateFin = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Gedmo\Versioned]
@@ -95,38 +95,38 @@ class Projet
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
-    public function setName(string $name): static
+    public function setNom(string $nom): static
     {
-        $this->name = $name;
+        $this->nom = $nom;
 
         return $this;
     }
 
-    public function getStartDate(): ?\DateTime
+    public function getDateDeb(): ?\DateTime
     {
-        return $this->startDate;
+        return $this->dateDeb;
     }
 
-    public function setStartDate(?\DateTime $startDate): static
+    public function setDateDeb(?\DateTime $dateDeb): static
     {
-        $this->startDate = $startDate;
+        $this->dateDeb = $dateDeb;
 
         return $this;
     }
 
-    public function getDateEnd(): ?\DateTime
+    public function getDateFin(): ?\DateTime
     {
-        return $this->dateEnd;
+        return $this->dateFin;
     }
 
-    public function setDateEnd(?\DateTime $dateEnd): static
+    public function setDateFin(?\DateTime $dateFin): static
     {
-        $this->dateEnd = $dateEnd;
+        $this->dateFin = $dateFin;
 
         return $this;
     }
@@ -290,7 +290,7 @@ class Projet
 
     public function __toString(): string
     {
-        return $this->name;
+        return $this->nom;
     }
 
     public function getDescription(): ?string

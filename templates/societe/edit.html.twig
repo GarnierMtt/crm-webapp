@@ -5,7 +5,7 @@
 
 {% block path %}
     <a href="{{ path('app_societe_index') }}">Sociétés/</a>
-    <a href="{{ path('app_societe_show', {'id': societe.id}) }}">{{ societe.name }}/</a>
+    <a href="{{ path('app_societe_show', {'id': societe.id}) }}">{{ societe.nom }}/</a>
     <a href="{{ path('app_societe_edit', {'id': societe.id}) }}">Edit</a>
 {% endblock %}
 {% block content %}

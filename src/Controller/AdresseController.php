@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Adresse;
+use App\Entity\Societe;
 use App\Form\AdresseForm;
 use App\Repository\AdresseRepository;
+use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,24 +43,36 @@ final class AdresseController extends AbstractController
 
 
     #[Route('/new', name: 'app_adresse_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, SocieteRepository $societeRepository, EntityManagerInterface $entityManager): Response
     {
         $adresse = new Adresse();
-        $form = $this->createForm(AdresseForm::class, $adresse);
-        $form->handleRequest($request);
+        $formAdresse = $this->createForm(AdresseForm::class, $adresse);
+        $formAdresse->handleRequest($request);
+        $path = $this->redirectToRoute('app_adresse_index', [], Response::HTTP_SEE_OTHER);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+
+        // Set societe if provided
+        $societeId = $request->query->get('societe');
+        if ($societeId) {
+            $path = $this->redirectToRoute('app_societe_show', ['id' => $societeId], Response::HTTP_SEE_OTHER);
+            $societe = $societeRepository->find($societeId);
+            if ($societe) {
+                $adresse->setSociete($societe);
+            }
+        }
+
+        if ($formAdresse->isSubmitted() && $formAdresse->isValid()) {
             $entityManager->persist($adresse);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_adresse_index', [], Response::HTTP_SEE_OTHER);
+            return $path;
         }
 
 
 
         return $this->render('adresse/new.html.twig', [
             'adresse' => $adresse,
-            'form' => $form,
+            'formAdresse' => $formAdresse,
         ]);
     }
 
@@ -90,10 +104,10 @@ final class AdresseController extends AbstractController
     #[Route('/{id}/edit', name: 'app_adresse_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Adresse $adresse, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(AdresseForm::class, $adresse);
-        $form->handleRequest($request);
+        $formAdresse = $this->createForm(AdresseForm::class, $adresse);
+        $formAdresse->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($formAdresse->isSubmitted() && $formAdresse->isValid()) {
             $entityManager->flush();
 
             return $this->redirectToRoute('app_adresse_index', [], Response::HTTP_SEE_OTHER);
@@ -103,7 +117,7 @@ final class AdresseController extends AbstractController
 
         return $this->render('adresse/edit.html.twig', [
             'adresse' => $adresse,
-            'form' => $form,
+            'formAdresse' => $formAdresse,
         ]);
     }
 

@@ -12,10 +12,10 @@ class ProjetForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('nom')
             ->add('description')
-            ->add('startDate')
-            ->add('dateEnd')
+            ->add('dateDeb')
+            ->add('dateFin')
         ;
     }
 

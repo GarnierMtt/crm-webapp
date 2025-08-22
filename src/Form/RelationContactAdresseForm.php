@@ -2,28 +2,28 @@
 
 namespace App\Form;
 
-use App\Entity\Societe;
-use App\Entity\RelationSocieteAdresse;
+use App\Entity\RelationContactAdresse;
+use App\Entity\Contact;
 use App\Entity\Adresse;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class RelationSocieteAdresseForm extends AbstractType
+class RelationContactAdresseForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nomsite')
-            ->add('description')
-            ->add('societe', EntityType::class, [
-                'class' => Societe::class,
-                'choice_label' => 'name',
+            ->add('role')
+            ->add('notes')
+            ->add('contact', EntityType::class, [
+                'class' => Contact::class,
+                'choice_label' => 'nom',
             ])
             ->add('adresse', EntityType::class, [
                 'class' => Adresse::class,
-                'choice_label' => 'nomVoie',
+                'choice_label' => 'nomSite',
             ])
         ;
     }
@@ -31,7 +31,7 @@ class RelationSocieteAdresseForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => RelationSocieteAdresse::class,
+            'data_class' => RelationContactAdresse::class,
         ]);
     }
 }
