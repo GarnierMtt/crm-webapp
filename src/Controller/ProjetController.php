@@ -58,9 +58,16 @@ final class ProjetController extends AbstractController
         $form = $this->createForm(ProjetForm::class, $projet);
         $form->handleRequest($request);
 
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($projet);
             $entityManager->flush();
+
+            // if societe is provided, create association
+            $societeId = $request->query->get('societe');
+            if ($societeId) {
+                return $this->redirectToRoute('app_relation_projet_societe_new', ['societe' => $societeId, 'projet' => $projet->getId()], Response::HTTP_SEE_OTHER);
+            }
 
             return $this->redirectToRoute('app_projet_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -127,23 +134,6 @@ final class ProjetController extends AbstractController
         */
 
         // OBJECT HISTORY
-            //associated projects seletion
-                $qb = $em->createQuery(
-                    "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
-                        WHERE l.objectClass = 'App\Entity\Projet'
-                ");
-
-                $projetIds[0] = $id;
-                foreach($qb->getResult() as $proj){
-                    if(isset($proj["data"]["root"]["id"])){
-                        if($proj["data"]["root"]["id"] == $id){
-                            $projetIds[] = $proj["objectId"];
-                        }
-                    }
-                }
-                $projetIds = array_unique($projetIds);
-
-
             //associated companies selection
                 $qb = $em->createQuery(
                     "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
@@ -166,20 +156,19 @@ final class ProjetController extends AbstractController
                     "SELECT l FROM Gedmo\Loggable\Entity\LogEntry l 
                         WHERE 
                             ( l.objectClass = 'App\Entity\Projet'
-                                AND l.objectId in (:projetIds)) 
+                                AND l.objectId = (:projId)) 
                             OR ( l.objectClass = 'App\Entity\RelationProjetSociete'
                                 AND l.objectId in (:steIds))
                         ORDER BY l.loggedAt DESC
                 ");
                 $qb->setParameters([
-                    'projetIds' => $projetIds,
+                    'projId' => $id,
                     'steIds' => $steIds,
                 ]);
         // END OBJEC HISTORY
 
         // RELATION PROJ STE
-            $relationProjetSociete = new RelationProjetSociete();
-            $formRelProjSte = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
+            $formRelProjSte = $this->createForm(RelationProjetSocieteForm::class, new RelationProjetSociete());
         // END RELATION PROJ STE
 
 
@@ -188,7 +177,6 @@ final class ProjetController extends AbstractController
             'projet' => $projet,
             //'htmlTree' => $htmlTree,
             'logEntries' => $qb->getResult(),
-            'relation_projet_societe' => $relationProjetSociete,
             'formRelProjSte' => $formRelProjSte,
             'formProj' => $formProj,
         ]);
@@ -212,7 +200,7 @@ final class ProjetController extends AbstractController
         }
 
 
-        
+
         return $this->redirectToRoute('app_projet_show', ['id' => $projet->getId()], Response::HTTP_SEE_OTHER);
     }
 

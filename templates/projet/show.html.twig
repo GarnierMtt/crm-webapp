@@ -35,9 +35,10 @@
 
                 <div class="draggableWindow visibleWindow" id="editProj"> <!-- Edit PROJ -->
                     <div class="window-top">
-                        <div>Clique ici pour déplacer</div>
-                        <a class="btn deleate" onclick="editProj(this)">Close</a>
+                        <div>&#10021;</div>
+                        <a class="btn deleate" onclick="editProj(this)">fermer popup</a>
                     </div>
+                    {{ include('projet/_delete_form.html.twig') }}
                     <h2>Editer le projet</h2>
 
                     {{ form_errors(formProj) }}
@@ -52,7 +53,6 @@
                         {{ form_row(formProj._token) }}
                         <button class="btn">Save</button>
                     {{ form_end(formProj, {render_rest: false}) }}
-                    {{ include('projet/_delete_form.html.twig') }}
                 </div>
 
             </div>
@@ -134,7 +134,7 @@
 
                     <div class="draggableWindow visibleWindow" id="menueSte"> <!-- Menue STE -->
                         <div class="window-top">
-                            <div>Clique ici pour déplacer</div>
+                            <div>&#10021;</div>
                             <a class="btn deleate" onclick="menueSte(this)">Close</a>
                         </div>
                         <h2>Associer une sociétée au projet {{ projet.name }}</h2>

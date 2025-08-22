@@ -1,38 +1,340 @@
 {% extends 'base.html.twig' %}
 
 {% block title %} - Société{% endblock %}
-
+{% block head %}
+    <link rel="stylesheet" href="{{ asset('styles/societe.css') }}">
+    
+    <link rel="stylesheet" href="{{ asset('styles/draggableWindow.css') }}">
+    <script type="text/javascript" src="{{ asset('scripts/draggableWindow.js') }}"></script>
+{% endblock %}
 
 {% block path %}
     <a href="{{ path('app_societe_index') }}">Sociétés/</a>
     <a href="{{ path('app_societe_show', {'id': societe.id}) }}">{{ societe.name }}</a>
 {% endblock %}
 {% block content %}
-    <h2>Téléphone standard: {{ societe.telephoneStandard }} </h2>
-    <h2>SIRET: {{ societe.siret }}</h2>
+    <div class="grid">
+
+        <div class="page-leftbar"> <!-- BARE DE GAUCHE -->
+            <div class="item">
+
+                <div style="text-align-last: justify;">
+                    <span>Informations:</span>
+                    <a class="btn" onClick="editSte(this)">Edit</a>
+                </div>
+                <div>
+                    <span>Téléphone standard: {{ societe.telephoneStandard }}</span>
+                </div>
+                <div>
+                    <span>SIRET: {{ societe.siret }}</span>
+                </div>
+                
+                
+                <table style="margin-top: 10px;" class="table objTable"> <!-- liste adresses -->
+                    <tr>
+                        <th colspan="2">
+                            <span>Sites</span>
+                            <a class="btn" onclick="menueAdresse(this)">[+]</a>
+                        </th>
+                    </tr>
+                    {% for pair in societe.adresses %}
+                        <tr class="collapsible" onclick="colaps(this)">
+                            <td>{{ pair.relation }}</td>
+                        </tr>
+                        <tr class="collContent">
+                            <td>
+                                <div>
+                                    <div style="text-align: right;">
+                                        <a class="btn" href="{{ path('app_relation_societe_adresse_edit', {'id': pair.relation.id, 'msg': 'Modifier la relation adresse sociétée entre ' ~ pair.adresse.nomVoie ~ ' et ' ~ societe.name}) }}" target="_blank">edit</a>
+                                    </div>
+                                    
+                                    Description :
+                                    <ul>
+                                        {{ pair.relation.description|nl2br }}
+                                    </ul>
+
+                                    Adresse :
+                                    <ul>
+                                        {{ pair.adresse.numeroVoie }} {{ pair.adresse.nomVoie }}<br>
+                                        {{ pair.adresse.codePostal }} {{ pair.adresse.commune }}, {{ pair.adresse.Pays }}<br>
+                                        Complément :
+                                        <ul>
+                                            {{ pair.adresse.complement|nl2br }}
+                                        </ul>
+                                    </ul>
+
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">aucune adresse associée</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                
+                <table style="margin-top: 10px;" class="table objTable"> <!-- liste contacts -->
+                    <tr>
+                        <th colspan="2">
+                            <span>Contacts</span>
+                            <a class="btn" onclick="nvxContact(this)">[+]</a>
+                        </th>
+                    </tr>
+                    {% for contact in societe.contacts %}
+                        <tr class="collapsible" onclick="colaps(this)">
+                            <td>{{ contact }}</td>
+                        </tr>
+                        <tr class="collContent">
+                            <td>
+                                <div>
+                                    <div style="text-align: right;">
+                                        <a class="btn" href="{{ path('app_contact_edit', {'id': contact.id, 'msg': 'Modifier le contact ' ~ contact}) }}" target="_blank">edit</a>
+                                    </div>
+                                    
+                                    Mél :
+                                    <ul>
+                                        <li>{{ contact.mel }}</li>
+                                    </ul>
+                                    Téléphone :
+                                    <ul>
+                                        <li>{{ contact.telephone }}</li>
+                                    </ul>
+                                    Post :
+                                    <ul>
+                                        <li>{{ contact.post }}</li>
+                                    </ul>
+                                
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td>aucun contact associé</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                
+                <table style="margin-top: 10px;" class="table objTable"> <!-- liste Projets -->
+                    <tr>
+                        <th colspan="2">
+                            <span>Projets</span>
+                            <a class="btn" onclick="nvxProjet(this)">[+]</a>
+                        </th>
+                    </tr>
+                    {% for pair in societe.projets %}
+                        <tr class="collapsible" onclick="colaps(this)">
+                            <td>{{ pair.relation }}</td>
+                            <td>{{ pair.projet }}</td>
+                        </tr>
+                        <tr class="collContent">
+                            <td colspan="2">
+                                <div>
+                                    <div style="text-align: right;">
+                                        <a class="btn" href="{{ path('app_projet_show', {'id': pair.projet.id}) }}">ouvrir projet</a>
+                                    </div>
+                                    Date de début/fin :
+                                    <ul>
+                                        <li>{{ pair.projet.startDate ? pair.projet.startDate|date('Y/m/d') : '' }}</li>
+                                        <li>{{ pair.projet.dateEnd ? pair.projet.dateEnd|date('Y/m/d') : '' }}</li>
+                                    </ul>
+                                    Déscription :
+                                    <ul>
+                                        <li>{{ pair.projet.description|nl2br }}</li>
+                                    </ul>
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">aucun projet associé</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+
+            
+            <div class="draggableWindow visibleWindow" id="editSte"> <!-- popup Edit STE -->
+                <div class="window-top">
+                    <div>&#10021;</div>
+                    <a class="btn deleate" onclick="editSte(this)">Fermer</a>
+                </div>
+                {{ include('societe/_delete_form.html.twig') }}
+                <h2>Modifier les informations de la société</h2>
+
+                {{ form_errors(formSte) }}
+                {{ form_start(formSte, {
+                    'action': path('app_societe_edit', {'id': societe.id}),
+                    'method': 'POST'
+                }) }}
+                    {{ form_row(formSte.name) }}
+                    {{ form_row(formSte.telephoneStandard) }}
+                    {{ form_row(formSte.siret) }}
+                    {{ form_row(formSte._token) }}
+                    <button class="btn">Save</button>
+                {{ form_end(formSte, {render_rest: false}) }}
+            </div>
+
+            
+            <div class="draggableWindow visibleWindow" id="menueAdresse"> <!-- popup Menue STE ADRESSE -->
+                <div class="window-top">
+                    <div>&#10021;</div>
+                    <a class="btn deleate" onclick="menueAdresse(this)">Fermer</a>
+                </div>
+                <h2>Associer une adresse a la societe {{ societe.name }}</h2>
+
+                {{ form_errors(formRelSteAdresse) }}
+                {{ form_start(formRelSteAdresse, {
+                    'action': path('app_relation_societe_adresse_new', {'societe': societe.id}),
+                    'method': 'POST'
+                }) }}
+                    {{ form_row(formRelSteAdresse.adresse, {placeholder: "choisire une ste"} ) }}
+                    {{ form_row(formRelSteAdresse.nomsite) }}
+                    {{ form_row(formRelSteAdresse.description) }}
+                    {{ form_row(formRelSteAdresse._token) }}
+                    <button class="btn">Save</button>
+                {{ form_end(formRelSteAdresse, {render_rest: false}) }}
+                
+            </div>
+
+
+            <div class="draggableWindow visibleWindow" id="nvxContact"> <!-- popup NVX contact -->
+                <div class="window-top">
+                    <div>&#10021;</div>
+                    <a class="btn deleate" onclick="nvxContact(this)">Fermer</a>
+                </div>
+                <h2>Créer un contact associer a la société {{ societe.name }}</h2>
+
+                {{ form_errors(formContact) }}
+                {{ form_start(formContact, {
+                    'action': path('app_contact_new', {'societe': societe.id}),
+                    'method': 'POST'
+                }) }}
+                    {{ form_row(formContact.post) }}
+                    {{ form_row(formContact.nom) }}
+                    {{ form_row(formContact.prenom) }}
+                    {{ form_row(formContact.telephone) }}
+                    {{ form_row(formContact.mel) }}
+                    {{ form_row(formContact._token) }}
+                    <button class="btn">Save</button>
+                {{ form_end(formContact, {render_rest: false}) }}
+                
+            </div>
+
+
+            <div class="draggableWindow visibleWindow" id="nvxProjet"> <!-- popup NVX projet -->
+                <div class="window-top">
+                    <div>&#10021;</div>
+                    <a class="btn deleate" onclick="nvxProjet(this)">Fermer</a>
+                </div>
+                <h2>Créer un projet associer a la société {{ societe.name }}</h2>
+
+                {{ form_errors(formProj) }}
+                {{ form_start(formProj, {
+                    'action': path('app_projet_new', {'societe': societe.id}),
+                    'method': 'POST'
+                }) }}
+                    {{ form_row(formProj.name) }}
+                    {{ form_row(formProj.startDate) }}
+                    {{ form_row(formProj.dateEnd) }}
+                    {{ form_row(formProj.description) }}
+                    {{ form_row(formProj._token) }}
+                    <button class="btn">Save</button>
+                {{ form_end(formProj, {render_rest: false}) }}
+                
+            </div>
+        </div>
+
+
+        <div class="page-header"> <!-- ENTÊTE -->
+            <div class="item">
+
+            </div>
+        </div>
+
+
+
+        <div class="page-main"> <!-- CORPS -->
+            <div class="item">
+
+              
+                <div> <!-- historique -->
+                    <div style="width: 100%" class="btn" onclick="unwrap(this)">Historique</div>
+                    <div class="wrapper">
+                        <div class="inner">
+                            {% include 'history/logsTable.twig' %}
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
     
-    <div>
-        <h3> Contacts </h3>
-        {% for contact in societe.contacts %}
-            <div>{{ contact }}</div>
-        {% endfor %}
-    </div>
+    <script>
+        makeDraggable(document.querySelector('#editSte'));
+        makeDraggable(document.querySelector('#menueAdresse'));
+        makeDraggable(document.querySelector('#nvxContact'));
+        makeDraggable(document.querySelector('#nvxProjet'));
 
-    <div>
-        <h3> Projets </h3>
-        {% for pair in societe.projets %}
-            <div>{{ pair.relation }} de {{ pair.projet }}</div>
-        {% endfor %}
-    </div>
 
-    <div>
-        <h3> Adresses </h3>
-        {% for pair in societe.adresses %}
-            <div>{{ pair.relation }}</div>
-        {% endfor %}
-    </div>
 
-    <a class="btn" href="{{ path('app_societe_edit', {'id': societe.id}) }}">edit</a>
-    {{ include('societe/_delete_form.html.twig') }}
-    
+        function colaps(coll) {
+            var content = coll.nextElementSibling;
+            if (content.style.display === "table-row") {
+                coll.classList.toggle("active");
+                content.style.display = "none";
+            } else {
+                var allColl = document.getElementsByClassName("collapsible");
+                for (i = 0; i < allColl.length; i++) {
+                    allColl[i].classList.remove("active");
+                    allColl[i].nextElementSibling.style.display = "none";
+                }
+                coll.classList.toggle("active");
+                content.style.display = "table-row";
+            }   
+        }
+
+        function editSte(btn){
+            var window = document.getElementById("editSte");
+            window.classList.toggle("visibleWindow");
+            btnRect = btn.getBoundingClientRect();
+            window.style.top = btnRect.top + "px";
+            window.style.left = btnRect.right + "px";
+        }
+
+
+        function menueAdresse(btn){
+            var window = document.getElementById("menueAdresse");
+            window.classList.toggle("visibleWindow");
+            btnRect = btn.getBoundingClientRect();
+            window.style.top = btnRect.top + "px";
+            window.style.left = btnRect.right + "px";
+        }
+
+
+        function nvxContact(btn){
+            var window = document.getElementById("nvxContact");
+            window.classList.toggle("visibleWindow");
+            btnRect = btn.getBoundingClientRect();
+            window.style.top = btnRect.top + "px";
+            window.style.left = btnRect.right + "px";
+        }
+
+
+        function nvxProjet(btn){
+            var window = document.getElementById("nvxProjet");
+            window.classList.toggle("visibleWindow");
+            btnRect = btn.getBoundingClientRect();
+            window.style.top = btnRect.top + "px";
+            window.style.left = btnRect.right + "px";
+        }
+
+
+    </script>
 {% endblock %}

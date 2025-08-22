@@ -51,49 +51,51 @@
     <body>
         <div id="main">
 
-            <div id="banner"> <!-- BANDEAU -->
-                {% if is_granted('ROLE_USER') %}
+            {% block navMenue %}
+                <div id="banner"> <!-- BANDEAU -->
+                    {% if is_granted('ROLE_USER') %}
 
-                    <div>
-                        <span class="navigator">
-                            <a style="font-weight: normal;" onclick="triggerMenue()">&#9776;</a> <!-- bouton du menue navigation -->
-                            {% block path %}{% endblock %}
-                        </span>
-                    </div>
-                    
+                        <div>
+                            <span class="navigator">
+                                <a style="font-weight: normal;" onclick="triggerMenue()">&#9776;</a> <!-- bouton du menue navigation -->
+                                {% block path %}{% endblock %}
+                            </span>
+                        </div>
+                        
 
-                    <div class="dropdown"> <!-- menue utilisateur -->
-                        <div class="currentUser">
-                            <img src="{{ asset('img/h.png') }}" style="height:100%">
-                            <span>{{ app.user.name }}</span>
+                        <div class="dropdown"> <!-- menue utilisateur -->
+                            <div class="currentUser">
+                                <img src="{{ asset('img/h.png') }}" style="height:100%">
+                                <span>{{ app.user.name }}</span>
+                            </div>
+
+                            <div class="dropdown-content"> <!-- options -->
+                                <a href="{{ path('app_user_show', {'id': app.user.id}) }}">Modifier profile</a>
+                                <a href="#">Link 2</a>
+                                <a href="#">Link 3</a>
+                            </div>
                         </div>
 
-                        <div class="dropdown-content"> <!-- options -->
-                            <a href="{{ path('app_user_show', {'id': app.user.id}) }}">Modifier profile</a>
-                            <a href="#">Link 2</a>
-                            <a href="#">Link 3</a>
-                        </div>
-                    </div>
+                    {% else %}
+                        <img src="{{ asset('img/h.png') }}" style="height:100%">
+                    {% endif %}
 
-                {% else %}
-                    <img src="{{ asset('img/h.png') }}" style="height:100%">
-                {% endif %}
-
-            </div>
-            
-            
-            {% if is_granted('ROLE_USER') %} <!-- MENUE NAVIGATION -->
-                <div id="sideMenue">
-                    <a href="javascript:void(0)" class="closebtn" onclick="closeMenue()">&times;</a>
-                        <a href="{{ path('app_home_index') }}">Tableau de bord</a>
-                        <a href="{{ path('app_projet_index') }}">Projets</a>
-                        <a href="{{ path('app_societe_index') }}">Sociétés</a>
-                        <a href="{{ path('app_adresse_index') }}">Adresses</a>
-                        <a href="{{ path('app_contact_index') }}">Contacts</a>
-                        <a href="{{ path('app_history_index') }}">Historique</a>
                 </div>
+                
+                
+                {% if is_granted('ROLE_USER') %} <!-- MENUE NAVIGATION -->
+                    <div id="sideMenue">
+                        <a href="javascript:void(0)" class="closebtn" onclick="closeMenue()">&times;</a>
+                            <a href="{{ path('app_home_index') }}">Tableau de bord</a>
+                            <a href="{{ path('app_projet_index') }}">Projets</a>
+                            <a href="{{ path('app_societe_index') }}">Sociétés</a>
+                            <a href="{{ path('app_adresse_index') }}">Adresses</a>
+                            <a href="{{ path('app_contact_index') }}">Contacts</a>
+                            <a href="{{ path('app_history_index') }}">Historique</a>
+                    </div>
 
-            {% endif %}
+                {% endif %}
+            {% endblock %}
 
             <!-- ZONE CONTENUS -->
             <div class="content">{% block content %}{% endblock %}</div>

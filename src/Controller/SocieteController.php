@@ -4,7 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Societe;
 use App\Form\SocieteForm;
+use App\Form\RelationSocieteAdresseForm;
+use App\Form\ContactForm;
+use App\Form\ProjetForm;
 use App\Repository\SocieteRepository;
+use App\Entity\RelationSocieteAdresse;
+use App\Entity\Contact;
+use App\Entity\Projet;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +57,7 @@ final class SocieteController extends AbstractController
             $entityManager->persist($societe);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_societe_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_societe_show', ['id' => $societe->getId()], Response::HTTP_SEE_OTHER);
         }
 
 
@@ -68,15 +74,68 @@ final class SocieteController extends AbstractController
 
 
 
-
     #[Route('/{id}', name: 'app_societe_show', methods: ['GET'])]
-    public function show(Societe $societe): Response
+    public function show(Societe $societe, EntityManagerInterface $em): Response
     {
+        $id = $societe->getId() ?? $societe;
+        $formSte = $this->createForm(SocieteForm::class, $societe);
+       
+
+        // OBJECT HISTORY
+            //associated adresses selection
+                $qb = $em->createQuery(
+                    "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
+                        WHERE l.objectClass = 'App\Entity\RelationSocieteAdresse'
+                ");
+
+                $adrIds = [];
+                foreach($qb->getResult() as $adrSte){
+                    if(isset($adrSte["data"]["projet"]["id"])){
+                        if($adrSte["data"]["projet"]["id"] == $id){
+                            $adrIds[] = $adrSte["objectId"];
+                        }
+                    }
+                }
+                $adrIds = array_unique($adrIds);
+
+
+            //return query
+                $qb = $em->createQuery(
+                    "SELECT l FROM Gedmo\Loggable\Entity\LogEntry l 
+                        WHERE 
+                            ( l.objectClass = 'App\Entity\Societe'
+                                AND l.objectId = (:steId)) 
+                            OR ( l.objectClass = 'App\Entity\RelationSocieteAdresse'
+                                AND l.objectId in (:adrIds))
+                        ORDER BY l.loggedAt DESC
+                ");
+                $qb->setParameters([
+                    'steId' => $id,
+                    'adrIds' => $adrIds,
+                ]);
+        // END OBJEC HISTORY
+
+        // RELATION STE ADRESSE
+            $formRelSteAdresse = $this->createForm(RelationSocieteAdresseForm::class, new RelationSocieteAdresse());
+        // END RELATION STE ADRESSE
+
+        // FORM CONTACT
+            $formContact = $this->createForm(ContactForm::class, new Contact() );
+        // END FORM CONTACT
+
+        // FORM PROJ
+            $formProj = $this->createForm(ProjetForm::class, new Projet() );
+        // END FORM PROJ
 
 
 
         return $this->render('societe/show.html.twig', [
             'societe' => $societe,
+            'logEntries' => $qb->getResult(),
+            'formSte' => $formSte,
+            'formRelSteAdresse' => $formRelSteAdresse,
+            'formContact' => $formContact,
+            'formProj' => $formProj,
         ]);
     }
 
@@ -95,16 +154,11 @@ final class SocieteController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_societe_index', [], Response::HTTP_SEE_OTHER);
         }
 
 
 
-        return $this->render('societe/edit.html.twig', [
-            'societe' => $societe,
-            'form' => $form,
-        ]);
+        return $this->redirectToRoute('app_societe_show', ['id' => $societe->getId()], Response::HTTP_SEE_OTHER);
     }
 
 

@@ -6,6 +6,7 @@ use App\Entity\RelationProjetSociete;
 use App\Form\RelationProjetSocieteForm;
 use App\Repository\RelationProjetSocieteRepository;
 use App\Repository\ProjetRepository;
+use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,35 +25,40 @@ final class RelationProjetSocieteController extends AbstractController
     }
 
     #[Route('/new', name: 'app_relation_projet_societe_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ProjetRepository $projetRepository, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, ProjetRepository $projetRepository, SocieteRepository $societeRepository, EntityManagerInterface $entityManager): Response
     {
         $relationProjetSociete = new RelationProjetSociete();
         $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
         $form->handleRequest($request);
-        $path = $this->redirectToRoute('app_relation_projet_societe_index', [], Response::HTTP_SEE_OTHER);
 
 
         // Set projet if provided
         $projetId = $request->query->get('projet');
         if ($projetId) {
-            $path = $this->redirectToRoute('app_projet_show', ['id' => $projetId], Response::HTTP_SEE_OTHER);
             $projet = $projetRepository->find($projetId);
             if ($projet) {
                 $relationProjetSociete->setProjet($projet);
+
+                // Set societe if provided
+                $societeId = $request->query->get('societe');
+                if ($societeId) {
+                    $societe = $societeRepository->find($societeId);
+                    if ($societe) {
+                        $relationProjetSociete->setSociete($societe);
+                        $relationProjetSociete->setRole('Client');
+                    }
+                }
             }
         }
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if (($form->isSubmitted() && $form->isValid()) || $societe) {
             $entityManager->persist($relationProjetSociete);
             $entityManager->flush();
 
-            return $path;
+            return $this->redirectToRoute('app_projet_show', ['id' => $projetId], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('relation_projet_societe/new.html.twig', [
-            'relation_projet_societe' => $relationProjetSociete,
-            'formRelProjSte' => $form,
-        ]);
+        throw new \Exception('Something went wrong!');
     }
 
     #[Route('/{id}', name: 'app_relation_projet_societe_show', methods: ['GET'])]
@@ -68,24 +74,16 @@ final class RelationProjetSocieteController extends AbstractController
     {
         $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
         $form->handleRequest($request);
-        $path = $this->redirectToRoute('app_relation_projet_societe_index', [], Response::HTTP_SEE_OTHER);
 
+        // Set msg if provided
         $msg = $request->query->get('msg');
-
-        // Set projet if provided
-        $projetId = $request->query->get('projet');
-        if ($projetId) {
-            $path = $this->redirectToRoute('app_projet_show', ['id' => $projetId], Response::HTTP_SEE_OTHER);
-            $projet = $projetRepository->find($projetId);
-            if ($projet) {
-                $relationProjetSociete->setProjet($projet);
-            }
-        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $path;
+            echo '<script> window.close(); </script>';
+
+            return $this->redirectToRoute('#', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('relation_projet_societe/edit.html.twig', [
@@ -103,6 +101,8 @@ final class RelationProjetSocieteController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_relation_projet_societe_index', [], Response::HTTP_SEE_OTHER);
+        echo '<script> window.close(); </script>';
+            
+        return $this->redirectToRoute('#', [], Response::HTTP_SEE_OTHER);
     }
 }
