@@ -5,9 +5,11 @@
 
         <title>- CRM{% block title %}{% endblock %}</title>
 
-        <link rel="icon" href="{{ asset('img/hFull.png') }}">
-        {% block head %}{% endblock %}
         {{ importmap('app') }}
+        <link rel="icon" href="{{ asset('img/H.png') }}">
+        <script src="{{ asset('scripts/jquery-3.7.1.min.js') }}"></script>
+        <script src="{{ asset('scripts/uiScripts.js') }}"></script>
+        {% block head %}{% endblock %}
         <script>
             {% if is_granted('ROLE_USER') %}
                 var menueFlag = 0;
@@ -39,6 +41,23 @@
                 var content = coll.nextElementSibling;
                 content.classList.toggle("is-open");
             }
+
+            // colapsibl element (objTable)
+            function colaps(coll) {
+                var content = coll.nextElementSibling;
+                if (content.style.display === "table-row") {
+                    coll.classList.toggle("active");
+                    content.style.display = "none";
+                } else {
+                    var allColl = document.getElementsByClassName("collapsible");
+                    for (i = 0; i < allColl.length; i++) {
+                        allColl[i].classList.remove("active");
+                        allColl[i].nextElementSibling.style.display = "none";
+                    }
+                    coll.classList.toggle("active");
+                    content.style.display = "table-row";
+                }   
+            }
         </script>
 
     </head>
@@ -65,7 +84,7 @@
 
                         <div class="dropdown"> <!-- menue utilisateur -->
                             <div class="currentUser">
-                                <img src="{{ asset('img/h.png') }}" style="height:100%">
+                                <img src="{{ asset('img/H.png') }}" style="height:100%">
                                 <span>{{ app.user.name }}</span>
                             </div>
 
@@ -77,7 +96,7 @@
                         </div>
 
                     {% else %}
-                        <img src="{{ asset('img/h.png') }}" style="height:100%">
+                        <img src="{{ asset('img/H.png') }}" style="height:100%">
                     {% endif %}
 
                 </div>

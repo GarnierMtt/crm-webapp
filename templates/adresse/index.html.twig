@@ -10,25 +10,20 @@
     <table class="table">
         <thead>
                 <tr>
+                    <th>Adresse</th>
+                    <th>Société</th>
                     <th>Nom du Site</th>
-                    <th>Pays</th>
-                    <th>Commune</th>
-                    <th>Code Postal</th>
-                    <th>Nom de la voie</th>
-                    <th>Numéro de la voie</th>
-                    <th>Complément</th>
                 </tr>
         </thead>
         <tbody>
                 {% for adresse in adresses %}
                     <tr onclick="window.location.href = '{{ path('app_adresse_show', {'id': adresse.id}) }}'">
+                        <td>
+                            {{ adresse.numeroVoie }} {{ adresse.nomVoie }},<br>
+                            {{ adresse.codePostal }} {{ adresse.commune }}, {{ adresse.pays }}
+                        </td>
+                        <td>{{ adresse.societe }}</td>
                         <td>{{ adresse.nomSite }}</td>
-                        <td>{{ adresse.pays }}</td>
-                        <td>{{ adresse.commune }}</td>
-                        <td>{{ adresse.codePostal }}</td>
-                        <td>{{ adresse.nomVoie }}</td>
-                        <td>{{ adresse.numeroVoie }}</td>
-                        <td>{{ adresse.complement }}</td>
                     </tr>
                 {% else %}
                     <tr>

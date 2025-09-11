@@ -1,8 +1,7 @@
 .btn{
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #c7c7c7; 
+    background-color: var(--accentColour); 
     border: none;
-    color: black;
+    color: var(--fontColour);
     padding: 2px 5px;
     text-align: center;
     text-decoration: none;
@@ -11,24 +10,24 @@
     cursor: pointer;
     box-sizing: border-box;
 }.btn:hover {
-    background-color: #a4a4a4; 
+    background-color: var(--highlightColour);
 }
 
 
 .btn.create {
-    background-color: #04AA6D; 
-    color: white;
+    background-color: var(--createColour);
+    color: var(--objectColour);
 }.btn.create:hover {
-    background-color: #d5f6ea; 
-    color: black; 
+    background-color: var(--createColourHighlight); 
+    color: var(--fontColour);
 }
 
 .btn.delete {
-    background-color: #f44336;
-    color: white;
+    background-color: var(--deleteColour);
+    color: var(--objectColour);
 }.btn.delete:hover {
-    background-color: #ffffff; 
-    color: #f44336; 
+    background-color: var(--objectColour); 
+    color: var(--deleteColour);
 }
 
 
@@ -36,11 +35,10 @@
 
 
 .navigator > a{
-    font-family: Arial, Helvetica, sans-serif;
     font-size: 2em;
     cursor: pointer;
     margin-left: 10px;
-    color: #000322;
+    color: var(--fontColour);
     text-decoration: none;
     font-weight: bold;
 }

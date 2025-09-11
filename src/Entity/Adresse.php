@@ -47,11 +47,11 @@ class Adresse
      * @var Collection<int, RelationContactAdresse>
      */
     #[ORM\OneToMany(targetEntity: RelationContactAdresse::class, mappedBy: 'adresse', orphanRemoval: true)]
-    private Collection $relationContactAdresses;
+    private Collection $contacts;
 
     public function __construct()
     {
-        $this->relationContactAdresses = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -158,27 +158,27 @@ class Adresse
     /**
      * @return Collection<int, RelationContactAdresse>
      */
-    public function getRelationContactAdresses(): Collection
+    public function getContacts(): Collection
     {
-        return $this->relationContactAdresses;
+        return $this->contacts;
     }
 
-    public function addRelationContactAdress(RelationContactAdresse $relationContactAdress): static
+    public function addContact(RelationContactAdresse $relationContactAdresse): static
     {
-        if (!$this->relationContactAdresses->contains($relationContactAdress)) {
-            $this->relationContactAdresses->add($relationContactAdress);
-            $relationContactAdress->setAdresse($this);
+        if (!$this->contacts->contains($relationContactAdresse)) {
+            $this->contacts->add($relationContactAdresse);
+            $relationContactAdresse->setAdresse($this);
         }
 
         return $this;
     }
 
-    public function removeRelationContactAdress(RelationContactAdresse $relationContactAdress): static
+    public function removeContact(RelationContactAdresse $relationContactAdresse): static
     {
-        if ($this->relationContactAdresses->removeElement($relationContactAdress)) {
+        if ($this->contacts->removeElement($relationContactAdresse)) {
             // set the owning side to null (unless already changed)
-            if ($relationContactAdress->getAdresse() === $this) {
-                $relationContactAdress->setAdresse(null);
+            if ($relationContactAdresse->getAdresse() === $this) {
+                $relationContactAdresse->setAdresse(null);
             }
         }
 

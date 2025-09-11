@@ -1,28 +1,27 @@
 /* BASE TABLE FORMAT */
 .table {
-  font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
 .table td, .table th {
-  border: 1px solid #ddd;
+  border: 1px solid var(--accentColour);
   padding: 8px;
 }
 
 .table tr{
-  background-color: #fff;
+  background-color: var(--objectColour);
   cursor: pointer;
 }.table tr:nth-child(even){
-  background-color: #f2f2f2;
+  background-color: var(--secondBgColour);
 }
 
 .table th {
   padding-top: 3px;
   padding-bottom: 3px;
   text-align: left;
-  background-color: #2183f3;
-  color: white;
+  background-color: var(--headdingColour);
+  color: var(--objectColour);
   cursor: default;
 }
 
@@ -34,9 +33,9 @@
 }
 
 .table.objTable tr{
-  background-color: #fff;
+  background-color: var(--objectColour);
 }.objTable tr:nth-child(4n){
-  background-color: #f2f2f2;
+  background-color: var(--secondBgColour);
 }
 
 
@@ -44,13 +43,23 @@
 
 /* OVERRIDES */
 .table tr:hover {
-  background-color: #ddd;
+  background-color: var(--accentColour);
 }.active{
-  background-color: #ddd !important;
+  background-color: var(--accentColour) !important;
 }
 
 .table.objTable .collContent{
   display: none;
-  background-color: #fff;
+  background-color: var(--objectColour);
   cursor: default;
+}
+
+
+
+
+/* EXTRAS */
+.spacedLine{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }

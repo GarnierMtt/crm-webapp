@@ -39,7 +39,7 @@ class Societe
      * @var Collection<int, RelationProjetSociete>
      */
     #[ORM\OneToMany(targetEntity: RelationProjetSociete::class, mappedBy: 'societe')]
-    private Collection $Projets;
+    private Collection $projets;
 
     /**
      * @var Collection<int, Adresse>
@@ -50,7 +50,7 @@ class Societe
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
-        $this->Projets = new ArrayCollection();
+        $this->projets = new ArrayCollection();
         $this->adresses = new ArrayCollection();
     }
 
@@ -130,7 +130,7 @@ class Societe
      */
     public function getProjets(): Collection
     {
-        return $this->Projets->map(
+        return $this->projets->map(
             fn($relation) => [
                 'relation' => $relation,
                 'projet' => $relation->getProjet(),
@@ -139,8 +139,8 @@ class Societe
 
     public function addProjet(RelationProjetSociete $projet): static
     {
-        if (!$this->Projets->contains($projet)) {
-            $this->Projets->add($projet);
+        if (!$this->projets->contains($projet)) {
+            $this->projets->add($projet);
             $projet->setSociete($this);
         }
 
@@ -149,7 +149,7 @@ class Societe
 
     public function removeProjet(RelationProjetSociete $projet): static
     {
-        if ($this->Projets->removeElement($projet)) {
+        if ($this->projets->removeElement($projet)) {
             // set the owning side to null (unless already changed)
             if ($projet->getSociete() === $this) {
                 $projet->setSociete(null);

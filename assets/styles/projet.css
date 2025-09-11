@@ -16,11 +16,10 @@
 .page-rightbar{
     grid-area: rightbar;
     height: 100%;
-    z-index: 1;
 }
 
 .item{
-    background-color:rgb(255, 255, 255);
+    background-color: var(--objectColour);
     height: calc(100% - 20px);
     padding: 10px;
 }

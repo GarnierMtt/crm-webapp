@@ -4,53 +4,83 @@
 
 
 {% block path %}
-    <a href="{{ path('app_adresse_index') }}">Adresses/</a>
+    <a href="{{ path('app_societe_index') }}">Sociétés/</a>
+    <a href="{{ path('app_societe_show', {'id': adresse.societe.id}) }}">{{ adresse.societe }}/</a>
     <a href="{{ path('app_adresse_show', {'id': adresse.id}) }}">{{ adresse.numeroVoie }} {{ adresse.nomVoie }} à {{ adresse.commune }}</a>
 {% endblock %}
 {% block content %}
-    <h1>Adresse</h1>
 
-    <table class="table">
-        <tbody>
-                <tr>
-                    <th>Id</th>
-                    <td>{{ adresse.id }}</td>
-                </tr>
-                <tr>
-                    <th>Pays</th>
-                    <td>{{ adresse.Pays }}</td>
-                </tr>
-                <tr>
-                    <th>Commune</th>
-                    <td>{{ adresse.commune }}</td>
-                </tr>
-                <tr>
-                    <th>Code Postal</th>
-                    <td>{{ adresse.codePostal }}</td>
-                </tr>
-                <tr>
-                    <th>Nom de la voie</th>
-                    <td>{{ adresse.nomVoie }}</td>
-                </tr>
-                <tr>
-                    <th>Numero de la voie</th>
-                    <td>{{ adresse.numeroVoie }}</td>
-                </tr>
-                <tr>
-                    <th>Complément</th>
-                    <td>{{ adresse.complement }}</td>
-                </tr>
-        </tbody>
-    </table>
-
-    <div>
-        <h3> Utilisée par : </h3>
-        {#% for pair in adresse.societes %}
-            <div>{{ pair.relation }} de {{ pair.societe }}</div>
-        {% endfor %#}
+    <div class="spacedLine">
+        <a class="btn" href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>
+        {{ include('adresse/_delete_form.html.twig') }}
     </div>
+    <div style="display: flex; justify-content: space-evenly;">
 
-    <a class="btn" href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>
-    {{ include('adresse/_delete_form.html.twig') }}
+        <div>
+            <h2>Adresse :</h2>
+            <table class="table">
+                
+                <tbody>
+                        <tr>
+                            <th>Nom du site</th>
+                            <td>{{ adresse.nomSite }}</td>
+                        </tr>
+                        <tr>
+                            <th>Societe</th>
+                            <td>{{ adresse.societe }}</td>
+                        </tr>
+                        <tr>
+                            <th>Adresse</th>
+                            <td>
+                                {{ adresse.numeroVoie }} {{ adresse.nomVoie }},<br>
+                                {{ adresse.codePostal }} {{ adresse.commune }}, {{ adresse.pays }}
+                            </td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h2> Contacts associés : </h2>
+
+            <table style="margin-top: 10px;" class="table objTable"> <!-- liste contacts -->
+                <tr>
+                    <th colspan="2">
+                        <span>contacts</span>
+                    </th>
+                </tr>
+                {% for relation in adresse.contacts %}
+                    <tr class="collapsible" onclick="colaps(this)">
+                        <td>{{ relation }}</td>
+                        <td>{{ relation.contact }}</td>
+                    </tr>
+                    <tr class="collContent">
+                        <td colspan="2">
+                            <div>
+                                <div class="spacedLine">
+                                    <span>infos :</span>
+                                    <a class="btn" href="{{ path('app_relation_contact_adresse_edit', {'id': relation.id, 'msg': 'Modifier la relation entre ' ~ relation.contact ~ ' et ' ~ adresse.nomSite}) }}" target="_blank">modifier</a>
+                                </div>
+                                <ul>
+                                    tél: {{ relation.contact.telephone }}<br>
+                                    mél: {{ relation.contact.mel }}<br>
+                                    notes :
+                                    <ul>
+                                        {{ relation.notes }}
+                                    </ul>
+                                </ul>
+
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2">aucun site associé</td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
     
 {% endblock %}

@@ -4,8 +4,6 @@
 {% block head %}
     <link rel="stylesheet" href="{{ asset('styles/societe.css') }}">
     
-    <link rel="stylesheet" href="{{ asset('styles/draggableWindow.css') }}">
-    <script type="text/javascript" src="{{ asset('scripts/draggableWindow.js') }}"></script>
 {% endblock %}
 
 {% block path %}
@@ -15,147 +13,212 @@
 {% block content %}
     <div class="grid">
 
-        <div class="page-leftbar"> <!-- BARE DE GAUCHE -->
+        <div class="infoSpace"> <!-- Espace Informations -->
             <div class="item">
 
-                <div style="text-align-last: justify;">
-                    <span>Informations:</span>
-                    <a class="btn" onClick="editSte(this)">Edit</a>
+                <div class="spacedLine">
+                    <h1>{{ societe.nom }}</h1>
+                    <a class="btn ui-popupBtn" asoc="#editSte">Edit</a>
                 </div>
+
                 <div>
                     <span>Téléphone standard: {{ societe.telephoneStandard }}</span>
                 </div>
                 <div>
                     <span>SIRET: {{ societe.siret }}</span>
                 </div>
-                
-                
-                <table style="margin-top: 10px;" class="table objTable"> <!-- liste adresses -->
-                    <tr>
-                        <th colspan="2">
-                            <span>Sites</span>
-                            <a class="btn" onclick="menueAdresse(this)">[+]</a>
-                        </th>
-                    </tr>
-                    {% for adresse in societe.adresses %}
-                        <tr class="collapsible" onclick="colaps(this)">
-                            <td>{{ adresse }}</td>
-                        </tr>
-                        <tr class="collContent">
-                            <td>
-                                <div>
-                                    <div style="text-align: right;">
-                                        <a class="btn" href="{{ path('app_adresse_edit', {'id': adresse.id, 'msg': 'Modifier l\'adresse relation adresse associer à la sociétée ' ~ societe.nom}) }}" target="_blank">edit</a>
-                                    </div>
-                                    
-                                    Adresse :
-                                    <ul>
-                                        {{ adresse.numeroVoie }} {{ adresse.nomVoie }}<br>
-                                        {{ adresse.codePostal }} {{ adresse.commune }}, {{ adresse.Pays }}<br>
-                                        Complément :
-                                        <ul>
-                                            {{ adresse.complement|nl2br }}
-                                        </ul>
-                                    </ul>
-
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="2">aucun site associé</td>
-                        </tr>
-                    {% endfor %}
-                </table>
 
                 
-                <table style="margin-top: 10px;" class="table objTable"> <!-- liste contacts -->
-                    <tr>
-                        <th colspan="2">
-                            <span>Contacts</span>
-                            <a class="btn" onclick="nvxContact(this)">[+]</a>
-                        </th>
-                    </tr>
-                    {% for contact in societe.contacts %}
-                        <tr class="collapsible" onclick="colaps(this)">
-                            <td>{{ contact }}</td>
-                        </tr>
-                        <tr class="collContent">
-                            <td>
-                                <div>
-                                    <div style="text-align: right;">
-                                        <a class="btn" href="{{ path('app_contact_edit', {'id': contact.id, 'msg': 'Modifier le contact ' ~ contact}) }}" target="_blank">edit</a>
+                <div id="tabs">
+                    <ul style="margin-inline: -1em;">
+                        <li href="#tabs-1">Contacts</li>
+                        <li href="#tabs-2">Sites</li>
+                        <li href="#tabs-3">Projets</li>
+                    </ul>
+                    <div id="tabs-1">
+                        <div>
+                            <a class="btn ui-popupBtn" asoc="#nvxContact">Nouveau</a>
+                            <div class="ui-listGrid">
+                                {% for contact in societe.contacts %}
+                                    <div class="ui-listGridItem">
+                                        <img src="{{ asset('img/profile.png') }}" style="height:100%">
+                                        <div>
+                                            <span>{{ contact }}</span><br>
+                                            mél: <span>{{ contact.mel }}</span><br>
+                                            tél: <span>{{ contact.telephone }}</span>
+                                        </div>
                                     </div>
-                                    
-                                    Mél :
-                                    <ul>
-                                        <li>{{ contact.mel }}</li>
-                                    </ul>
-                                    Téléphone :
-                                    <ul>
-                                        <li>{{ contact.telephone }}</li>
-                                    </ul>
-                                    Post :
-                                    <ul>
-                                        <li>{{ contact.post }}</li>
-                                    </ul>
-                                
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td>aucun contact associé</td>
-                        </tr>
-                    {% endfor %}
-                </table>
+                                {% endfor %}
+                            </div>
+                            {#
+                            <table style="margin-top: 10px;" class="table objTable"> <!-- liste contacts -->
+                                <tr>
+                                    <th colspan="2">
+                                        <span>Contacts</span>
+                                        
+                                    </th>
+                                </tr>
+                                {% for contact in societe.contacts %}
+                                    <tr class="collapsible" onclick="colaps(this)">
+                                        <td>{{ contact }}</td>
+                                    </tr>
+                                    <tr class="collContent">
+                                        <td>
+                                            <div>
+                                                <div class="spacedLine">
+                                                    <span>Infos :</span>
+                                                    <a class="btn" href="{{ path('app_contact_edit', {'id': contact.id, 'msg': 'Modifier le contact ' ~ contact}) }}" target="_blank">edit</a>
+                                                </div>
+                                                Mél :
+                                                <ul>
+                                                    <li>{{ contact.mel }}</li>
+                                                </ul>
+                                                Téléphone :
+                                                <ul>
+                                                    <li>{{ contact.telephone }}</li>
+                                                </ul>
+                                                Post :
+                                                <ul>
+                                                    <li>{{ contact.post }}</li>
+                                                </ul>
 
-                
-                <table style="margin-top: 10px;" class="table objTable"> <!-- liste Projets -->
-                    <tr>
-                        <th colspan="2">
-                            <span>Projets</span>
-                            <a class="btn" onclick="nvxProjet(this)">[+]</a>
-                        </th>
-                    </tr>
-                    {% for pair in societe.projets %}
-                        <tr class="collapsible" onclick="colaps(this)">
-                            <td>{{ pair.relation }}</td>
-                            <td>{{ pair.projet }}</td>
-                        </tr>
-                        <tr class="collContent">
-                            <td colspan="2">
-                                <div>
-                                    <div style="text-align: right;">
-                                        <a class="btn" href="{{ path('app_projet_show', {'id': pair.projet.id}) }}">ouvrir projet</a>
-                                    </div>
-                                    Date de début/fin :
-                                    <ul>
-                                        <li>{{ pair.projet.dateDeb ? pair.projet.dateDeb|date('Y/m/d') : '' }}</li>
-                                        <li>{{ pair.projet.dateFin ? pair.projet.dateFin|date('Y/m/d') : '' }}</li>
-                                    </ul>
-                                    Déscription :
-                                    <ul>
-                                        <li>{{ pair.projet.description|nl2br }}</li>
-                                    </ul>
-                                    
-                                </div>
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="2">aucun projet associé</td>
-                        </tr>
-                    {% endfor %}
-                </table>
+                                                <div class="spacedLine">
+                                                    <span>Roles :</span>
+                                                    <a class="btn" href="{{ path('app_contact_edit', {'id': contact.id, 'msg': 'Modifier le contact ' ~ contact}) }}" target="_blank">edit</a>
+                                                </div>
+                                                {% for relation in contact.adresses %}
+                                                    <ul>
+                                                        {{ relation }} -> {{ relation.adresse }}
+                                                    </ul>
+                                                {% else %}
+                                                    <ul>
+                                                        aucune adresse associée
+                                                    </ul>
+                                                {% endfor %}
+                                            
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td>aucun contact associé</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+                            #}
+                        </div>
+                    </div>
+                    <div id="tabs-2">
+                        <div>
+
+                            <table style="margin-top: 10px;" class="table objTable"> <!-- liste Sites -->
+                                <tr>
+                                    <th colspan="2">
+                                        <span>Sites</span>
+                                        <a class="btn ui-popupBtn" asoc="#menueSites">[+]</a>
+                                    </th>
+                                </tr>
+                                {% for adresse in societe.adresses %}
+                                    <tr class="collapsible" onclick="colaps(this)">
+                                        <td>{{ adresse }}</td>
+                                    </tr>
+                                    <tr class="collContent">
+                                        <td>
+                                            <div>
+                                                <div class="spacedLine">
+                                                    <span>Adresse :</span>
+                                                    <a class="btn" href="{{ path('app_adresse_show', {'id': adresse.id, 'msg': 'Modifier l\'adresse du site associer à la sociétée ' ~ societe.nom}) }}">consulter</a>
+                                                </div>
+                                                <ul>
+                                                    {{ adresse.numeroVoie }} {{ adresse.nomVoie }},<br>
+                                                    {{ adresse.codePostal }} {{ adresse.commune }}, {{ adresse.Pays }}<br>
+                                                    <ul>
+                                                        {{ adresse.complement|nl2br }}
+                                                    </ul>
+                                                </ul>
+                                                Contacts associés :
+                                                {% for relation in adresse.contacts %}
+                                                    <div style="width: 100%" class="btn" onclick="unwrap(this)">{{ relation.contact }} -> {{ relation }}</div>
+                                                    <div class="wrapper">
+                                                        <div class="inner">
+                                                            <ul>
+                                                                tél: {{ relation.contact.telephone }}<br>
+                                                                mél: {{ relation.contact.mel }}<br>
+                                                                notes :
+                                                                <ul>
+                                                                    {{ relation.notes }}
+                                                                </ul>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <ul>
+                                                        aucun contact associé
+                                                    </ul>
+                                                {% endfor %}
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2">aucun site associé</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+
+                        </div>
+                    </div>
+                    <div id="tabs-3">
+                        <div>
+
+                            <table style="margin-top: 10px;" class="table objTable"> <!-- liste Projets -->
+                                <tr>
+                                    <th colspan="2">
+                                        <span>Projets</span>
+                                        <a class="btn ui-popupBtn" asoc="#nvxProjet">[+]</a>
+                                    </th>
+                                </tr>
+                                {% for pair in societe.projets %}
+                                    <tr class="collapsible" onclick="colaps(this)">
+                                        <td>{{ pair.relation }}</td>
+                                        <td>{{ pair.projet }}</td>
+                                    </tr>
+                                    <tr class="collContent">
+                                        <td colspan="2">
+                                            <div>
+                                                <div style="text-align: right;">
+                                                    <a class="btn" href="{{ path('app_projet_show', {'id': pair.projet.id}) }}">ouvrir projet</a>
+                                                </div>
+                                                Date de début/fin :
+                                                <ul>
+                                                    <li>{{ pair.projet.dateDeb ? pair.projet.dateDeb|date('Y/m/d') : '' }}</li>
+                                                    <li>{{ pair.projet.dateFin ? pair.projet.dateFin|date('Y/m/d') : '' }}</li>
+                                                </ul>
+                                                Déscription :
+                                                <ul>
+                                                    <li>{{ pair.projet.description|nl2br }}</li>
+                                                </ul>
+                                                
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2">aucun projet associé</td>
+                                    </tr>
+                                {% endfor %}
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
             </div>
 
+
             
-            <div class="draggableWindow visibleWindow" id="editSte"> <!-- popup Edit STE -->
-                <div class="window-top">
-                    <div>&#10021;</div>
-                    <a class="btn deleate" onclick="editSte(this)">Fermer</a>
-                </div>
+            <div id="editSte"> <!-- popup Edit STE -->
+                <span>edit societe</span>
                 {{ include('societe/_delete_form.html.twig') }}
                 <h2>Modifier les informations de la société</h2>
 
@@ -173,11 +236,8 @@
             </div>
 
             
-            <div class="draggableWindow visibleWindow" id="menueAdresse"> <!-- popup NVL adresse -->
-                <div class="window-top">
-                    <div>&#10021;</div>
-                    <a class="btn deleate" onclick="menueAdresse(this)">Fermer</a>
-                </div>
+            <div id="menueSites"> <!-- popup NVX site -->
+                <span>Nouveaux site</span>
                 <h2>Nouveau site associer à la societe {{ societe.nom }}</h2>
 
                 {{ form_errors(formAdresse) }}
@@ -199,11 +259,8 @@
             </div>
 
 
-            <div class="draggableWindow visibleWindow" id="nvxContact"> <!-- popup NVX contact -->
-                <div class="window-top">
-                    <div>&#10021;</div>
-                    <a class="btn deleate" onclick="nvxContact(this)">Fermer</a>
-                </div>
+            <div id="nvxContact"> <!-- popup NVX contact -->
+                <span>Popup Title</span>
                 <h2>Créer un contact associer a la société {{ societe.nom }}</h2>
 
                 {{ form_errors(formContact) }}
@@ -223,11 +280,8 @@
             </div>
 
 
-            <div class="draggableWindow visibleWindow" id="nvxProjet"> <!-- popup NVX projet -->
-                <div class="window-top">
-                    <div>&#10021;</div>
-                    <a class="btn deleate" onclick="nvxProjet(this)">Fermer</a>
-                </div>
+            <div id="nvxProjet"> <!-- popup NVX projet -->
+                <span>nouveux projet</span>
                 <h2>Créer un projet associer a la société {{ societe.nom }}</h2>
 
                 {{ form_errors(formProj) }}
@@ -247,15 +301,7 @@
         </div>
 
 
-        <div class="page-header"> <!-- ENTÊTE -->
-            <div class="item">
-
-            </div>
-        </div>
-
-
-
-        <div class="page-main"> <!-- CORPS -->
+        <div class="comsSpace"> <!-- Espace Comunications -->
             <div class="item">
 
               
@@ -276,64 +322,12 @@
 
     
     <script>
-        makeDraggable(document.querySelector('#editSte'));
-        makeDraggable(document.querySelector('#menueAdresse'));
-        makeDraggable(document.querySelector('#nvxContact'));
-        makeDraggable(document.querySelector('#nvxProjet'));
 
-
-
-        function colaps(coll) {
-            var content = coll.nextElementSibling;
-            if (content.style.display === "table-row") {
-                coll.classList.toggle("active");
-                content.style.display = "none";
-            } else {
-                var allColl = document.getElementsByClassName("collapsible");
-                for (i = 0; i < allColl.length; i++) {
-                    allColl[i].classList.remove("active");
-                    allColl[i].nextElementSibling.style.display = "none";
-                }
-                coll.classList.toggle("active");
-                content.style.display = "table-row";
-            }   
-        }
-
-        function editSte(btn){
-            var window = document.getElementById("editSte");
-            window.classList.toggle("visibleWindow");
-            btnRect = btn.getBoundingClientRect();
-            window.style.top = btnRect.top + "px";
-            window.style.left = btnRect.right + "px";
-        }
-
-
-        function menueAdresse(btn){
-            var window = document.getElementById("menueAdresse");
-            window.classList.toggle("visibleWindow");
-            btnRect = btn.getBoundingClientRect();
-            window.style.top = btnRect.top + "px";
-            window.style.left = btnRect.right + "px";
-        }
-
-
-        function nvxContact(btn){
-            var window = document.getElementById("nvxContact");
-            window.classList.toggle("visibleWindow");
-            btnRect = btn.getBoundingClientRect();
-            window.style.top = btnRect.top + "px";
-            window.style.left = btnRect.right + "px";
-        }
-
-
-        function nvxProjet(btn){
-            var window = document.getElementById("nvxProjet");
-            window.classList.toggle("visibleWindow");
-            btnRect = btn.getBoundingClientRect();
-            window.style.top = btnRect.top + "px";
-            window.style.left = btnRect.right + "px";
-        }
-
+        $(function() {
+            $( "#tabs" ).tabs();
+            $( [ "#editSte", "#nvxContact", "#menueSites", "#nvxProjet" ] ).popup();
+        })
+        
 
     </script>
 {% endblock %}

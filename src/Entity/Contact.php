@@ -45,11 +45,11 @@ class Contact
      * @var Collection<int, RelationContactAdresse>
      */
     #[ORM\OneToMany(targetEntity: RelationContactAdresse::class, mappedBy: 'contact')]
-    private Collection $relationContactAdresses;
+    private Collection $adresses;
 
     public function __construct()
     {
-        $this->relationContactAdresses = new ArrayCollection();
+        $this->adresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -132,27 +132,27 @@ class Contact
     /**
      * @return Collection<int, RelationContactAdresse>
      */
-    public function getRelationContactAdresses(): Collection
+    public function getAdresses(): Collection
     {
-        return $this->relationContactAdresses;
+        return $this->adresses;
     }
 
-    public function addRelationContactAdress(RelationContactAdresse $relationContactAdress): static
+    public function addAdresse(RelationContactAdresse $relationContactAdresse): static
     {
-        if (!$this->relationContactAdresses->contains($relationContactAdress)) {
-            $this->relationContactAdresses->add($relationContactAdress);
-            $relationContactAdress->setContact($this);
+        if (!$this->adresses->contains($relationContactAdresse)) {
+            $this->adresses->add($relationContactAdresse);
+            $relationContactAdresse->setContact($this);
         }
 
         return $this;
     }
 
-    public function removeRelationContactAdress(RelationContactAdresse $relationContactAdress): static
+    public function removetAdresse(RelationContactAdresse $relationContactAdresse): static
     {
-        if ($this->relationContactAdresses->removeElement($relationContactAdress)) {
+        if ($this->adresses->removeElement($relationContactAdresse)) {
             // set the owning side to null (unless already changed)
-            if ($relationContactAdress->getContact() === $this) {
-                $relationContactAdress->setContact(null);
+            if ($relationContactAdresse->getContact() === $this) {
+                $relationContactAdresse->setContact(null);
             }
         }
 

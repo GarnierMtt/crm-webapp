@@ -1,0 +1,127 @@
+/*
+* 
+* styles referenced in uiScripts.js 
+* 
+*/
+
+
+/*      TABS
+    */
+    .ui-tabs{
+        background-color: var(--objectColour);
+    }
+
+    .ui-tabsList{
+        display: flex;
+        list-style: none;
+        border-bottom: 1px solid var(--accentColour);
+        margin: 0;
+        margin-bottom: 2em;
+        padding: .5em .8em 0;
+    }
+
+    .ui-tabsTab{
+        float: left;
+        position: relative;
+        top: 0;
+        margin: 1px .2em 0 0;
+        border-bottom-width: 0;
+        padding: .5em 1em;
+        text-decoration: none;
+        white-space: nowrap;
+        cursor: pointer;
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
+        border: 1px solid var(--noColour);
+        border-bottom: none;
+        background-color: var(--objectColour);
+    }
+
+    .ui-tabsTab:hover,
+    .ui-tabsTab.ui-activ{
+        border-color: var(--accentColour);
+    }
+    .ui-tabsTab.ui-activ{
+        margin-bottom: -1px;
+        padding-bottom: 1px;
+        cursor: default;
+    }
+
+    .ui-tabsContent{
+        display: none;
+    }
+
+    .ui-tabsContent.ui-activ{
+        display: initial;
+    }
+/**/
+
+
+
+/*      POPUP
+    */
+    .ui-popup{
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        background-color: var(--secondBgColour);
+        text-align: center;
+        border: 1px solid var(--accentColour);
+        text-wrap-mode: nowrap;
+        justify-self: center;
+    }
+
+    .ui-popup.ui-activ{
+        display: initial;
+    }
+
+    .ui-popupHead{        
+        display: flex; 
+        flex-direction: row; 
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: .5em;
+        cursor: move;
+        background-color: var(--headdingColour);
+        color: var(--objectColour);
+    }
+
+/**/
+
+
+
+/*      LIST 
+    */
+    .ui-listGrid{
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        
+        justify-items: stretch;
+        margin-top: 2em;
+        margin-bottom: 2em;
+        column-gap: .5em;
+        row-gap: .5em;
+
+    }
+
+    .ui-listGridItem{
+        display: flex;
+        min-width: max-content;
+        flex-direction: row;
+        height: 5em;
+        border: 1px solid var(--accentColour);
+        padding: .1em .5em .1em .5em;
+        gap: .5em;
+        white-space: nowrap;
+    }
+
+    .ui-listGridItem > div{
+        align-content: space-around;
+    }
+
+    .ui-listGridItem span{
+        font-weight: bold;
+    }
+
+/**/

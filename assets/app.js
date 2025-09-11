@@ -5,6 +5,8 @@
  * which should already be in your base.html.twig.
  */
 import './styles/normalize.css';
+import './styles/colours.css';
+import './styles/uiStyle.css';
 import './styles/app.css';
 import './styles/buttons.css';
 import './styles/indexTable.css';

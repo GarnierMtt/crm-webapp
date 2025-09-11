@@ -5,9 +5,9 @@
 }
 
 .cal-container input span{
-    border: 1px solid #ccc;
+    border: 1px solid var(--highlightColour);
 }
 .cal-date:select {
-    border-color: rgb(102, 175, 233);
+    border-color: var(--headdingColour);
     box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px 0px inset, rgba(102, 175, 233, 0.6) 0px 0px 8px 0px;
 }

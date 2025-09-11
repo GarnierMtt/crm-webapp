@@ -21,7 +21,7 @@ final class RelationContactAdresseController extends AbstractController
         $relationContactAdresse = new RelationContactAdresse();
         $form = $this->createForm(RelationContactAdresseForm::class, $relationContactAdresse);
         $form->handleRequest($request);
-        $path = $this->redirectToRoute('app_relation_contact_adresse_index', [], Response::HTTP_SEE_OTHER);
+        $path = $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
 
 
         // Set contact if provided
@@ -43,7 +43,7 @@ final class RelationContactAdresseController extends AbstractController
 
         return $this->render('relation_contact_adresse/new.html.twig', [
             'relation_contact_adresse' => $relationContactAdresse,
-            'formRelSteAdresse' => $form,
+            'formRelContactAdresse' => $form,
         ]);
     }
 
@@ -67,7 +67,7 @@ final class RelationContactAdresseController extends AbstractController
         return $this->render('relation_contact_adresse/edit.html.twig', [
             'msg' => $msg,
             'relation_contact_adresse' => $relationContactAdresse,
-            'formRelSteAdresse' => $form,
+            'formRelContactAdresse' => $form,
         ]);
     }
 

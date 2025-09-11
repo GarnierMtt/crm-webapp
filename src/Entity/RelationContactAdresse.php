@@ -14,10 +14,10 @@ class RelationContactAdresse
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'relationContactAdresses')]
+    #[ORM\ManyToOne(inversedBy: 'adresses')]
     private ?Contact $contact = null;
 
-    #[ORM\ManyToOne(inversedBy: 'relationContactAdresses')]
+    #[ORM\ManyToOne(inversedBy: 'contacts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Adresse $adresse = null;
 
@@ -78,5 +78,12 @@ class RelationContactAdresse
         $this->notes = $notes;
 
         return $this;
+    }
+
+
+
+    public function __toString(): string
+    {
+        return $this->role;
     }
 }

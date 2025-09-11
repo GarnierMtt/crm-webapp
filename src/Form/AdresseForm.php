@@ -14,17 +14,17 @@ class AdresseForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('pays')
-            ->add('commune')
-            ->add('codePostal')
-            ->add('nomVoie')
-            ->add('numeroVoie')
-            ->add('complement')
             ->add('nomSite')
             ->add('societe', EntityType::class, [
                 'class' => Societe::class,
                 'choice_label' => 'nom',
             ])
+            ->add('pays')
+            ->add('codePostal')
+            ->add('commune')
+            ->add('numeroVoie')
+            ->add('nomVoie')
+            ->add('complement')
         ;
     }
 
