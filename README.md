@@ -13,6 +13,10 @@ with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) 
 4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
 5. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
+## Practical info
+
+["ROLE_USER","ROLE_ADMIN"]
+$2y$13$/hM1WMZb.vVl7p2MfOuA..1ebQ.9ok8iW91k8c5CArkHe3LAK2Yjy
 
 docker compose run --rm php chown -R $(id -u):$(id -g) .
 docker exec -it crm-webapp-php-1 bash
