@@ -114,6 +114,7 @@
         padding: .1em .5em .1em .5em;
         gap: .5em;
         white-space: nowrap;
+        cursor: pointer;
     }
 
     .ui-listGridItem > div{

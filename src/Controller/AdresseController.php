@@ -48,7 +48,6 @@ final class AdresseController extends AbstractController
         $adresse = new Adresse();
         $formAdresse = $this->createForm(AdresseForm::class, $adresse);
         $formAdresse->handleRequest($request);
-        $path = $this->redirectToRoute('app_adresse_show', ['id' => $adresse->getId()], Response::HTTP_SEE_OTHER);
 
 
         // Set societe if provided
@@ -65,7 +64,10 @@ final class AdresseController extends AbstractController
             $entityManager->persist($adresse);
             $entityManager->flush();
 
-            return $path;
+            if ($societe) {
+                return $this->redirectToRoute('app_societe_show', ['id' => $societeId], Response::HTTP_SEE_OTHER);
+            }
+            return $this->redirectToRoute('app_adresse_show', ['id' => $adresse->getId()], Response::HTTP_SEE_OTHER);
         }
 
 

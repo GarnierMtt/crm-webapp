@@ -80,15 +80,15 @@ jQuery.fn.extend({
           $("<div><span>&#10021; </span> <a class='btn delete ui-popupBtn' asoc='#" + $(popupID).attr("id") + "'>&#9587;</a></div>").appendTo($(popupID).children().first());
 
           
-          var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0, elmnt = $(popupID)[0];
+          var elmnt = $(popupID)[0], elmPoseX, elmPoseY;
           elmnt.querySelector(".ui-popupHead").onmousedown = dragMouseDown;
           
 
           function dragMouseDown(e) {
             e.preventDefault();
             // get the mouse cursor position at startup:
-            pos3 = e.clientX;
-            pos4 = e.clientY;
+            elmPoseX = elmnt.offsetLeft - e.clientX; 
+            elmPoseY = elmnt.offsetTop - e.clientY;
             document.onmouseup = closeDragElement;
             // call a function whenever the cursor moves:
             document.onmousemove = elementDrag;
@@ -96,35 +96,22 @@ jQuery.fn.extend({
 
           function elementDrag(e) {
             // calculate the new cursor position:
-            pos1 = pos3 - e.clientX;
-            pos2 = pos4 - e.clientY;
-            pos3 = e.clientX;
-            pos4 = e.clientY;
             // set the element's new position:
-            elmnt.style.left = (0 < (elmnt.offsetLeft - pos1) && (elmnt.offsetLeft - pos1) < (window.innerWidth - elmnt.offsetWidth)) ? (elmnt.offsetLeft - pos1) + "px" : elmnt.offsetLeft + "px";
-            elmnt.style.top = (0 < (elmnt.offsetTop - pos2) && (elmnt.offsetTop - pos2) < (window.innerHeight - elmnt.offsetHeight)) ? (elmnt.offsetTop - pos2) + "px" : elmnt.style.top + "px";
-
-            
-
-            /* stop element from being off frame:
-              // top
-            if(elmnt.offsetTop < -1){
-              elmnt.style.paddingTop = -1 - elmnt.offsetTop + "px";
+            if(0 > (e.clientX + elmPoseX)){
+              elmnt.style.left = "0px";
+            }else if((e.clientX + elmPoseX) > (window.innerWidth - elmnt.offsetWidth)){
+              elmnt.style.left = window.innerWidth - elmnt.offsetWidth + "px";
             }else{
-              elmnt.style.paddingTop = "0px";
+            elmnt.style.left = e.clientX + elmPoseX + "px"
             }
-              // left
-            if(elmnt.offsetLeft < -1){
-              elmnt.style.paddingLeft = -1 - elmnt.offsetLeft + "px";
+
+            if(0 > (e.clientY + elmPoseY)){
+              elmnt.style.top = "0px";
+            }else if((e.clientY + elmPoseY) > (window.innerHeight - elmnt.offsetHeight)){
+              elmnt.style.top = window.innerHeight - elmnt.offsetHeight + "px";
             }else{
-              elmnt.style.paddingLeft = "0px";
+            elmnt.style.top = e.clientY + elmPoseY + "px"
             }
-              //right
-            if(elmnt.offsetLeft > (window.innerWidth - elmnt.offsetWidth) ){
-              elmnt.style.paddingRight = elmnt.offsetLeft - window.innerWidth + elmnt.offsetWidth + "px";
-            }else{
-              elmnt.style.paddingRight = "0px";
-            }*/
           }
 
           function closeDragElement() {
@@ -137,7 +124,6 @@ jQuery.fn.extend({
         });
       //popup btn
         $(".ui-popupBtn").click(function() {
-          console.log("bip");
           var linkedPopup = $(this).attr("asoc");
           $(linkedPopup).css("top", $(this).offset().top + "px") ;
           $(linkedPopup).css("left", ($(window).width() - $(linkedPopup).width() )/2 + "px");

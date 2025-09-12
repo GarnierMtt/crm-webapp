@@ -85,18 +85,50 @@ final class SocieteController extends AbstractController
             //associated adresses selection
                 $qb = $em->createQuery(
                     "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
-                        WHERE l.objectClass = 'App\Entity\RelationSocieteAdresse'
+                        WHERE l.objectClass = 'App\Entity\Adresse'
                 ");
 
                 $adrIds = [];
-                foreach($qb->getResult() as $adrSte){
-                    if(isset($adrSte["data"]["projet"]["id"])){
-                        if($adrSte["data"]["projet"]["id"] == $id){
-                            $adrIds[] = $adrSte["objectId"];
+                foreach($qb->getResult() as $adr){
+                    if(isset($adr["data"]["societe"]["id"])){
+                        if($adr["data"]["societe"]["id"] == $id){
+                            $adrIds[] = $adr["objectId"];
                         }
                     }
                 }
                 $adrIds = array_unique($adrIds);
+
+            //associated contacts selection
+                $qb = $em->createQuery(
+                    "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
+                        WHERE l.objectClass = 'App\Entity\Contact'
+                ");
+
+                $ctcIds = [];
+                foreach($qb->getResult() as $ctc){
+                    if(isset($ctc["data"]["societe"]["id"])){
+                        if($ctc["data"]["societe"]["id"] == $id){
+                            $ctcIds[] = $ctc["objectId"];
+                        }
+                    }
+                }
+                $ctcIds = array_unique($ctcIds);
+
+            //associated project selection
+                $qb = $em->createQuery(
+                    "SELECT l.objectId, l.data FROM Gedmo\Loggable\Entity\LogEntry l 
+                        WHERE l.objectClass = 'App\Entity\RelationProjetSociete'
+                ");
+
+                $prjIds = [];
+                foreach($qb->getResult() as $prj){
+                    if(isset($prj["data"]["societe"]["id"])){
+                        if($prj["data"]["societe"]["id"] == $id){
+                            $prjIds[] = $prj["objectId"];
+                        }
+                    }
+                }
+                $prjIds = array_unique($prjIds);
 
 
             //return query
@@ -105,13 +137,19 @@ final class SocieteController extends AbstractController
                         WHERE 
                             ( l.objectClass = 'App\Entity\Societe'
                                 AND l.objectId = (:steId)) 
-                            OR ( l.objectClass = 'App\Entity\RelationSocieteAdresse'
+                            OR ( l.objectClass = 'App\Entity\Adresse'
                                 AND l.objectId in (:adrIds))
+                            OR ( l.objectClass = 'App\Entity\Contact'
+                                AND l.objectId in (:ctcIds))
+                            OR ( l.objectClass = 'App\Entity\RelationProjetSociete'
+                                AND l.objectId in (:prjIds))
                         ORDER BY l.loggedAt DESC
                 ");
                 $qb->setParameters([
                     'steId' => $id,
                     'adrIds' => $adrIds,
+                    'ctcIds' => $ctcIds,
+                    'prjIds' => $prjIds,
                 ]);
         // END OBJEC HISTORY
 

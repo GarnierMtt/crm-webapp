@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\RelationContactAdresseRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: RelationContactAdresseRepository::class)]
+#[Gedmo\Loggable]
 class RelationContactAdresse
 {
     #[ORM\Id]
@@ -15,16 +17,20 @@ class RelationContactAdresse
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'adresses')]
+    #[Gedmo\Versioned]
     private ?Contact $contact = null;
 
     #[ORM\ManyToOne(inversedBy: 'contacts')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Gedmo\Versioned]
     private ?Adresse $adresse = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $role = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $notes = null;
 
     public function getId(): ?int

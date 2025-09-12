@@ -19,28 +19,36 @@ class Adresse
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $pays = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $commune = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private ?int $codePostal = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $nomVoie = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $numeroVoie = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $complement = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $nomSite = null;
 
     #[ORM\ManyToOne(inversedBy: 'adresses')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Gedmo\Versioned]
     private ?Societe $societe = null;
 
     /**
