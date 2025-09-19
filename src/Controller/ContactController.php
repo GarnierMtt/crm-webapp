@@ -10,6 +10,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Exception\CircularReferenceException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/contact')]
@@ -17,7 +21,36 @@ final class ContactController extends AbstractController
 {
 
 
+    #[Route('/api/contact',name: 'api_contact_index', methods: ['GET'])]
+    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $contacts = $contactRepository->findAll();
 
+        $context = [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (object $object, ?string $format, array $context): string {
+                if (!$object instanceof Contact) {
+                    throw new CircularReferenceException('A circular reference has been detected when serializing the object of class "'.get_debug_type($object).'".');
+                }
+
+                // serialize the nested Organization with only the name (and not the members)
+                return $object;
+            },
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => function (object $object, ?string $format, array $context): string {
+                if (!$object instanceof Societe) {
+                    throw new CircularReferenceException('A circular reference has been detected when serializing the object of class "'.get_debug_type($object).'".');
+                }
+
+                // serialize the nested Organization with only the name (and not the members)
+                return $object->getName();
+            },
+        ];
+
+        $jsonContacts = $serializer->serialize($contacts, 'json', $context);
+
+
+
+        return new JsonResponse($jsonContacts, Response::HTTP_OK, [], true);
+    }
 
 
 
