@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\ContactRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -37,6 +39,7 @@ class Contact
     #[Gedmo\Versioned]
     private ?string $post = null;
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['societe' => ['id', 'nom']]])]
     #[ORM\ManyToOne(inversedBy: 'contacts')]
     #[Gedmo\Versioned]
     private ?Societe $societe = null;
@@ -44,6 +47,7 @@ class Contact
     /**
      * @var Collection<int, RelationContactAdresse>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['adresse', 'role', 'notes']]])]
     #[ORM\OneToMany(targetEntity: RelationContactAdresse::class, mappedBy: 'contact')]
     private Collection $adresses;
 

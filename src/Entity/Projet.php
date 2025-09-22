@@ -6,6 +6,8 @@ use App\Repository\ProjetRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -74,12 +76,14 @@ class Projet
     /**
      * @var Collection<int, RelationProjetSociete>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['societes' => ['societe', 'role', 'notes']]])]
     #[ORM\OneToMany(targetEntity: RelationProjetSociete::class, mappedBy: 'projet', orphanRemoval: true)]
     private Collection $societes;
 
     /**
      * @var Collection<int, LienFibre>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['lienFibres' => ['id']]])]
     #[ORM\OneToMany(targetEntity: LienFibre::class, mappedBy: 'projet')]
     private Collection $lienFibres;
 

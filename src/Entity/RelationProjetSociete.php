@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\RelationProjetSocieteRepository;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -16,11 +18,13 @@ class RelationProjetSociete
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['projet' => ['id', 'nom']]])]
     #[ORM\ManyToOne(inversedBy: 'societes')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Gedmo\Versioned]
     private ?Projet $projet = null;
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['societe' => ['id', 'nom']]])]
     #[ORM\ManyToOne(inversedBy: 'projets')]
     #[ORM\JoinColumn(nullable: true)]
     #[Gedmo\Versioned]

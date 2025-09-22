@@ -6,7 +6,7 @@
 {% block path %}
     <a href="{{ path('app_societe_index') }}">Sociétés/</a>
     <a href="{{ path('app_societe_show', {'id': adresse.societe.id}) }}">{{ adresse.societe }}/</a>
-    <a href="{{ path('app_adresse_show', {'id': adresse.id}) }}">{{ adresse.numeroVoie }} {{ adresse.nomVoie }} à {{ adresse.commune }}</a>
+    <a href="{{ path('app_adresse_show', {'id': adresse.id}) }}">{{ adresse.nomSite }}</a>
 {% endblock %}
 {% block content %}
 
@@ -17,6 +17,7 @@
     <div style="display: flex; justify-content: space-evenly;">
 
         <div>
+            <a class="btn ui-popupBtn" asoc="#menueContactSites">ajouter contact</a>
             <h2>Adresse :</h2>
             <table class="table">
                 
@@ -82,5 +83,35 @@
 
         </div>
     </div>
+    
+
+
+            <div id="menueContactSites"> <!-- popup ajt contact sur site -->
+                <span>Ajout contact au site</span>
+                <h2>Ajouter un contact au site {{ adresse.nom }}</h2>
+
+                {{ form_errors(formProj) }}
+                {{ form_start(formProj, {
+                    'action': path('app_projet_new', {'societe': societe.id}),
+                    'method': 'POST'
+                }) }}
+                    {{ form_row(formProj.nom) }}
+                    {{ form_row(formProj.dateDeb) }}
+                    {{ form_row(formProj.dateFin) }}
+                    {{ form_row(formProj.description) }}
+                    {{ form_row(formProj._token) }}
+                    <button class="btn">Save</button>
+                {{ form_end(formProj, {render_rest: false}) }}
+                
+            </div>
+
+    <script>
+
+        $(function() {
+            $( [ "#menueContactSites" ] ).popup();
+        })
+        
+
+    </script>
     
 {% endblock %}

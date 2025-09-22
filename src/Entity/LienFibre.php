@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\LienFibreRepository;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -16,11 +18,13 @@ class LienFibre
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['id', 'nomSite']]])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Gedmo\Versioned]
     private ?Adresse $pointA = null;
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['id', 'nomSite']]])]
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Gedmo\Versioned]
@@ -62,6 +66,7 @@ class LienFibre
     #[Gedmo\Versioned]
     private ?bool $lienActive = null;
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['projet' => ['id', 'nom']]])]
     #[ORM\ManyToOne(inversedBy: 'lienFibres')]
     #[Gedmo\Versioned]
     private ?Projet $projet = null;

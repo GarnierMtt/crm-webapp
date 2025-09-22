@@ -6,6 +6,8 @@ use App\Repository\AdresseRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -46,6 +48,7 @@ class Adresse
     #[Gedmo\Versioned]
     private ?string $nomSite = null;
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['societe' => ['id', 'nom']]])]
     #[ORM\ManyToOne(inversedBy: 'adresses')]
     #[ORM\JoinColumn(nullable: false)]
     #[Gedmo\Versioned]
@@ -54,6 +57,7 @@ class Adresse
     /**
      * @var Collection<int, RelationContactAdresse>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['contacts' => ['contact', 'role', 'notes']]])]
     #[ORM\OneToMany(targetEntity: RelationContactAdresse::class, mappedBy: 'adresse', orphanRemoval: true)]
     private Collection $contacts;
 

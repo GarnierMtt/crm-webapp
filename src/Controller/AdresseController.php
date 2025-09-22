@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Adresse;
 use App\Entity\Societe;
 use App\Form\AdresseForm;
+use App\Form\RelationContactAdresseForm;
 use App\Repository\AdresseRepository;
 use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -90,9 +91,13 @@ final class AdresseController extends AbstractController
     {
 
 
+        // FORM PROJ
+            $formRelContactAdresse = $this->createForm(RelationContactAdresseForm::class, $relationContactAdresse);
+
 
         return $this->render('adresse/show.html.twig', [
             'adresse' => $adresse,
+            'formRelContactAdresse' => $formRelContactAdresse,
         ]);
     }
 

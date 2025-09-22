@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\RelationContactAdresseRepository;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -16,10 +18,12 @@ class RelationContactAdresse
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['contact' => ['id', 'nom', 'prenom']]])]
     #[ORM\ManyToOne(inversedBy: 'adresses')]
     #[Gedmo\Versioned]
     private ?Contact $contact = null;
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresse' => ['id', 'nomSite']]])]
     #[ORM\ManyToOne(inversedBy: 'contacts')]
     #[ORM\JoinColumn(nullable: false)]
     #[Gedmo\Versioned]

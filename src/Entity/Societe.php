@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\SocieteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -32,18 +34,21 @@ class Societe
     /**
      * @var Collection<int, Contact>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['contacts' => ['id', 'nom', 'prenom']]])]
     #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'societe')]
     private Collection $contacts;
 
     /**
      * @var Collection<int, RelationProjetSociete>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['projets' => ['projet', 'role', 'notes']]])]
     #[ORM\OneToMany(targetEntity: RelationProjetSociete::class, mappedBy: 'societe')]
     private Collection $projets;
 
     /**
      * @var Collection<int, Adresse>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['id', 'nomSite']]])]
     #[ORM\OneToMany(targetEntity: Adresse::class, mappedBy: 'societe')]
     private Collection $adresses;
 
