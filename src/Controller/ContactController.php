@@ -12,16 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
-use Symfony\Component\Serializer\Exception\CircularReferenceException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/contact')]
 final class ContactController extends AbstractController
 {
 
-
-    #[Route('/api/contact',name: 'api_contact_index', methods: ['GET'])]
+    //// routes pour l'api
+            // -index
+    #[Route('_api',name: 'api_contact_index', methods: ['GET'])]
     public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer): JsonResponse
     {
         $contacts = $contactRepository->findAll();
@@ -32,10 +31,76 @@ final class ContactController extends AbstractController
         return new JsonResponse($jsonContacts, Response::HTTP_OK, [], true);
     }
 
+            // -show
+    #[Route('_api/{id}',name: 'api_contact_show', methods: ['GET'])]
+    public function apiShow(Contact $contact, SerializerInterface $serializer): JsonResponse
+    {
+        $jsonContact = $serializer->serialize($contact, 'json');
+
+
+
+        return new JsonResponse($jsonContact, Response::HTTP_OK, [], true);
+    }
+
+            // -new
+    #[Route('_api/new', name: 'api_contact_new', methods: ['POST'])]
+    public function apiNew(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    {
+        $contact = new Contact();
+        $form = $this->createForm(ContactForm::class, $contact);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($contact);
+            $entityManager->flush();
+        }
+
+        $jsonContact = $serializer->serialize($contact, 'json');
+
+
+        return new JsonResponse($jsonContact, Response::HTTP_CREATED, [], true);
+    }
+
+            // -edit
+    #[Route('_api/{id}', name: 'api_contact_edit', methods: ['POST'])]
+    public function apiEdit(Request $request, Contact $contact, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    {
+        $form = $this->createForm(ContactForm::class, $contact);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+        }
+
+        $jsonContact = $serializer->serialize($contact, 'json');
+
+
+
+        return new JsonResponse($jsonContact, Response::HTTP_ACCEPTED, [], true);
+    }
+
+            // -delete
+    #[Route('_api/{id}', name: 'api_contact_delete', methods: ['DELETE'])]
+    public function apiDelete(Request $request, Contact $contact, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    {
+        if ($this->isCsrfTokenValid('delete'.$contact->getId(), $request->getPayload()->getString('_token'))) {
+            $entityManager->remove($contact);
+            $entityManager->flush();
+        }
+
+        $jsonContact = $serializer->serialize($contact, 'json');
+
+
+        
+        return new JsonResponse($jsonContact, Response::HTTP_FOUND, [], true);
+    }
 
 
 
 
+    //// routes vues
+            // -index
     #[Route(name: 'app_contact_index', methods: ['GET'])]
     public function index(ContactRepository $contactRepository): Response
     {
@@ -47,13 +112,7 @@ final class ContactController extends AbstractController
         ]);
     }
 
-
-
-
-
-
-
-
+            // -new
     #[Route('/new', name: 'app_contact_new', methods: ['GET', 'POST'])]
     public function new(Request $request, SocieteRepository $societeRepository,EntityManagerInterface $entityManager): Response
     {
@@ -88,13 +147,7 @@ final class ContactController extends AbstractController
         ]);
     }
 
-
-
-
-
-
-
-
+            // -show
     #[Route('/{id}', name: 'app_contact_show', methods: ['GET'])]
     public function show(Contact $contact): Response
     {
@@ -106,13 +159,7 @@ final class ContactController extends AbstractController
         ]);
     }
 
-
-
-
-
-
-
-
+            // -edit
     #[Route('/{id}/edit', name: 'app_contact_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Contact $contact, EntityManagerInterface $entityManager): Response
     {
@@ -133,13 +180,7 @@ final class ContactController extends AbstractController
         ]);
     }
 
-
-
-
-
-
-
-
+            // -delete
     #[Route('/{id}', name: 'app_contact_delete', methods: ['POST'])]
     public function delete(Request $request, Contact $contact, EntityManagerInterface $entityManager): Response
     {
