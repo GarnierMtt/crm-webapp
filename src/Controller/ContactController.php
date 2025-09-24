@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Form\ContactForm;
+use App\Form\DeleteForm;
 use App\Repository\ContactRepository;
 use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -84,16 +85,12 @@ final class ContactController extends AbstractController
     #[Route('_api/{id}', name: 'api_contact_delete', methods: ['DELETE'])]
     public function apiDelete(Request $request, Contact $contact, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$contact->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($contact);
-            $entityManager->flush();
-        }
-
-        $jsonContact = $serializer->serialize($contact, 'json');
-
-
         
+        $entityManager->remove($contact);
+        $entityManager->flush();
+        $jsonContact = $serializer->serialize($contact, 'json');
         return new JsonResponse($jsonContact, Response::HTTP_FOUND, [], true);
+        
     }
 
 
