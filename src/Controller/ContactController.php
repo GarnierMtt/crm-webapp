@@ -99,14 +99,12 @@ final class ContactController extends AbstractController
     //// routes vues
             // -index
     #[Route(name: 'app_contact_index', methods: ['GET'])]
-    public function index(ContactRepository $contactRepository): Response
+    public function index(): Response
     {
 
 
 
-        return $this->render('contact/index.html.twig', [
-            'contacts' => $contactRepository->findAll(),
-        ]);
+        return $this->render('contact/index.html.twig', []);
     }
 
             // -new

@@ -133,4 +133,76 @@ jQuery.fn.extend({
   
     },
 
+
+
+    jsonToObj: function(route) {
+        /*
+        * jsonToObj
+        * parse json string to object
+        * usage snipet:
+              <!-- add to script -->
+                <script>
+                    $(function() {
+                        // [...]
+                        var obj = $( "{{ render(path('api_contact_index'))}}" ).jsonToObj();
+                        // [...]
+                    })
+                </script>
+        * -TkT
+        */
+      // Function to fetch JSON using PHP
+        const getJSON = async () => {
+          // Generate the Response object
+          const response = await fetch(route);
+          if (response.ok) {
+            // Get JSON value from the response body
+            return response.json();
+          }
+          throw new Error("*** PHP file not found");
+        };
+        return getJSON();
+    },
+
+
+
+    jsonObjTable: function(route) {
+        /*
+        * jsonObjTable
+        * parse json object to html table
+        * usage snipet:
+              <!-- htmlTable -->
+                <tbody id="tableId">
+                  <tr>
+                    <td>#tableId.key1</td>
+                    <td>#tableId.key2</td>
+                    <!-- add keys as needed -->
+                  </tr>
+                </tbody>
+              <!-- add to script -->
+                <script>
+                    $(function() {
+                        // [...]
+                        $( "#tableId", obj ).jsonToObj();
+                        // [...]
+                    })
+                </script>
+        * -TkT
+        */
+      //table object itteration
+        var data = $().jsonToObj(route);
+        template = $("<div />").append($(this).children());
+        data
+          .then((result) => {
+            result.forEach((element) => {
+              i = (template).clone().html().replace(new RegExp('#' + $(this).attr("id") + '\\.(.[^# ]+)#', 'g'), function(match, p1) {
+                return element[p1];
+              });
+
+              $(i).appendTo($(this));
+            });
+          })
+          .catch((error) => console.error(error));
+        //data.forEach((element) => console.log(element));
+    },
+
 });
