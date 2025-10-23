@@ -5,6 +5,15 @@
 */
 
 
+/*      GENERAL UI
+    */
+    .ui-noDisplay{
+        display: none;
+    }
+/**/
+
+
+
 /*      TABS
     */
     .ui-tabs{

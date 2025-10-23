@@ -1,4 +1,32 @@
 
+async function jsonToObj(source) {
+    /*
+    * jsonToObj
+    * parse url to json data to object
+    * usage snipet:
+          <!-- add to script -->
+            <script>
+                $(function() {
+                    // [...]
+                    $().jsonToObj("api/object/source");
+                    // [...]
+                })
+            </script>
+    * -TkT
+    */
+      // Generate the Response object
+      const response = await fetch(source);
+      if (response.ok) {
+        // Get JSON value from the response body
+        //console.log("responce: " + response);
+        return response.json();
+      }
+      throw new Error("*** PHP file not found");
+}
+
+
+
+
 jQuery.fn.extend({
 
     tabs: function() {
@@ -135,42 +163,86 @@ jQuery.fn.extend({
 
 
 
-    jsonToObj: function(route) {
-        /*
-        * jsonToObj
-        * parse json string to object
-        * usage snipet:
-              <!-- add to script -->
-                <script>
-                    $(function() {
-                        // [...]
-                        var obj = $( "{{ render(path('api_contact_index'))}}" ).jsonToObj();
-                        // [...]
-                    })
-                </script>
-        * -TkT
-        */
-      // Function to fetch JSON using PHP
-        const getJSON = async () => {
-          // Generate the Response object
-          const response = await fetch(route);
-          if (response.ok) {
-            // Get JSON value from the response body
-            return response.json();
-          }
-          throw new Error("*** PHP file not found");
-        };
-        return getJSON();
-    },
-
-
-
-    jsonObjTable: function(route) {
+    jsonObjTable: function(objSource) {
         /*
         * jsonObjTable
         * parse json object to html table
         * usage snipet:
               <!-- htmlTable -->
+                <tbody id="tableId">
+                  <tr>
+                    <td>#tableId.key1#</td>
+                    <td>#tableId.key2#</td>
+                    <!-- add keys as needed -->
+                  </tr>
+                </tbody>
+              <!-- add to script -->
+                <script>
+                    $(function() {
+                        // [...]
+                        $( "#tableId").jsonToObj("api/object/route");
+                        // [...]
+                    })
+                </script>
+        * -TkT
+        */
+      //table object itteration
+        var data = jsonToObj(objSource);
+        template = $("<div />").append($(this).children());
+        data.then((result) => {
+            result.forEach((element) => {
+              i = (template).clone();
+              $(i).jsonObjParse($(this).attr("id"), element);
+              
+
+              $(i).children().appendTo($(this));
+            });
+          })
+          .catch((error) => console.error(error));
+        //data.forEach((element) => console.log(element));
+    },
+
+
+
+    jsonObjReplace: function(identifier, objSource) {
+        /*
+        * jsonObjTable
+        * parse json object to html table
+        * usage snipet:
+              <!-- htmlTable -->
+                <tbody id="tableId">
+                  <tr>
+                    <td>#tableId.key1#</td>
+                    <td>#tableId.key2#</td>
+                    <!-- add keys as needed -->
+                  </tr>
+                </tbody>
+              <!-- add to script -->
+                <script>
+                    $(function() {
+                        // [...]
+                        $( "#tableId").jsonToObj("api/object/route");
+                        // [...]
+                    })
+                </script>
+        * -TkT
+        */
+      //table object itteration
+        var data = jsonToObj(objSource);
+        data.then((result) => {
+            $(this).jsonObjParse(identifier, result);
+          })
+          .catch((error) => console.error(error));
+    },
+
+
+
+    jsonObjParse: function(identifier, object) {
+        /*
+        * jsonObjReplace
+        * parse json object to html table
+        * usage snipet:
+              <!-- htmlBody -->
                 <tbody id="tableId">
                   <tr>
                     <td>#tableId.key1</td>
@@ -189,20 +261,14 @@ jQuery.fn.extend({
         * -TkT
         */
       //table object itteration
-        var data = $().jsonToObj(route);
-        template = $("<div />").append($(this).children());
-        data
-          .then((result) => {
-            result.forEach((element) => {
-              i = (template).clone().html().replace(new RegExp('#' + $(this).attr("id") + '\\.(.[^# ]+)#', 'g'), function(match, p1) {
-                return element[p1];
-              });
-
-              $(i).appendTo($(this));
-            });
-          })
-          .catch((error) => console.error(error));
-        //data.forEach((element) => console.log(element));
+        //console.log(object);
+        $(this).html((this).html().replace(new RegExp('#' + identifier + '\\.(.[^# ]+)#', 'g'), function(match, p1) {
+          var result = object;
+          p1.split(".").forEach((element) => result = result[element]);
+          //console.log(result);
+          
+          return result;
+        }));
     },
 
 });

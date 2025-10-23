@@ -6,7 +6,6 @@
 {% block path %}
     <a href="{{ path('app_contact_index') }}">Contacts</a>
 {% endblock %}
-{% set contacts =  path('api_contact_index') %}
 {% block content %}
     <table class="table">
         <thead>
@@ -27,30 +26,16 @@
                 <td>#contactTable.post#</td>
             </tr>
         </tbody>
-                {#% for contact in contacts %}
-                    <tr onclick="window.location.href = '{{ path('app_contact_show', {'id': contact.id}) }}'">
-                        <td>{{ contact.nom }}</td>
-                        <td>{{ contact.prenom }}</td>
-                        <td>{{ contact.mel }}</td>
-                        <td>{{ contact.telephone }}</td>
-                        <td>{{ contact.post }}</td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="7">no records found</td>
-                    </tr>
-                {% endfor %#}
     </table>
 
     <a class="btn create" href="{{ path('app_contact_new') }}">Create new</a>
-
-    <script>
-        //var contactsRoute = "{{ path('api_contact_index') }}";
-        //var contacts;
-        $(function(){
-            contacts = $("#contactTable").jsonObjTable("{{ path('api_contact_index') }}");
-            //console.log("contacts: ", contacts);
-        })
-    </script>
     
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+            $("#contactTable").jsonObjTable("{{ path('api_contact_index') }}");
+        });
+    </script>
 {% endblock %}
