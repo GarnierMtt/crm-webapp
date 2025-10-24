@@ -1,4 +1,30 @@
-{{ form_start(formContact) }}
-    {{ form_widget(formContact) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(formContact) }}
+
+<form name="contact_form" method="post" action="{{ path('api_contact') }}/{{ edit|default('new') }}">
+    <div>
+        <label for="contact_form_nom">Nom</label>
+        <input type="text" id="contact_form_nom" name="contact_form[nom]" />
+    </div>
+    <div>
+        <label for="contact_form_prenom">Prenom</label>
+        <input type="text" id="contact_form_prenom" name="contact_form[prenom]" />
+    </div>
+    <div>
+        <label for="contact_form_telephone">Telephone</label>
+        <input type="text" id="contact_form_telephone" name="contact_form[telephone]" />
+    </div>
+    <div>
+        <label for="contact_form_mel">Mel</label>
+        <input type="text" id="contact_form_mel" name="contact_form[mel]" />
+    </div>
+    <div>
+        <label for="contact_form_societe">Societe</label>
+        <input type="text" id="contact_form_societe" name="contact_form[societe]" />
+    </div>
+    <div>
+        <label for="contact_form_post">Post</label>
+        <input type="text" id="contact_form_post" name="contact_form[post]" />
+    </div>
+    <input type="hidden" name="contact_form[_token]" data-controller="csrf-protection" value="csrf-token">
+
+    <button class="btn">Save</button>
+</form>

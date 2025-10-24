@@ -28,7 +28,14 @@
         </tbody>
     </table>
 
-    <a class="btn create" href="{{ path('app_contact_new') }}">Create new</a>
+    <a class="btn create ui-popupBtn" asoc="#nvxContact">Create new</a>
+    
+    <div id="nvxContact"> <!-- popup NVX contact -->
+        <span>Créer un nouveaux contact :</span>
+
+        {{ include('contact/_form.html.twig') }}
+        
+    </div>
     
 {% endblock %}
 
@@ -36,6 +43,8 @@
     <script>
         $(function(){
             $("#contactTable").jsonObjTable("{{ path('api_contact_index') }}");
+
+            $( ["#nvxContact"] ).popup();
         });
     </script>
 {% endblock %}
