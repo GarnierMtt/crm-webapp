@@ -1,14 +1,14 @@
 
-async function jsonToObj(source) {
+async function urlToJsonObj(source) {
     /*
-    * jsonToObj
+    * urlToJsonObj
     * parse url to json data to object
     * usage snipet:
           <!-- add to script -->
             <script>
                 $(function() {
                     // [...]
-                    $().jsonToObj("api/object/source");
+                    $().urlToJsonObj("api/object/source");
                     // [...]
                 })
             </script>
@@ -22,6 +22,32 @@ async function jsonToObj(source) {
         return response.json();
       }
       throw new Error("*** PHP file not found");
+}
+
+
+
+async function apiDeleteObj(source, redirectURL = null) {
+    /*
+    * apiDeleteObj
+    * delete object via api and get responce
+    * usage snipet:
+            // [...]
+            <a class="btn delete" onclick="apiDeleteObj('{{ path("api_contact_delete", {"id": id}) }}', '{{ path("app_contact_index") }}');">Delete</a>
+            // [...]
+    * -TkT
+    */
+      //confirmation
+      if(confirm("Êtes-vous sur de vouloirs supprimés cet objet ?")){
+        //delete request
+        await fetch(source, { method: 'DELETE' })
+          .then((response) => {
+            if(response.status === 204){
+              //redirect if needed
+              if(redirectURL) open(redirectURL, "_self");
+            }
+          })
+          .catch((error) => console.error(error));
+      }
 }
 
 
@@ -180,14 +206,14 @@ jQuery.fn.extend({
                 <script>
                     $(function() {
                         // [...]
-                        $( "#tableId").jsonToObj("api/object/route");
+                        $( "#tableId").urlToJsonObj("api/object/route");
                         // [...]
                     })
                 </script>
         * -TkT
         */
       //table object itteration
-        var data = jsonToObj(objSource);
+        var data = urlToJsonObj(objSource);
         template = $("<div />").append($(this).children());
         data.then((result) => {
             result.forEach((element) => {
@@ -221,14 +247,14 @@ jQuery.fn.extend({
                 <script>
                     $(function() {
                         // [...]
-                        $( "#tableId").jsonToObj("api/object/route");
+                        $( "#tableId").urlToJsonObj("api/object/route");
                         // [...]
                     })
                 </script>
         * -TkT
         */
       //table object itteration
-        var data = jsonToObj(objSource);
+        var data = urlToJsonObj(objSource);
         data.then((result) => {
             $(this).jsonObjParse(identifier, result);
           })
@@ -254,7 +280,7 @@ jQuery.fn.extend({
                 <script>
                     $(function() {
                         // [...]
-                        $( "#tableId", obj ).jsonToObj();
+                        $( "#tableId", obj ).urlToJsonObj();
                         // [...]
                     })
                 </script>

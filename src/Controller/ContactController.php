@@ -83,14 +83,14 @@ final class ContactController extends AbstractController
 
             // -delete
     #[Route('_api/{id}', name: 'api_contact_delete', methods: ['DELETE'])]
-    public function apiDelete(Request $request, Contact $contact, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function apiDelete(Contact $contact, EntityManagerInterface $entityManager): Response
     {
-        
         $entityManager->remove($contact);
         $entityManager->flush();
-        $jsonContact = $serializer->serialize($contact, 'json');
-        return new JsonResponse($jsonContact, Response::HTTP_FOUND, [], true);
-        
+
+
+
+        return new Response('', Response::HTTP_NO_CONTENT);
     }
 
 
@@ -101,9 +101,6 @@ final class ContactController extends AbstractController
     #[Route(name: 'app_contact_index', methods: ['GET'])]
     public function index(): Response
     {
-
-
-
         return $this->render('contact/index.html.twig', []);
     }
 
@@ -144,14 +141,9 @@ final class ContactController extends AbstractController
 
             // -show
     #[Route('/{id}', name: 'app_contact_show', methods: ['GET'])]
-    public function show(Contact $contact): Response
+    public function show(int $id): Response
     {
-
-
-
-        return $this->render('contact/show.html.twig', [
-            'contact' => $contact,
-        ]);
+        return $this->render('contact/show.html.twig', ['id' => $id]);
     }
 
             // -edit
@@ -173,19 +165,5 @@ final class ContactController extends AbstractController
             'contact' => $contact,
             'formContact' => $form,
         ]);
-    }
-
-            // -delete
-    #[Route('/{id}', name: 'app_contact_delete', methods: ['POST'])]
-    public function delete(Request $request, Contact $contact, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$contact->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($contact);
-            $entityManager->flush();
-        }
-
-
-        
-        return $this->redirectToRoute('app_contact_index', [], Response::HTTP_SEE_OTHER);
     }
 }

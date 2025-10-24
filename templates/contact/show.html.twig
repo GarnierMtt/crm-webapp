@@ -36,15 +36,17 @@
         </tbody>
     </table>
 
-    <a class="btn" href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
-    {{ include('contact/_delete_form.html.twig') }}
+    <a class="btn" href="{{ path('app_contact_edit', {'id': id}) }}">edit</a>
+    
+    <a class="btn delete" onclick="apiDeleteObj('{{ path("api_contact_delete", {"id": id}) }}', '{{ path("app_contact_index") }}');">Delete</a>
+    
     
 {% endblock %}
 
 {% block script %}
     <script>
         $(function(){
-            $("#main").jsonObjReplace("contact", "{{ path('api_contact_show', {'id': contact.id}) }}");
+            $("#main").jsonObjReplace("contact", "{{ path('api_contact_show', {'id': id}) }}");
         });
     </script>
 {% endblock %}
