@@ -15,11 +15,26 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/societe')]
 final class SocieteController extends AbstractController
 {
+
+    //// routes pour l'api
+            // -index
+    #[Route('_api',name: 'api_societe_index', methods: ['GET'])]
+    public function apiIndex(SocieteRepository $societeRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $societes = $societeRepository->findAll();
+        $jsonSocietes = $serializer->serialize($societes, 'json');
+
+
+
+        return new JsonResponse($jsonSocietes, Response::HTTP_OK, [], true);
+    }
 
 
 

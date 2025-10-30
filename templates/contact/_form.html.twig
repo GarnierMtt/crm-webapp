@@ -1,5 +1,5 @@
 
-<form name="contact_form" method="post" action="{{ path('api_contact') }}/{{ edit|default('new') }}">
+<form name="contact_form" method="post" action="{{ path('api_contact_index') }}/{{ edit|default('new') }}">
     <div>
         <label for="contact_form_nom">Nom</label>
         <input type="text" id="contact_form_nom" name="contact_form[nom]" />

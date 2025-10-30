@@ -96,6 +96,10 @@
         color: var(--objectColour);
     }
 
+    .ui-popup > *:nth-child(2){
+        margin: .5em;
+    }
+
 /**/
 
 
