@@ -59,7 +59,7 @@ class ResetPasswordController extends AbstractController
         }
 
         $email = (new TemplatedEmail())
-            ->from(new Address('noreply@horten-telecom.fr', 'SupportMailBot'))
+            ->from(new Address('no-reply@horten.fr', 'SupportMailBot'))
             ->to((string) $user->getEmail())
             ->subject('Demande de modification du mot de passe')
             ->htmlTemplate('reset_password/email.html.twig')
