@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Form\ContactForm;
-use App\Form\DeleteForm;
 use App\Repository\ContactRepository;
 use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,7 +44,7 @@ final class ContactController extends AbstractController
 
             // -new
     #[Route('_api/new', name: 'api_contact_new', methods: ['POST'])]
-    public function apiNew(Request $request, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function apiNew(Request $request, EntityManagerInterface $entityManager): Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactForm::class, $contact);
@@ -57,15 +56,13 @@ final class ContactController extends AbstractController
             $entityManager->flush();
         }
 
-        $jsonContact = $serializer->serialize($contact, 'json');
 
-
-        return new JsonResponse($jsonContact, Response::HTTP_CREATED, [], true);
+        return new Response('', Response::HTTP_CREATED);
     }
 
             // -edit
     #[Route('_api/{id}', name: 'api_contact_edit', methods: ['POST'])]
-    public function apiEdit(Request $request, Contact $contact, EntityManagerInterface $entityManager, SerializerInterface $serializer): JsonResponse
+    public function apiEdit(Request $request, Contact $contact, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ContactForm::class, $contact);
         $form->handleRequest($request);
@@ -74,11 +71,9 @@ final class ContactController extends AbstractController
             $entityManager->flush();
         }
 
-        $jsonContact = $serializer->serialize($contact, 'json');
 
 
-
-        return new JsonResponse($jsonContact, Response::HTTP_ACCEPTED, [], true);
+        return new Response('', Response::HTTP_ACCEPTED);
     }
 
             // -delete

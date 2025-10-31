@@ -214,7 +214,7 @@ jQuery.fn.extend({
         */
       //table object itteration
         var data = urlToJsonObj(objSource);
-        template = $("<div />").append($(this).children());
+        var template = $("<div />").append($(this).children());
         data.then((result) => {
             result.forEach((element) => {
               i = (template).clone();
@@ -295,6 +295,59 @@ jQuery.fn.extend({
           
           return result;
         }));
+    },
+
+
+
+    ajaxForm: function() {
+        /*
+        * ajaxForm
+        * send form data via ajax
+        * usage snipet:
+              <!-- htmlBody -->
+                <tbody id="tableId">
+                  <tr>
+                    <td>#tableId.key1</td>
+                    <td>#tableId.key2</td>
+                    <!-- add keys as needed -->
+                  </tr>
+                </tbody>
+              <!-- add to script -->
+                <script>
+                    $(function() {
+                        // [...]
+                        $( "#tableId", obj ).urlToJsonObj();
+                        // [...]
+                    })
+                </script>
+        * -TkT
+        */
+      //function start:
+        $(this).on('submit', async function(e) {
+          e.preventDefault(); // prevent native submit
+          var formData = new FormData(this);
+
+
+          await fetch(formData.get('action'), {
+            method: formData.get('method'),
+            body: formData
+          })
+          .then((response) => {
+            if(response.status === 201 || response.status === 202){
+              alert("Formulaire envoyé avec succès.");
+            }
+            else{
+              alert("Erreur lors de l'envoi du formulaire.");
+            }
+          })
+          .catch((error) => console.error(error));
+
+
+          for (const pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+          }
+
+        });
     },
 
 });

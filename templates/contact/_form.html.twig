@@ -2,7 +2,7 @@
 <form name="contact_form" method="post" action="{{ path('api_contact_index') }}/{{ edit|default('new') }}">
     <div>
         <label for="contact_form_nom">Nom</label>
-        <input type="text" id="contact_form_nom" name="contact_form[nom]" />
+        <input type="text" id="contact_form_nom" name="contact_form[nom]" required/>
     </div>
     <div>
         <label for="contact_form_prenom">Prenom</label>
@@ -10,15 +10,17 @@
     </div>
     <div>
         <label for="contact_form_telephone">Telephone</label>
-        <input type="text" id="contact_form_telephone" name="contact_form[telephone]" />
+        <input type="tel" id="contact_form_telephone" name="contact_form[telephone]" />
     </div>
     <div>
         <label for="contact_form_mel">Mel</label>
-        <input type="text" id="contact_form_mel" name="contact_form[mel]" />
+        <input type="email" id="contact_form_mel" name="contact_form[mel]" required/>
     </div>
     <div>
         <label for="contact_form_societe">Societe</label>
-        <input type="text" id="contact_form_societe" name="contact_form[societe]" />
+        <select id="contact_form_societe" name="contact_form[societe]" >
+            <option value="#contact_form_societe.id#">#contact_form_societe.nom#</option>
+        </select>
     </div>
     <div>
         <label for="contact_form_post">Post</label>
@@ -28,3 +30,11 @@
 
     <button class="btn">Save</button>
 </form>
+<script>
+    $(function(){
+        $("#contact_form_societe").jsonObjTable("{{ path('api_societe_index') }}");
+        $("<option value=''> -- Selectionner une societe -- </option>").appendTo($("#contact_form_societe"));
+
+        $('form').ajaxForm();
+    });
+</script>
