@@ -15,24 +15,29 @@
                     <th>Nom du Site</th>
                 </tr>
         </thead>
-        <tbody>
-                {% for adresse in adresses %}
-                    <tr onclick="window.location.href = '{{ path('app_adresse_show', {'id': adresse.id}) }}'">
-                        <td>
-                            {{ adresse.numeroVoie }} {{ adresse.nomVoie }},<br>
-                            {{ adresse.codePostal }} {{ adresse.commune }}, {{ adresse.pays }}
-                        </td>
-                        <td>{{ adresse.societe }}</td>
-                        <td>{{ adresse.nomSite }}</td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="8">no records found</td>
-                    </tr>
-                {% endfor %}
+        <tbody id="adresseTable">
+            <tr onclick="window.location.href = '{{ path('app_adresse_index')}}/#adresseTable.id#'">
+                
+                <td>
+                    #adresseTable.numeroVoie# #adresseTable.nomVoie#,<br>
+                    #adresseTable.codePostal# #adresseTable.commune#, #adresseTable.pays#
+                </td>
+                <td>#adresseTable.societe.nom#</td>
+                <td>#adresseTable.nomSite#</td>
+            </tr>
         </tbody>
     </table>
 
     <a class="btn create" href="{{ path('app_adresse_new') }}">Create new</a>
     
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function(){
+            $("#adresseTable").jsonObjTable("{{ path('api_adresse_index') }}");
+
+            //$( "#nvxContact" ).popup();
+        });
+    </script>
 {% endblock %}

@@ -36,13 +36,68 @@ final class SocieteController extends AbstractController
         return new JsonResponse($jsonSocietes, Response::HTTP_OK, [], true);
     }
 
+            // -show
+    #[Route('_api/{id}',name: 'api_societe_show', methods: ['GET'])]
+    public function apiShow(Societe $societe, SerializerInterface $serializer): JsonResponse
+    {
+        $jsonSociete = $serializer->serialize($societe, 'json');
+
+
+
+        return new JsonResponse($jsonSociete, Response::HTTP_OK, [], true);
+    }
+
+            // -new
+    #[Route('_api/new', name: 'api_societe_new', methods: ['POST'])]
+    public function apiNew(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $societe = new Societe();
+        $form = $this->createForm(SocieteForm::class, $societe);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($societe);
+            $entityManager->flush();
+        }
+
+
+        return new Response('', Response::HTTP_CREATED);
+    }
+
+            // -edit
+    #[Route('_api/{id}', name: 'api_societe_edit', methods: ['POST'])]
+    public function apiEdit(Request $request, Societe $societe, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(SocieteForm::class, $societe);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+        }
+
+
+
+        return new Response('', Response::HTTP_ACCEPTED);
+    }
+
+            // -delete
+    #[Route('_api/{id}', name: 'api_societe_delete', methods: ['DELETE'])]
+    public function apiDelete(Societe $societe, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($societe);
+        $entityManager->flush();
+
+
+
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
 
 
 
 
-
-
-
+    //// routes vues
+            // -index
     #[Route(name: 'app_societe_index', methods: ['GET'])]
     public function index(SocieteRepository $societeRepository): Response
     {
