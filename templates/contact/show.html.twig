@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import "contact/_form.html.twig" as contact_form %}
 
 {% block title %} - Contact{% endblock %}
 
@@ -36,10 +37,16 @@
         </tbody>
     </table>
 
-    <a class="btn" href="{{ path('app_contact_edit', {'id': id}) }}">edit</a>
+    <a class="btn" onclick="uiPopupBtn('#editContact')">Modifier</a>
     
     <a class="btn delete" onclick="apiDeleteObj('{{ path("api_contact_delete", {"id": id}) }}', '{{ path("app_contact_index") }}');">Delete</a>
     
+    <div id="editContact"> <!-- popup edit contact -->
+        <span>modifier le contact :</span>
+
+        {{ contact_form.form('#contact.id#') }}
+        
+    </div>
     
 {% endblock %}
 
@@ -47,6 +54,12 @@
     <script>
         $(function(){
             $("#main").jsonObjReplace("contact", "{{ path('api_contact_show', {'id': id}) }}");
+
+            setTimeout(function(){
+                $( "#editContact" ).popup();
+
+            {{ contact_form.script() }}
+            }, 500);
         });
     </script>
 {% endblock %}

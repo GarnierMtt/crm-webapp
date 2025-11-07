@@ -36,18 +36,35 @@ async function apiDeleteObj(source, redirectURL = null) {
             // [...]
     * -TkT
     */
-      //confirmation
-      if(confirm("Êtes-vous sur de vouloirs supprimés cet objet ?")){
-        //delete request
-        await fetch(source, { method: 'DELETE' })
-          .then((response) => {
-            if(response.status === 204){
-              //redirect if needed
-              if(redirectURL) open(redirectURL, "_self");
-            }
-          })
-          .catch((error) => console.error(error));
-      }
+  //fonction start:
+    //confirm delete
+    if(confirm("Êtes-vous sur de vouloirs supprimés cet objet ?")){
+      //delete request
+      await fetch(source, { method: 'DELETE' })
+        .then((response) => {
+          if(response.status === 204){
+            //redirect if needed
+            if(redirectURL) open(redirectURL, "_self");
+          }
+        })
+        .catch((error) => console.error(error));
+    }
+}
+
+
+
+function uiPopupBtn(linkedPopup) {
+    /*
+    * uiPopupBtn
+    * popup btn handler
+    * usage snipet:
+            // [ look at "popup: function()" below ]
+    * -TkT
+    */
+  //fonction start:
+    $(linkedPopup).css("top", ($(window).height() - $(linkedPopup).height())/2 + "px") ;
+    $(linkedPopup).css("left", ($(window).width() - $(linkedPopup).width() )/2 + "px");
+    $(linkedPopup).toggleClass("ui-activ");
 }
 
 
@@ -80,6 +97,7 @@ jQuery.fn.extend({
                 </script>
         * -TkT
         */
+      //function start:
         this.addClass("ui-tabs");
         this.children("ul").first().addClass("ui-tabsList").children("li").each(function(){
             $(this).addClass("ui-tabsTab");
@@ -103,7 +121,7 @@ jQuery.fn.extend({
         * draggable popup element formating and manipulation
         * usage snipet:
               <!-- popup activator -->
-                <a class="ui-popupBtn" asoc="#popupId">btnText</a>
+                <a onclick="uiPopupBtn('#popupId')">btnText</a>
               <!-- popup -->
                 <div id="popupId">
                   <span>Popup Title</span> <!-- optional -->
@@ -113,78 +131,67 @@ jQuery.fn.extend({
                 <script>
                     $(function() {
                         // [...]
-                        $( ["#popupId", "#popupId2"] ).popup();
+                        $( "#popupId" ).popup();
                         // [...]
                     })
                 </script>
         * -TkT
         */
-      //popup formating
-        this.each(function(){
-          var popupID = "";
-          $(this).each(function() {
-            popupID += this;
-          });
-          $(popupID).addClass("ui-popup");
-          if($(popupID).children().first().is("span")){
-            $(popupID).children().first().wrap("<div class='ui-popupHead'></div>");
+      //function start:
+        //popup formating
+        $(this).addClass("ui-popup");
+        if($(this).children().first().is("span")){
+          $(this).children().first().wrap("<div class='ui-popupHead'></div>");
+        }else{
+          $("<div class='ui-popupHead'><span></span></div>").prependTo($(this));
+        }
+        $("<div><span>&#10021; </span> <a class='btn delete' onclick=\"uiPopupBtn('#" + $(this).attr("id") + "')\">&#9587;</a></div>").appendTo($(this).children().first());
+
+
+        
+        //initialize drag functions variables
+        var elmnt = $(this)[0], elmPoseX, elmPoseY;
+        //call drag function on popup head mousedown
+        elmnt.querySelector(".ui-popupHead").onmousedown = dragMouseDown;
+        
+        //drag handler
+        function dragMouseDown(e) {
+          e.preventDefault();
+          //get the mouse cursor position at startup
+          elmPoseX = elmnt.offsetLeft - e.clientX; 
+          elmPoseY = elmnt.offsetTop - e.clientY;
+          //stop handling when mouse button is released
+          document.onmouseup = closeDragElement;
+          //whenever the cursor moves, call elementDrag function
+          document.onmousemove = elementDrag;
+        }
+
+        //element position handler
+        function elementDrag(e) {
+          //handle horizontal position and stop popup from going out of viewport
+          if(0 > (e.clientX + elmPoseX)){
+            elmnt.style.left = "0px";
+          }else if((e.clientX + elmPoseX) > (window.innerWidth - elmnt.offsetWidth)){
+            elmnt.style.left = window.innerWidth - elmnt.offsetWidth + "px";
           }else{
-            $("<div class='ui-popupHead'><span></span></div>").prependTo($(popupID));
-          }
-          $("<div><span>&#10021; </span> <a class='btn delete ui-popupBtn' asoc='#" + $(popupID).attr("id") + "'>&#9587;</a></div>").appendTo($(popupID).children().first());
-
-          
-          var elmnt = $(popupID)[0], elmPoseX, elmPoseY;
-          elmnt.querySelector(".ui-popupHead").onmousedown = dragMouseDown;
-          
-
-          function dragMouseDown(e) {
-            e.preventDefault();
-            // get the mouse cursor position at startup:
-            elmPoseX = elmnt.offsetLeft - e.clientX; 
-            elmPoseY = elmnt.offsetTop - e.clientY;
-            document.onmouseup = closeDragElement;
-            // call a function whenever the cursor moves:
-            document.onmousemove = elementDrag;
+          elmnt.style.left = e.clientX + elmPoseX + "px"
           }
 
-          function elementDrag(e) {
-            // calculate the new cursor position:
-            // set the element's new position:
-            if(0 > (e.clientX + elmPoseX)){
-              elmnt.style.left = "0px";
-            }else if((e.clientX + elmPoseX) > (window.innerWidth - elmnt.offsetWidth)){
-              elmnt.style.left = window.innerWidth - elmnt.offsetWidth + "px";
-            }else{
-            elmnt.style.left = e.clientX + elmPoseX + "px"
-            }
-
-            if(0 > (e.clientY + elmPoseY)){
-              elmnt.style.top = "0px";
-            }else if((e.clientY + elmPoseY) > (window.innerHeight - elmnt.offsetHeight)){
-              elmnt.style.top = window.innerHeight - elmnt.offsetHeight + "px";
-            }else{
-            elmnt.style.top = e.clientY + elmPoseY + "px"
-            }
+          //handle vertical position and stop popup from going out of viewport
+          if(0 > (e.clientY + elmPoseY)){
+            elmnt.style.top = "0px";
+          }else if((e.clientY + elmPoseY) > (window.innerHeight - elmnt.offsetHeight)){
+            elmnt.style.top = window.innerHeight - elmnt.offsetHeight + "px";
+          }else{
+          elmnt.style.top = e.clientY + elmPoseY + "px"
           }
+        }
 
-          function closeDragElement() {
-            // stop moving when mouse button is released:
-            document.onmouseup = null;
-            document.onmousemove = null;
-          }
-
-
-        });
-      //popup btn
-        $(".ui-popupBtn").click(function() {
-          var linkedPopup = $(this).attr("asoc");
-          $(linkedPopup).css("top", $(this).offset().top + "px") ;
-          $(linkedPopup).css("left", ($(window).width() - $(linkedPopup).width() )/2 + "px");
-          $(linkedPopup).toggleClass("ui-activ");
-        });
-      //dragging popup
-  
+        //stop listening to movement
+        function closeDragElement() {
+          document.onmouseup = null;
+          document.onmousemove = null;
+        }
     },
 
 
@@ -235,25 +242,25 @@ jQuery.fn.extend({
         * jsonObjTable
         * parse json object to html table
         * usage snipet:
-              <!-- htmlTable -->
-                <tbody id="tableId">
-                  <tr>
-                    <td>#tableId.key1#</td>
-                    <td>#tableId.key2#</td>
+              <!-- html -->
+                <body>
+                  <div>
+                    <label>#objectId.key1#</label>
+                    <label>#objectId.key2#</label>
                     <!-- add keys as needed -->
-                  </tr>
-                </tbody>
+                  </div>
+                </body>
               <!-- add to script -->
                 <script>
                     $(function() {
                         // [...]
-                        $( "#tableId").urlToJsonObj("api/object/route");
+                        $("body").jsonObjReplace("objectId","api/object/route");
                         // [...]
                     })
                 </script>
         * -TkT
         */
-      //table object itteration
+      //function start:
         var data = urlToJsonObj(objSource);
         data.then((result) => {
             $(this).jsonObjParse(identifier, result);
@@ -268,32 +275,21 @@ jQuery.fn.extend({
         * jsonObjReplace
         * parse json object to html table
         * usage snipet:
-              <!-- htmlBody -->
-                <tbody id="tableId">
-                  <tr>
-                    <td>#tableId.key1</td>
-                    <td>#tableId.key2</td>
-                    <!-- add keys as needed -->
-                  </tr>
-                </tbody>
-              <!-- add to script -->
-                <script>
-                    $(function() {
-                        // [...]
-                        $( "#tableId", obj ).urlToJsonObj();
-                        // [...]
-                    })
-                </script>
+
         * -TkT
         */
-      //table object itteration
-        //console.log(object);
+      //function start:
+        //get and replace all matching patterns
         $(this).html((this).html().replace(new RegExp('#' + identifier + '\\.(.[^# ]+)#', 'g'), function(match, p1) {
-          var result = object;
-          p1.split(".").forEach((element) => result = result[element]);
-          //console.log(result);
-          
-          return result;
+          var result = object; //instance object
+          //split identifyer to access nested elements and stop if element not found
+          p1.split(".").forEach((element) => {
+            if(result){
+              result = result[element];
+            }
+          });
+
+          return result; //return asociated data
         }));
     },
 
@@ -305,49 +301,72 @@ jQuery.fn.extend({
         * send form data via ajax
         * usage snipet:
               <!-- htmlBody -->
-                <tbody id="tableId">
-                  <tr>
-                    <td>#tableId.key1</td>
-                    <td>#tableId.key2</td>
-                    <!-- add keys as needed -->
-                  </tr>
-                </tbody>
+                <form name="contact_form" method="post" action="{{ path('api_contact_index') }}/{{ edit|default('new') }}">
+                  <div>
+                      <label for="contact_form_nom">Nom</label>
+                      <input type="text" id="contact_form_nom" name="contact_form[nom]" required/>
+                  </div>
+                  <div>
+                      <label for="contact_form_prenom">Prenom</label>
+                      <input type="text" id="contact_form_prenom" name="contact_form[prenom]" />
+                  </div>
+                  <!-- add fields as needed -->
+                  <input type="hidden" name="contact_form[_token]" data-controller="csrf-protection" value="csrf-token">
+
+                  <button class="btn">Save</button>
+                </form>
               <!-- add to script -->
                 <script>
-                    $(function() {
-                        // [...]
-                        $( "#tableId", obj ).urlToJsonObj();
-                        // [...]
-                    })
+                    $(function(){
+                        $('form').ajaxForm();
+                    });
                 </script>
         * -TkT
         */
       //function start:
+        //form submit handler
         $(this).on('submit', async function(e) {
           e.preventDefault(); // prevent native submit
           var formData = new FormData(this);
 
-
-          await fetch(formData.get('action'), {
-            method: formData.get('method'),
+          await fetch(this.action, {
+            method: this.method,
             body: formData
           })
           .then((response) => {
             if(response.status === 201 || response.status === 202){
               alert("Formulaire envoyé avec succès.");
+              location.reload(); //reload page
             }
             else{
               alert("Erreur lors de l'envoi du formulaire.");
             }
           })
           .catch((error) => console.error(error));
-
-
-          for (const pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-          }
-
         });
+
+        
+        //form population handler for edit forms
+        if(this[0].action.match(/\/(\d+)$/)){ //check if action url ends with an id
+          var data = urlToJsonObj(this[0].action); //get object data from api
+          data.then((result) => {
+            for(var key of this[0]){  //itterate form elements
+              var m;
+              if(m = key.name.match(/\[(.+)\]/)){
+                if(result[m[1]]){ //check if key exists in object
+                  if(result[m[1]].id){
+                    key.value = result[m[1]].id; //set form element value for related objects
+                  }
+                  else{
+                    key.value = result[m[1]]; //set form element value
+                  }
+                }
+              }
+            }
+          })
+          .catch((error) => console.error(error));
+        }
+
     },
 
 });
