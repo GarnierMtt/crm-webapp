@@ -1,4 +1,56 @@
-{{ form_start(formAdresse) }}
-    {{ form_widget(formAdresse) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(formAdresse) }}
+
+{% if societes is not defined %}
+    {% if societe is not defined %}
+        {% set societes = render(path('api_societe_index'))|json_decode %}
+    {% endif %}
+{% endif %}
+
+    <form name="adresse_form" id="adresse_form" method="post" action="{{ path('api_adresse_index') }}/{{ edit|default('new') }}">
+        <div>
+            <label for="adresse_form_nomSite">Nom du site</label>
+            <input type="text" id="adresse_form_nomSite" name="adresse_form[nomSite]" required/>
+        </div>
+        <div>
+            <label for="adresse_form_societe">Societe</label>
+            <select id="adresse_form_societe" name="adresse_form[societe]" required>
+                <option value=''> -- Selectionner une societe -- </option>
+                {% for societe in societes %}
+                    <option value="{{ societe.id }}">{{ societe.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="adresse_form_pays">Pays</label>
+            <input type="text" id="adresse_form_pays" name="adresse_form[pays]"/>
+        </div>
+        <div>
+            <label for="adresse_form_commune">Commune</label>
+            <input type="text" id="adresse_form_commune" name="adresse_form[commune]" />
+        </div>
+        <div>
+            <label for="adresse_form_codePostal">Code postal</label>
+            <input type="number" id="adresse_form_codePostal" name="adresse_form[codePostal]" />
+        </div>
+        <div>
+            <label for="adresse_form_numeroVoie">Numero de la voie</label>
+            <input type="text" id="adresse_form_numeroVoie" name="adresse_form[numeroVoie]" />
+        </div>
+        <div>
+            <label for="adresse_form_nomVoie">Nom de la voie</label>
+            <input type="text" id="adresse_form_nomVoie" name="adresse_form[nomVoie]"/>
+        </div>
+        <div>
+            <label for="adresse_form_complement">Complement</label>
+            <input type="text" id="adresse_form_complement" name="adresse_form[complement]"/>
+        </div>
+        <input type="hidden" name="adresse_form[_token]" data-controller="csrf-protection" value="csrf-token">
+
+        <button class="btn">Save</button>
+    </form>
+
+
+    <script>
+        $(function(){
+            $("#adresse_form").ajaxForm();
+        });
+    </script>

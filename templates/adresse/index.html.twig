@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% set adresses = render(path('api_adresse_index'))|json_decode %}
 
 {% block title %} - Adresse index{% endblock %}
 
@@ -15,29 +16,36 @@
                     <th>Nom du Site</th>
                 </tr>
         </thead>
-        <tbody id="adresseTable">
-            <tr onclick="window.location.href = '{{ path('app_adresse_index')}}/#adresseTable.id#'">
-                
-                <td>
-                    #adresseTable.numeroVoie# #adresseTable.nomVoie#,<br>
-                    #adresseTable.codePostal# #adresseTable.commune#, #adresseTable.pays#
-                </td>
-                <td>#adresseTable.societe.nom#</td>
-                <td>#adresseTable.nomSite#</td>
-            </tr>
+        <tbody>
+            {% for adresse in adresses %}
+                <tr onclick="window.location.href = '{{ path('app_adresse_index')}}/{{ adresse.id }}'">
+                    
+                    <td>
+                        {{ adresse.numeroVoie }} {{ adresse.nomVoie }},<br>
+                        {{ adresse.codePostal }} {{ adresse.commune }}, {{ adresse.pays }}
+                    </td>
+                    <td>{{ adresse.societe.nom }}</td>
+                    <td>{{ adresse.nomSite }}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
-    <a class="btn create" href="{{ path('app_adresse_new') }}">Create new</a>
+    <a class="btn create" onclick="uiPopupBtn('#nvlAdresse')">Create new</a>
+
+    <div id="nvlAdresse"> <!-- popup NVL adresse -->
+        <span>Créer une nouvelle adresse :</span>
+
+        {{ include('adresse/_form.html.twig') }}
+        
+    </div>
     
 {% endblock %}
 
 {% block script %}
     <script>
         $(function(){
-            $("#adresseTable").jsonObjTable("{{ path('api_adresse_index') }}");
-
-            //$( "#nvxContact" ).popup();
+            $( "#nvlAdresse" ).popup();
         });
     </script>
 {% endblock %}

@@ -1,6 +1,60 @@
-{{ form_start(formRelContactAdresse) }}
 
-    {{ form_widget(formRelContactAdresse) }}
-    
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(formRelContactAdresse, {render_rest: false}) }}
+{% if contacts is not defined %}
+    {% if contact is not defined %}
+        {% set contacts = render(path('api_contact_index'))|json_decode %}
+    {% endif %}
+{% endif %}
+
+{% if adresses is not defined %}
+    {% if adresse is not defined %}
+        {% set adresses = render(path('api_adresse_index'))|json_decode %}
+    {% endif %}
+{% endif %}
+
+
+<form name="relation_contact_adresse_form" id="relation_contact_adresse_form{{ edit|default('new') }}" method="post" action="{{ path('api_relation_contact_adresse_index') }}/{{ edit|default('new') }}">
+    <div>
+        <label for="relation_contact_adresse_form_role">Role</label>
+        <input type="text" id="relation_contact_adresse_form_role" name="relation_contact_adresse_form[role]" required/>
+    </div>
+    <div>
+        <label for="relation_contact_adresse_form_notes">Notes</label>
+        <textarea id="relation_contact_adresse_form_notes" name="relation_contact_adresse_form[notes]"></textarea>
+    </div>
+    <div>
+        <label for="relation_contact_adresse_form_contact">Contact</label>
+        <select id="relation_contact_adresse_form_contact" name="relation_contact_adresse_form[contact]" required>
+            {% if contact is defined %}
+                <option value="{{ contact.id }}">{{ contact.nom }} {{ contact.prenom }}</option>
+            {% else %}
+                <option value=''> -- Selectionner un  contact -- </option>
+                {% for contact in contacts %}
+                    <option value="{{ contact.id }}">{{ contact.nom }} {{ contact.prenom }}</option>
+                {% endfor %}
+            {% endif %}
+        </select>
+    </div>
+    <div>
+        <label for="relation_contact_adresse_form_adresse">Adresse</label>
+        <select id="relation_contact_adresse_form_adresse" name="relation_contact_adresse_form[adresse]" required>
+            {% if adresse is defined %}
+                <option value="{{ adresse.id }}">{{ adresse.nomSite }}</option>
+            {% else %}
+                <option value=''> -- Selectionner une adresse -- </option>
+                {% for frmAdresse in adresses %}
+                    <option value="{{ adresse.id }}">{{ adresse.nomSite }}</option>
+                {% endfor %}
+            {% endif %}
+        </select>
+    </div>
+    <input type="hidden" name="relation_contact_adresse_form[_token]" data-controller="csrf-protection" value="csrf-token">
+
+    <button class="btn">Save</button>
+</form>
+
+
+<script>
+    $(function(){
+        $("#relation_contact_adresse_form{{ edit|default('new') }}").ajaxForm();
+    });
+</script>

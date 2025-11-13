@@ -1,38 +1,38 @@
 {% extends 'base.html.twig' %}
-{% import "contact/_form.html.twig" as contact_form %}
+{% set contact = render(path('api_contact_show', {'id': id}))|json_decode %}
 
 {% block title %} - Contact{% endblock %}
 
 
 {% block path %}
     <a href="{{ path('app_contact_index') }}">Contacts/</a>
-    <a href="{{ path('app_contact_index') }}/#contact.id#">#contact.nom# #contact.prenom#</a>
+    <a href="{{ path('app_contact_show', {'id': id}) }}">{{ contact.nom }} {{ contact.prenom }}</a>
 {% endblock %}
 {% block content %}
     <table class="table">
         <tbody>
                 <tr>
                     <th>Nom</th>
-                    <td>#contact.nom#</td>
+                    <td>{{ contact.nom }}</td>
                 </tr>
                 <tr>
                     <th>Prénom</th>
-                    <td>#contact.prenom#</td>
+                    <td>{{ contact.prenom }}</td>
                 </tr>
                 <tr>
                     <th>Mél</th>
-                    <td>#contact.mel#</td>
+                    <td>{{ contact.mel }}</td>
                 </tr>
                 <tr>
                     <th>Téléphone</th>
-                    <td>#contact.telephone#</td>
+                    <td>{{ contact.telephone }}</td>
                 </tr>
                 <tr>
                     <th>Pôst</th>
-                    <td>#contact.post#</td>
+                    <td>{{ contact.post }}</td>
                 </tr>
                     <th>Société</th>
-                    <td>#contact.societe.nom#</td>
+                    <td>{{ contact.societe.nom is defined ? contact.societe.nom }}</td>
                 </tr>
         </tbody>
     </table>
@@ -44,7 +44,7 @@
     <div id="editContact"> <!-- popup edit contact -->
         <span>modifier le contact :</span>
 
-        {{ contact_form.form('#contact.id#') }}
+        {{ include('contact/_form.html.twig', {'edit': id}) }}
         
     </div>
     
@@ -53,13 +53,7 @@
 {% block script %}
     <script>
         $(function(){
-            $("#main").jsonObjReplace("contact", "{{ path('api_contact_show', {'id': id}) }}");
-
-            setTimeout(function(){
-                $( "#editContact" ).popup();
-
-            {{ contact_form.script() }}
-            }, 500);
+            $( "#editContact" ).popup();
         });
     </script>
 {% endblock %}

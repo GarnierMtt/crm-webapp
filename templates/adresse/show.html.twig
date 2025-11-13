@@ -1,25 +1,22 @@
 {% extends 'base.html.twig' %}
+{% set adresse = render(path('api_adresse_show', {'id': id}))|json_decode %}
 
 {% block title %} - Adresse{% endblock %}
 
 
 {% block path %}
     <a href="{{ path('app_societe_index') }}">Sociétés/</a>
-    <a href="{{ path('app_societe_show', {'id': adresse.societe.id}) }}">{{ adresse.societe }}/</a>
-    <a href="{{ path('app_adresse_show', {'id': adresse.id}) }}">{{ adresse.nomSite }}</a>
+    <a href="{{ path('app_societe_show', {'id': adresse.societe.id}) }}">{{ adresse.societe.nom }}/</a>
+    <a href="{{ path('app_adresse_show', {'id': id}) }}">{{ adresse.nomSite }}</a>
 {% endblock %}
 {% block content %}
-
-    <div class="spacedLine">
-        <a class="btn" href="{{ path('app_adresse_edit', {'id': adresse.id}) }}">edit</a>
-        {{ include('adresse/_delete_form.html.twig') }}
-    </div>
     <div style="display: flex; justify-content: space-evenly;">
 
         <div>
-            <a class="btn ui-popupBtn" asoc="#menueContactSites">ajouter contact</a>
             <h2>Adresse :</h2>
-            <table class="table">
+
+            <a class="btn" onclick="uiPopupBtn('#editAdresse')">edit</a>
+            <table style="margin-top: 10px;" class="table">
                 
                 <tbody>
                         <tr>
@@ -28,7 +25,7 @@
                         </tr>
                         <tr>
                             <th>Societe</th>
-                            <td>{{ adresse.societe }}</td>
+                            <td>{{ adresse.societe.nom }}</td>
                         </tr>
                         <tr>
                             <th>Adresse</th>
@@ -44,74 +41,87 @@
         <div>
             <h2> Contacts associés : </h2>
 
+            <a class="btn" onclick="uiPopupBtn('#menueContactSites')">asocier contact</a>
             <table style="margin-top: 10px;" class="table objTable"> <!-- liste contacts -->
-                <tr>
-                    <th colspan="2">
-                        <span>contacts</span>
-                    </th>
-                </tr>
-                {% for relation in adresse.contacts %}
-                    <tr class="collapsible" onclick="colaps(this)">
-                        <td>{{ relation }}</td>
-                        <td>{{ relation.contact }}</td>
-                    </tr>
-                    <tr class="collContent">
-                        <td colspan="2">
-                            <div>
-                                <div class="spacedLine">
-                                    <span>infos :</span>
-                                    <a class="btn" href="{{ path('app_relation_contact_adresse_edit', {'id': relation.id, 'msg': 'Modifier la relation entre ' ~ relation.contact ~ ' et ' ~ adresse.nomSite}) }}" target="_blank">modifier</a>
-                                </div>
-                                <ul>
-                                    tél: {{ relation.contact.telephone }}<br>
-                                    mél: {{ relation.contact.mel }}<br>
-                                    notes :
-                                    <ul>
-                                        {{ relation.notes }}
-                                    </ul>
-                                </ul>
-
-                            </div>
-                        </td>
-                    </tr>
-                {% else %}
+                <thead>
                     <tr>
-                        <td colspan="2">aucun site associé</td>
+                        <th colspan="2">
+                            <span>contacts</span>
+                        </th>
                     </tr>
-                {% endfor %}
+                </thead>
+
+                <tbody>
+                    {% for relation in adresse.contacts %}
+                        <tr class="collapsible" onclick="colaps(this)">
+                            <td>{{ relation.role }}</td>
+                            <td>{{ relation.contact.nom }} {{ relation.contact.prenom }}</td>
+                        </tr>
+                        <tr class="collContent">
+                            <td colspan="2">
+                                <div>
+                                    <div class="spacedLine">
+                                        <span>infos :</span>
+                                        <a class="btn" onclick="uiPopupBtn('#menueContactSites{{ relation.id }}')">modifier</a>
+                                    </div>
+                                    <ul>
+                                        tél: {{ relation.contact.telephone }}<br>
+                                        mél: {{ relation.contact.mel }}<br>
+                                        notes :
+                                        <ul>
+                                            {{ relation.notes|nl2br }}
+                                        </ul>
+                                    </ul>
+
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">aucun contact associés</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
             </table>
 
         </div>
     </div>
+
+    <div id="editAdresse"> <!-- popup edit adresse -->
+        <span>modifier l'adresse :</span>
+
+        <a class="btn delete" onclick="apiDeleteObj('{{ path("api_adresse_delete", {"id": id}) }}', '{{ path("app_societe_show", {"id": adresse.societe.id}) }}');">Delete</a>
+
+        {{ include('adresse/_form.html.twig', {'edit': adresse.id}) }}
+    </div>
+
+    <div id="menueContactSites"> <!-- popup asoc contact sur site -->
+        <span>Associés un contact au site :</span>
+
+        {{ include('relation_contact_adresse/_form.html.twig') }}
+    </div>
+
+    {% for relation in adresse.contacts %}
+        <div id="menueContactSites{{ relation.id }}"> <!-- popup edit relation contact adresse -->
+            <span>Modifier la relation du contact au site :</span>
+
+            <a class="btn delete" onclick="apiDeleteObj('{{ path("api_relation_contact_adresse_delete", {"id": relation.id}) }}', '{{ path("app_adresse_show", {"id": id}) }}');">Delete</a>
+
+            {{ include('relation_contact_adresse/_form.html.twig', {'edit': relation.id}) }}
+        </div>
+    {% endfor %}
     
 
+{% endblock %}
 
-            <div id="menueContactSites"> <!-- popup ajt contact sur site -->
-                <span>Ajout contact au site</span>
-                <h2>Ajouter un contact au site {{ adresse.nom }}</h2>
-
-                {{ form_errors(formProj) }}
-                {{ form_start(formProj, {
-                    'action': path('app_projet_new', {'societe': societe.id}),
-                    'method': 'POST'
-                }) }}
-                    {{ form_row(formProj.nom) }}
-                    {{ form_row(formProj.dateDeb) }}
-                    {{ form_row(formProj.dateFin) }}
-                    {{ form_row(formProj.description) }}
-                    {{ form_row(formProj._token) }}
-                    <button class="btn">Save</button>
-                {{ form_end(formProj, {render_rest: false}) }}
-                
-            </div>
-
+{% block script %}
     <script>
-
         $(function() {
-            $( [ "#menueContactSites" ] ).popup();
-        })
-        
-
+            $( "#editAdresse" ).popup();
+            $( "#menueContactSites" ).popup();
+            {% for relation in adresse.contacts %}
+                $( "#menueContactSites{{ relation.id }}" ).popup();
+            {% endfor %}
+        }) 
     </script>
-    
 {% endblock %}

@@ -57,7 +57,7 @@ class Adresse
     /**
      * @var Collection<int, RelationContactAdresse>
      */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['contacts' => ['contact', 'role', 'notes']]])]
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['contacts' => ['id','contact', 'role', 'notes']]])]
     #[ORM\OneToMany(targetEntity: RelationContactAdresse::class, mappedBy: 'adresse', orphanRemoval: true)]
     private Collection $contacts;
 

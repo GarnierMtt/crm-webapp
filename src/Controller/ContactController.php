@@ -53,10 +53,13 @@ final class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($contact);
             $entityManager->flush();
+
+            return new Response('', Response::HTTP_CREATED);
         }
 
 
-        return new Response('', Response::HTTP_CREATED);
+        
+        return new Response('', Response::HTTP_EXPECTATION_FAILED);
     }
 
             // -edit
@@ -68,11 +71,13 @@ final class ContactController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
+            
+            return new Response('', Response::HTTP_ACCEPTED);
         }
 
 
 
-        return new Response('', Response::HTTP_ACCEPTED);
+        return new Response('', Response::HTTP_EXPECTATION_FAILED);
     }
 
             // -delete

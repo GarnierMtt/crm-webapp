@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% import "contact/_form.html.twig" as contact_form %}
+{% set contacts = render(path('api_contact_index'))|json_decode %}
 
 {% block title %} - Contact index{% endblock %}
 
@@ -19,13 +19,15 @@
                 </tr>
         </thead>
         <tbody id="contactTable">
-            <tr onclick="window.location.href = '{{ path('app_contact_index')}}/#contactTable.id#'">
-                <td>#contactTable.nom#</td>
-                <td>#contactTable.prenom#</td>
-                <td>#contactTable.mel#</td>
-                <td>#contactTable.telephone#</td>
-                <td>#contactTable.post#</td>
-            </tr>
+            {% for contact in contacts %}
+                <tr onclick="window.location.href = '{{ path("app_contact_show", {"id": contact.id }) }}'">
+                    <td>{{ contact.nom }}</td>
+                    <td>{{ contact.prenom }}</td>
+                    <td>{{ contact.mel }}</td>
+                    <td>{{ contact.telephone }}</td>
+                    <td>{{ contact.post}}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
@@ -34,7 +36,7 @@
     <div id="nvxContact"> <!-- popup NVX contact -->
         <span>Créer un nouveaux contact :</span>
 
-        {{ contact_form.form() }}
+        {{ include('contact/_form.html.twig') }}
         
     </div>
     
@@ -43,10 +45,7 @@
 {% block script %}
     <script>
         $(function(){
-            $("#contactTable").jsonObjTable("{{ path('api_contact_index') }}");
-
             $( "#nvxContact" ).popup();
-            {{ contact_form.script() }}
         });
     </script>
 {% endblock %}

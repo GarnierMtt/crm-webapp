@@ -8,7 +8,7 @@ async function urlToJsonObj(source) {
             <script>
                 $(function() {
                     // [...]
-                    $().urlToJsonObj("api/object/source");
+                    urlToJsonObj("api/object/source");
                     // [...]
                 })
             </script>

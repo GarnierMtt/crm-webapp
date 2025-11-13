@@ -18,7 +18,7 @@ class RelationContactAdresse
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['contact' => ['id', 'nom', 'prenom']]])]
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['contact' => ['id', 'nom', 'prenom', 'mel', 'telephone']]])]
     #[ORM\ManyToOne(inversedBy: 'adresses')]
     #[Gedmo\Versioned]
     private ?Contact $contact = null;

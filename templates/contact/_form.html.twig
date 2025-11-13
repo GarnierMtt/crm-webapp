@@ -1,48 +1,53 @@
 
-{% macro form(edit = "new") %}
-    <form name="contact_form" id="contact_form" method="post" action="{{ path('api_contact_index') }}/{{ edit }}">
-        <div>
-            <label for="contact_form_nom">Nom</label>
-            <input type="text" id="contact_form_nom" name="contact_form[nom]" required/>
-        </div>
-        <div>
-            <label for="contact_form_prenom">Prenom</label>
-            <input type="text" id="contact_form_prenom" name="contact_form[prenom]" />
-        </div>
-        <div>
-            <label for="contact_form_telephone">Telephone</label>
-            <input type="tel" id="contact_form_telephone" name="contact_form[telephone]" />
-        </div>
-        <div>
-            <label for="contact_form_mel">Mel</label>
-            <input type="email" id="contact_form_mel" name="contact_form[mel]" required/>
-        </div>
-        <div>
-            <label for="contact_form_societe">Societe</label>
-            <select id="contact_form_societe" name="contact_form[societe]" >
-                <option value="#contact_form_societe.id#">#contact_form_societe.nom#</option>
-            </select>
-        </div>
-        <div>
-            <label for="contact_form_post">Post</label>
-            <input type="text" id="contact_form_post" name="contact_form[post]" />
-        </div>
-        <input type="hidden" name="contact_form[_token]" data-controller="csrf-protection" value="csrf-token">
+{% if societes is not defined %}
+    {% if societe is not defined %}
+        {% set societes = render(path('api_societe_index'))|json_decode %}
+    {% endif %}
+{% endif %}
 
-        <button class="btn">Save</button>
-    </form>
-{% endmacro %}
+<form name="contact_form" id="contact_form" method="post" action="{{ path('api_contact_index') }}/{{ edit|default('new') }}">
+    <div>
+        <label for="contact_form_nom">Nom</label>
+        <input type="text" id="contact_form_nom" name="contact_form[nom]" required/>
+    </div>
+    <div>
+        <label for="contact_form_prenom">Prenom</label>
+        <input type="text" id="contact_form_prenom" name="contact_form[prenom]" />
+    </div>
+    <div>
+        <label for="contact_form_telephone">Telephone</label>
+        <input type="tel" id="contact_form_telephone" name="contact_form[telephone]" />
+    </div>
+    <div>
+        <label for="contact_form_mel">Mel</label>
+        <input type="email" id="contact_form_mel" name="contact_form[mel]" required/>
+    </div>
+    <div>
+        <label for="contact_form_societe">Societe</label>
+        <select id="contact_form_societe" name="contact_form[societe]" >
+            {% if societe is defined %}
+                <option value="{{ societe.id }}">{{ societe.nom }}</option>
+            {% else %}
+                <option value=''> -- Selectionner une société -- </option>
+                {% for societe in societes %}
+                    <option value="{{ societe.id }}">{{ societe.nom }}</option>
+                {% endfor %}
+            {% endif %}
+        </select>
+    </div>
+    <div>
+        <label for="contact_form_post">Post</label>
+        <input type="text" id="contact_form_post" name="contact_form[post]" />
+    </div>
+    <input type="hidden" name="contact_form[_token]" data-controller="csrf-protection" value="csrf-token">
+
+    <button class="btn">Save</button>
+</form>
+
 
 
 <script>
     $(function(){
-
-        {% macro script() %}
-            $("#contact_form_societe").jsonObjTable("{{ path('api_societe_index') }}");
-            $("<option value=''> -- Selectionner une societe -- </option>").appendTo($("#contact_form_societe"));
-
-            $("#contact_form").ajaxForm();
-        {% endmacro %}
-
+        $("#contact_form").ajaxForm();
     });
 </script>
