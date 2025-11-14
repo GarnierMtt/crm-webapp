@@ -5,7 +5,7 @@
     {% endif %}
 {% endif %}
 
-<form name="contact_form" id="contact_form" method="post" action="{{ path('api_contact_index') }}/{{ edit|default('new') }}">
+<form name="contact_form" id="contact_form{{ edit|default('new') }}" method="post" action="{{ path('api_contact_index') }}/{{ edit|default('new') }}">
     <div>
         <label for="contact_form_nom">Nom</label>
         <input type="text" id="contact_form_nom" name="contact_form[nom]" required/>
@@ -48,6 +48,6 @@
 
 <script>
     $(function(){
-        $("#contact_form").ajaxForm();
+        $("#contact_form{{ edit|default('new') }}").ajaxForm();
     });
 </script>

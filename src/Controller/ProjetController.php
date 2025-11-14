@@ -11,6 +11,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Gedmo\Loggable\Entity\LogEntry;
 use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
@@ -19,6 +21,87 @@ use Gedmo\Loggable\LoggableListener;
 #[Route('/projet')]
 final class ProjetController extends AbstractController
 {
+
+    //// routes pour l'api
+            // -index
+    #[Route('_api',name: 'api_projet_index', methods: ['GET'])]
+    public function apiIndex(ProjetRepository $projetRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $projets = $projetRepository->findAll();
+        $jsonProjets = $serializer->serialize($projets, 'json');
+
+
+
+        return new JsonResponse($jsonProjets, Response::HTTP_OK, [], true);
+    }
+
+            // -show
+    #[Route('_api/{id}', name: 'api_projet_show', methods: ['GET'])]
+    public function apiShow(Projet $projet, SerializerInterface $serializer): JsonResponse
+    {
+        $jsonProjet = $serializer->serialize($projet, 'json');
+
+
+
+        return new JsonResponse($jsonProjet, Response::HTTP_OK, [], true);
+    }
+
+            // -new
+    #[Route('_api/new', name: 'api_projet_new', methods: ['POST'])]
+    public function apiNew(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $projet = new Projet();
+        $form = $this->createForm(ProjetForm::class, $projet);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($projet);
+            $entityManager->flush();
+            
+            return new Response('', Response::HTTP_CREATED);
+        }
+
+
+        
+        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+    }
+
+            // -edit
+    #[Route('_api/{id}', name: 'api_projet_edit', methods: ['POST'])]
+    public function apiEdit(Request $request, Projet $projet, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(ProjetForm::class, $projet);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return new Response('', Response::HTTP_ACCEPTED);
+        }
+
+
+
+        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+    }
+
+            // -delete
+    #[Route('_api/{id}', name: 'api_projet_delete', methods: ['DELETE'])]
+    public function apiDelete(Projet $projet, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($projet);
+        $entityManager->flush();
+
+
+
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+
+
+
+    //// routes vues
+            // -index
     public function nodeDecorator(array $node): string
     {
         $name = htmlspecialchars($node['name']);

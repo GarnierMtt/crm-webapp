@@ -39,21 +39,20 @@
 
     <a class="btn" onclick="uiPopupBtn('#editContact')">Modifier</a>
     
-    <a class="btn delete" onclick="apiDeleteObj('{{ path("api_contact_delete", {"id": id}) }}', '{{ path("app_contact_index") }}');">Delete</a>
     
     <div id="editContact"> <!-- popup edit contact -->
         <span>modifier le contact :</span>
+        
+        <a class="btn delete" onclick="apiDeleteObj('{{ path("api_contact_delete", {"id": id}) }}', '{{ path("app_contact_index") }}');">Delete</a>
 
         {{ include('contact/_form.html.twig', {'edit': id}) }}
-        
     </div>
     
-{% endblock %}
 
-{% block script %}
     <script>
         $(function(){
             $( "#editContact" ).popup();
         });
     </script>
+    
 {% endblock %}

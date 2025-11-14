@@ -5,7 +5,7 @@
     {% endif %}
 {% endif %}
 
-    <form name="adresse_form" id="adresse_form" method="post" action="{{ path('api_adresse_index') }}/{{ edit|default('new') }}">
+    <form name="adresse_form" id="adresse_form{{ edit|default('new') }}" method="post" action="{{ path('api_adresse_index') }}/{{ edit|default('new') }}">
         <div>
             <label for="adresse_form_nomSite">Nom du site</label>
             <input type="text" id="adresse_form_nomSite" name="adresse_form[nomSite]" required/>
@@ -13,10 +13,14 @@
         <div>
             <label for="adresse_form_societe">Societe</label>
             <select id="adresse_form_societe" name="adresse_form[societe]" required>
-                <option value=''> -- Selectionner une societe -- </option>
-                {% for societe in societes %}
+                {% if societe is defined %}
                     <option value="{{ societe.id }}">{{ societe.nom }}</option>
-                {% endfor %}
+                {% else %}
+                    <option value=''> -- Selectionner une societe -- </option>
+                    {% for societe in societes %}
+                        <option value="{{ societe.id }}">{{ societe.nom }}</option>
+                    {% endfor %}
+                {% endif %}
             </select>
         </div>
         <div>
@@ -51,6 +55,6 @@
 
     <script>
         $(function(){
-            $("#adresse_form").ajaxForm();
+            $("#adresse_form{{ edit|default('new') }}").ajaxForm();
         });
     </script>

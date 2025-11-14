@@ -1,5 +1,5 @@
 
-<form name="user_form" id="user_form" method="post" action="{{ path('api_user_index') }}/{{ edit|default('new') }}">
+<form name="user_form" id="user_form{{ edit|default('new') }}" method="post" action="{{ path('api_user_index') }}/{{ edit|default('new') }}">
     <div>
         <label for="user_form_email">Mel</label>
         <input type="email" id="user_form_email" name="user_form[email]" required/>
@@ -21,6 +21,6 @@
 
 <script>
     $(function(){
-        $("#user_form").ajaxForm();
+        $("#user_form{{ edit|default('new') }}").ajaxForm();
     });
 </script>

@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
+{% set societe = render(path('api_societe_show', {'id': id}))|json_decode %}
 
 {% block title %} - Société{% endblock %}
 {% block head %}
     <link rel="stylesheet" href="{{ asset('styles/societe.css') }}">
-    
 {% endblock %}
+
 
 {% block path %}
     <a href="{{ path('app_societe_index') }}">Sociétés/</a>
@@ -18,7 +19,7 @@
 
                 <div class="spacedLine">
                     <h1>{{ societe.nom }}</h1>
-                    <a class="btn ui-popupBtn" asoc="#editSte">Edit</a>
+                    <a class="btn ui-popupBtn" onclick="uiPopupBtn('#editSte')">Edit</a>
                 </div>
 
                 <div>
@@ -37,13 +38,13 @@
                     </ul>
                     <div id="tabs-1">
                         <div>
-                            <a class="btn ui-popupBtn" asoc="#nvxContact">Nouveau</a>
+                            <a class="btn ui-popupBtn" onclick="uiPopupBtn('#nvxContact')">Nouveau</a>
                             <div class="ui-listGrid">
                                 {% for contact in societe.contacts %}
                                     <div class="ui-listGridItem">
                                         <img src="{{ asset('img/profile.png') }}" style="height:100%">
                                         <div>
-                                            <span>{{ contact }}</span><br>
+                                            <span>{{ contact.nom }}</span><br>
                                             mél: <span>{{ contact.mel }}</span><br>
                                             tél: <span>{{ contact.telephone }}</span>
                                         </div>
@@ -115,30 +116,30 @@
                                 <tr>
                                     <th colspan="2">
                                         <span>Sites</span>
-                                        <a class="btn ui-popupBtn" asoc="#menueSites">[+]</a>
+                                        <a class="btn ui-popupBtn" onclick="uiPopupBtn('#menueSites')">[+]</a>
                                     </th>
                                 </tr>
                                 {% for adresse in societe.adresses %}
                                     <tr class="collapsible" onclick="colaps(this)">
-                                        <td>{{ adresse }}</td>
+                                        <td>{{ adresse.nomSite }}</td>
                                     </tr>
                                     <tr class="collContent">
                                         <td>
                                             <div>
                                                 <div class="spacedLine">
                                                     <span>Adresse :</span>
-                                                    <a class="btn" href="{{ path('app_adresse_show', {'id': adresse.id, 'msg': 'Modifier l\'adresse du site associer à la sociétée ' ~ societe.nom}) }}">consulter</a>
+                                                    <a class="btn" href="{{ path('app_adresse_show', {'id': adresse.id}) }}">consulter</a>
                                                 </div>
                                                 <ul>
                                                     {{ adresse.numeroVoie }} {{ adresse.nomVoie }},<br>
-                                                    {{ adresse.codePostal }} {{ adresse.commune }}, {{ adresse.Pays }}<br>
+                                                    {{ adresse.codePostal }} {{ adresse.commune }}, {{ adresse.pays }}<br>
                                                     <ul>
                                                         {{ adresse.complement|nl2br }}
                                                     </ul>
                                                 </ul>
                                                 Contacts associés :
                                                 {% for relation in adresse.contacts %}
-                                                    <div style="width: 100%" class="btn" onclick="unwrap(this)">{{ relation.contact }} -> {{ relation }}</div>
+                                                    <div style="width: 100%" class="btn" onclick="unwrap(this)">{{ relation.contact.nom }} {{ relation.contact.prenom }} -> {{ relation.role }}</div>
                                                     <div class="wrapper">
                                                         <div class="inner">
                                                             <ul>
@@ -176,28 +177,28 @@
                                 <tr>
                                     <th colspan="2">
                                         <span>Projets</span>
-                                        <a class="btn ui-popupBtn" asoc="#nvxProjet">[+]</a>
+                                        <a class="btn ui-popupBtn" onclick="uiPopupBtn('#nvxProjet')">[+]</a>
                                     </th>
                                 </tr>
-                                {% for pair in societe.projets %}
+                                {% for relation in societe.projets %}
                                     <tr class="collapsible" onclick="colaps(this)">
-                                        <td>{{ pair.relation }}</td>
-                                        <td>{{ pair.projet }}</td>
+                                        <td>{{ relation.role }}</td>
+                                        <td>{{ relation.projet.nom }}</td>
                                     </tr>
                                     <tr class="collContent">
                                         <td colspan="2">
                                             <div>
                                                 <div style="text-align: right;">
-                                                    <a class="btn" href="{{ path('app_projet_show', {'id': pair.projet.id}) }}">ouvrir projet</a>
+                                                    <a class="btn" href="{{ path('app_projet_show', {'id': relation.projet.id}) }}">ouvrir projet</a>
                                                 </div>
                                                 Date de début/fin :
                                                 <ul>
-                                                    <li>{{ pair.projet.dateDeb ? pair.projet.dateDeb|date('Y/m/d') : '' }}</li>
-                                                    <li>{{ pair.projet.dateFin ? pair.projet.dateFin|date('Y/m/d') : '' }}</li>
+                                                    <li>{{ relation.projet.dateDeb ? relation.projet.dateDeb|date('Y/m/d') : '' }}</li>
+                                                    <li>{{ relation.projet.dateFin ? relation.projet.dateFin|date('Y/m/d') : '' }}</li>
                                                 </ul>
                                                 Déscription :
                                                 <ul>
-                                                    <li>{{ pair.projet.description|nl2br }}</li>
+                                                    <li>{{ relation.projet.description|nl2br }}</li>
                                                 </ul>
                                                 
                                             </div>
@@ -218,21 +219,11 @@
 
             
             <div id="editSte"> <!-- popup Edit STE -->
-                <span>edit societe</span>
-                {{ include('societe/_delete_form.html.twig') }}
-                <h2>Modifier les informations de la société</h2>
+                <span>Modifier les informations de la société</span>
 
-                {{ form_errors(formSte) }}
-                {{ form_start(formSte, {
-                    'action': path('app_societe_edit', {'id': societe.id}),
-                    'method': 'POST'
-                }) }}
-                    {{ form_row(formSte.nom) }}
-                    {{ form_row(formSte.telephoneStandard) }}
-                    {{ form_row(formSte.siret) }}
-                    {{ form_row(formSte._token) }}
-                    <button class="btn">Save</button>
-                {{ form_end(formSte, {render_rest: false}) }}
+                <a class="btn delete" onclick="apiDeleteObj('{{ path("api_societe_delete", {"id": id}) }}', '{{ path("app_societe_index") }}');">Delete</a>
+
+                {{ include('societe/_form.html.twig', {'edit': id}) }}
             </div>
 
             
@@ -240,43 +231,14 @@
                 <span>Nouveaux site</span>
                 <h2>Nouveau site associer à la societe {{ societe.nom }}</h2>
 
-                {{ form_errors(formAdresse) }}
-                {{ form_start(formAdresse, {
-                    'action': path('app_adresse_new', {'societe': societe.id}),
-                    'method': 'POST'
-                }) }}
-                    {{ form_row(formAdresse.nomSite) }}
-                    {{ form_row(formAdresse.pays) }}
-                    {{ form_row(formAdresse.commune) }}
-                    {{ form_row(formAdresse.codePostal) }}
-                    {{ form_row(formAdresse.nomVoie) }}
-                    {{ form_row(formAdresse.numeroVoie) }}
-                    {{ form_row(formAdresse.complement) }}
-                    {{ form_row(formAdresse._token) }}
-                    <button class="btn">Save</button>
-                {{ form_end(formAdresse, {render_rest: false}) }}
-                
+                {{ include('adresse/_form.html.twig') }}
             </div>
 
 
             <div id="nvxContact"> <!-- popup NVX contact -->
-                <span>Popup Title</span>
-                <h2>Créer un contact associer a la société {{ societe.nom }}</h2>
+                <span>Créer un contact associer a la société {{ societe.nom }}</span>
 
-                {{ form_errors(formContact) }}
-                {{ form_start(formContact, {
-                    'action': path('app_contact_new', {'societe': societe.id}),
-                    'method': 'POST'
-                }) }}
-                    {{ form_row(formContact.post) }}
-                    {{ form_row(formContact.nom) }}
-                    {{ form_row(formContact.prenom) }}
-                    {{ form_row(formContact.telephone) }}
-                    {{ form_row(formContact.mel) }}
-                    {{ form_row(formContact._token) }}
-                    <button class="btn">Save</button>
-                {{ form_end(formContact, {render_rest: false}) }}
-                
+                {{ include('contact/_form.html.twig') }}
             </div>
 
 
@@ -284,19 +246,7 @@
                 <span>nouveux projet</span>
                 <h2>Créer un projet associer a la société {{ societe.nom }}</h2>
 
-                {{ form_errors(formProj) }}
-                {{ form_start(formProj, {
-                    'action': path('app_projet_new', {'societe': societe.id}),
-                    'method': 'POST'
-                }) }}
-                    {{ form_row(formProj.nom) }}
-                    {{ form_row(formProj.dateDeb) }}
-                    {{ form_row(formProj.dateFin) }}
-                    {{ form_row(formProj.description) }}
-                    {{ form_row(formProj._token) }}
-                    <button class="btn">Save</button>
-                {{ form_end(formProj, {render_rest: false}) }}
-                
+                {#{ include('projet/_form.html.twig') }#}
             </div>
         </div>
 
@@ -309,7 +259,7 @@
                     <div style="width: 100%" class="btn" onclick="unwrap(this)">Historique</div>
                     <div class="wrapper">
                         <div class="inner">
-                            {% include 'history/logsTable.twig' %}
+                            {#% include 'history/logsTable.twig' %#}
                         </div>
                     </div>
                 </div>
@@ -320,9 +270,7 @@
     </div>
 
 
-    
     <script>
-
         $(function() {
             $( "#tabs" ).tabs();
 
@@ -331,7 +279,6 @@
             $( "#menueSites" ).popup();
             $( "#nvxProjet" ).popup();
         })
-        
-
     </script>
+
 {% endblock %}

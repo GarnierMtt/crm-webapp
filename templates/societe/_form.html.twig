@@ -1,4 +1,26 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+
+<form name="societe_form" id="societe_form{{ edit|default('new') }}" method="post" action="{{ path('api_societe_index') }}/{{ edit|default('new') }}">
+    <div>
+        <label for="societe_form_nom">Nom</label>
+        <input type="text" id="societe_form_nom" name="societe_form[nom]" required/>
+    </div>
+    <div>
+        <label for="societe_form_telephoneStandard">Téléphone standard</label>
+        <input type="text" id="societe_form_telephoneStandard" name="societe_form[telephoneStandard]"/>
+    </div>
+    <div>
+        <label for="societe_form_siret">SIRET</label>
+        <input type="text" id="societe_form_siret" name="societe_form[siret]" required/>
+    </div>
+    <input type="hidden" name="societe_form[_token]" data-controller="csrf-protection" value="csrf-token">
+
+    <button class="btn">Save</button>
+</form>
+
+
+
+<script>
+    $(function(){
+        $("#societe_form{{ edit|default('new') }}").ajaxForm();
+    });
+</script>

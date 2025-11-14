@@ -11,11 +11,94 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/relation/projet/societe')]
 final class RelationProjetSocieteController extends AbstractController
 {
+
+    //// routes pour l'api
+            // -index
+    #[Route('_api',name: 'api_relation_projet_societe_index', methods: ['GET'])]
+    public function apiIndex(RelationProjetSocieteRepository $relationProjetSocieteRepository, SerializerInterface $serializer): JsonResponse
+    {
+        $relationsProjetSociete = $relationProjetSocieteRepository->findAll();
+        $jsonRelationsProjetSociete = $serializer->serialize($relationsProjetSociete, 'json');
+
+
+
+        return new JsonResponse($jsonRelationsProjetSociete, Response::HTTP_OK, [], true);
+    }
+
+            // -show
+    #[Route('_api/{id}', name: 'api_relation_projet_societe_show', methods: ['GET'])]
+    public function apiShow(RelationProjetSociete $relationProjetSociete, SerializerInterface $serializer): JsonResponse
+    {
+        $jsonRelationProjetSociete = $serializer->serialize($relationProjetSociete, 'json');
+
+
+
+        return new JsonResponse($jsonRelationProjetSociete, Response::HTTP_OK, [], true);
+    }
+
+            // -new
+    #[Route('_api/new', name: 'api_relation_projet_societe_new', methods: ['POST'])]
+    public function apiNew(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $relationProjetSociete = new RelationProjetSociete();
+        $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($relationProjetSociete);
+            $entityManager->flush();
+            
+            return new Response('', Response::HTTP_CREATED);
+        }
+
+
+        
+        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+    }
+
+            // -edit
+    #[Route('_api/{id}', name: 'api_relation_projet_societe_edit', methods: ['POST'])]
+    public function apiEdit(Request $request, RelationProjetSociete $relationProjetSociete, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(RelationProjetSocieteForm::class, $relationProjetSociete);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return new Response('', Response::HTTP_ACCEPTED);
+        }
+
+
+
+        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+    }
+
+            // -delete
+    #[Route('_api/{id}', name: 'api_relation_projet_societe_delete', methods: ['DELETE'])]
+    public function apiDelete(RelationProjetSociete $relationProjetSociete, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($relationProjetSociete);
+        $entityManager->flush();
+
+
+
+        return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+
+
+
+    //// routes vues
+            // -index
     #[Route(name: 'app_relation_projet_societe_index', methods: ['GET'])]
     public function index(RelationProjetSocieteRepository $relationProjetSocieteRepository): Response
     {

@@ -99,14 +99,16 @@ final class SocieteController extends AbstractController
     //// routes vues
             // -index
     #[Route(name: 'app_societe_index', methods: ['GET'])]
-    public function index(SocieteRepository $societeRepository): Response
+    public function index(): Response
     {
+        return $this->render('societe/index.html.twig', []);
+    }
 
-
-
-        return $this->render('societe/index.html.twig', [
-            'societes' => $societeRepository->findAll(),
-        ]);
+            // -show
+    #[Route('/{id}', name: 'app_societe_show', methods: ['GET'])]
+    public function show(int $id): Response
+    {
+        return $this->render('societe/show.html.twig', ['id' => $id]);
     }
 
 
@@ -143,7 +145,7 @@ final class SocieteController extends AbstractController
 
 
 
-
+    /*
     #[Route('/{id}', name: 'app_societe_show', methods: ['GET'])]
     public function show(Societe $societe, EntityManagerInterface $em): Response
     {
@@ -245,7 +247,7 @@ final class SocieteController extends AbstractController
             'formContact' => $formContact,
             'formProj' => $formProj,
         ]);
-    }
+    }//*/
 
 
 

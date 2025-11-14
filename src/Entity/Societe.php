@@ -34,21 +34,21 @@ class Societe
     /**
      * @var Collection<int, Contact>
      */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['contacts' => ['id', 'nom', 'prenom']]])]
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['contacts' => ['id', 'nom', 'prenom', 'mel', 'telephone', 'post']]])]
     #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'societe')]
     private Collection $contacts;
 
     /**
      * @var Collection<int, RelationProjetSociete>
      */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['projets' => ['projet', 'role', 'notes']]])]
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['projets' => ['id', 'role', 'notes', 'projet']]])]
     #[ORM\OneToMany(targetEntity: RelationProjetSociete::class, mappedBy: 'societe')]
     private Collection $projets;
 
     /**
      * @var Collection<int, Adresse>
      */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['id', 'nomSite']]])]
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['id', 'nomSite', 'numeroVoie', 'nomVoie', 'codePostal', 'commune', 'pays', 'complement', 'contacts']]])]
     #[ORM\OneToMany(targetEntity: Adresse::class, mappedBy: 'societe')]
     private Collection $adresses;
 
@@ -135,11 +135,7 @@ class Societe
      */
     public function getProjets(): Collection
     {
-        return $this->projets->map(
-            fn($relation) => [
-                'relation' => $relation,
-                'projet' => $relation->getProjet(),
-        ]);
+        return $this->projets;
     }
 
     public function addProjet(RelationProjetSociete $projet): static
@@ -162,13 +158,6 @@ class Societe
         }
 
         return $this;
-    }
-
-
-
-    public function __toString(): string
-    {
-        return $this->nom;
     }
 
     /**
@@ -199,5 +188,12 @@ class Societe
         }
 
         return $this;
+    }
+
+
+
+    public function __toString(): string
+    {
+        return $this->nom;
     }
 }

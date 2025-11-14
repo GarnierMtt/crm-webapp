@@ -74,17 +74,31 @@
         position: fixed;
         z-index: 1000;
         background-color: var(--secondBgColour);
-        text-align: center;
         border: 1px solid var(--accentColour);
         text-wrap-mode: nowrap;
         justify-self: center;
+    }
+
+
+    .ui-popup > form > *{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .ui-popup > form > button{
+        margin-top: .5em;
+        justify-self: flex-end;
+    }
+
+    .ui-popup > form > div > label{
+        margin-right: .5em;
     }
 
     .ui-popup.ui-activ{
         display: initial;
     }
 
-    .ui-popupHead{        
+    .ui-popupHead{
         display: flex; 
         flex-direction: row; 
         flex-wrap: nowrap;
@@ -96,7 +110,7 @@
         color: var(--objectColour);
     }
 
-    .ui-popup > *:nth-child(2){
+    .ui-popup > *:nth-child( n + 2 ){
         margin: .5em;
     }
 

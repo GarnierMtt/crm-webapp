@@ -18,7 +18,7 @@ class RelationProjetSociete
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['projet' => ['id', 'nom']]])]
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['projet' => ['id', 'nom', 'dateDeb', 'dateFin', 'description']]])]
     #[ORM\ManyToOne(inversedBy: 'societes')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Gedmo\Versioned]
