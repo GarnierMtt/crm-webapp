@@ -290,13 +290,6 @@ class Projet
         return $this;
     }
 
-
-
-    public function __toString(): string
-    {
-        return $this->nom;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;

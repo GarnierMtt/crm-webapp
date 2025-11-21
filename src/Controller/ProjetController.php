@@ -14,25 +14,47 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Gedmo\Loggable\Entity\LogEntry;
-use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
-use Gedmo\Loggable\LoggableListener;
 
 #[Route('/projet')]
 final class ProjetController extends AbstractController
 {
+    //// api documentation
+    public function documentation($data, $em): Response
+    {
+        $mappings = array();
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Projet')->getFieldNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Projet')->getTypeOfField($atribute)];
+        }
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Projet')->getAssociationNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Projet')->getAssociationTargetClass($atribute)];
+        }
+
+
+
+        return $this->render('api/api_obj_index.html.twig', [
+            'class' => "projet",
+            'atributes' => $mappings,
+            'data' => $data,
+        ]);
+    }
+
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_projet_index', methods: ['GET'])]
-    public function apiIndex(ProjetRepository $projetRepository, SerializerInterface $serializer): JsonResponse
+    #[Route('_api', name: 'api_projet_index', methods: ['GET'])]
+    public function apiIndex(ProjetRepository $projetRepository, SerializerInterface $serializer, EntityManagerInterface $em): Response
     {
-        $projets = $projetRepository->findAll();
-        $jsonProjets = $serializer->serialize($projets, 'json');
+        
+            $jsonProjets = $serializer->serialize($projetRepository->findAll(), 'json');
+        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
+            return new JsonResponse($jsonProjets, Response::HTTP_OK, [], true);
+        }
 
-
-
-        return new JsonResponse($jsonProjets, Response::HTTP_OK, [], true);
+        return $this->documentation($jsonProjets, $em);
     }
 
             // -show

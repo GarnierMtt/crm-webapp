@@ -100,7 +100,7 @@ body{
 }
 
 
-.content{
+.content, .documentation{
     width: calc(100% - 2em);
     height: 100%;
     padding: 1em;

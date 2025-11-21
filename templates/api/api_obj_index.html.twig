@@ -1,0 +1,41 @@
+{% extends 'api/api_base.html.twig' %}
+
+{% block title %} - Index {{ class }}{% endblock %}
+
+
+{% block path %}
+    <a href="{{ path('api_' ~ class ~ '_index') }}">{{ class|capitalize }}s</a>
+{% endblock %}
+
+{% block doc %}
+    <p>{{ class|capitalize }} scheama :</p>
+
+    <ul>
+        {% for atribute in atributes %}
+            <li><span>{{ atribute[0] }} > type : {{ atribute[1] }}</span></li>
+        {% endfor %}
+    </ul>
+
+
+    <p>Liste des endpoints pour la ressource Projet :</p>
+{% endblock %}
+
+{% block content %}
+
+    <table class="table">
+        <tr>
+                <td>{{ data|json_encode }}</td>
+            </tr>
+        {% for entry in data %}
+            <tr>
+                <td>{{ entry|json_encode }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+</table>
+
+   
+{% endblock %}
