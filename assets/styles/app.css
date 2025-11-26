@@ -130,3 +130,29 @@ body{
 .inner {
   overflow: hidden;
 }
+
+.jsonDisplay {
+    background-color: black;
+    color: white;
+    padding: .5em;
+    border-radius: 8px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.endpoints {
+  margin-left: 2em;
+  border-collapse: collapse;
+  width: calc(100% - 3em);
+}
+
+.endpoints td {
+    border: 1px solid var(--accentColour);
+    align-items: center;
+    height: 2em;
+}
+
+.endpoints tr {
+    background-color: var(--objectColour);
+    cursor: pointer;
+    margin-bottom: .5em;
+}

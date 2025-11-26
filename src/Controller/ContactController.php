@@ -16,18 +16,43 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/contact')]
 final class ContactController extends AbstractController
 {
+    //// api documentation
+    public function documentation($data, $em): Response
+    {
+        $mappings = array();
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Contact')->getFieldNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Contact')->getTypeOfField($atribute)];
+        }
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Contact')->getAssociationNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Contact')->getAssociationTargetClass($atribute)];
+        }
+
+
+
+        return $this->render('api/api_obj_index.html.twig', [
+            'class' => "contact",
+            'atributes' => $mappings,
+            'data' => $data,
+        ]);
+    }
+
 
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_contact_index', methods: ['GET'])]
-    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer): JsonResponse
+    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer, EntityManagerInterface $em): Response
     {
-        $contacts = $contactRepository->findAll();
-        $jsonContacts = $serializer->serialize($contacts, 'json');
+        $jsonContacts = $serializer->serialize($contactRepository->findAll(), 'json');
+        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
+            return new JsonResponse($jsonContacts, Response::HTTP_OK, [], true);
+        }
 
 
-
-        return new JsonResponse($jsonContacts, Response::HTTP_OK, [], true);
+        return $this->documentation($jsonContacts, $em);
     }
 
             // -show

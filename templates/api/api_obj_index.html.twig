@@ -17,25 +17,43 @@
     </ul>
 
 
-    <p>Liste des endpoints pour la ressource Projet :</p>
+    <p>Liste des endpoints pour la ressource {{ class|capitalize }} :</p>
+
+    <table class="endpoints">
+        <tr>
+            <td>GET</td>
+            <td>/{{ class }}_api : Récupère la liste des {{ class }}s</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/{{ class }}_api/{id} : Récupère un élément {{ class }} par son id</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td>/{{ class }}_api : Crée un nouvel élément {{ class }}</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td>/{{ class }}_api/{id} : Met à jour un élément {{ class }} existante</td>
+        </tr>
+        <tr>
+            <td>DELETE</td>
+            <td>/{{ class }}_api/{id} : Supprime un élément {{ class }} par son id</td>
+        </tr>
+    </table>
 {% endblock %}
 
 {% block content %}
-
-    <table class="table">
-        <tr>
-                <td>{{ data|json_encode }}</td>
-            </tr>
-        {% for entry in data %}
-            <tr>
-                <td>{{ entry|json_encode }}</td>
-            </tr>
+    <p> Données retournées pour <span style="font-weight:bold">/{{ class }}_api</span> :</p>
+    <div class="jsonDisplay">
+        {% if data %}
+            <ul>
+                <li>{{ data }}</li>
+            </ul>
         {% else %}
-            <tr>
-                <td colspan="5">no records found</td>
-            </tr>
-        {% endfor %}
-</table>
-
-   
+            <ul>
+                <li>aucune entrée</li>
+            </ul>
+        {% endif %}
+    </div>
 {% endblock %}
