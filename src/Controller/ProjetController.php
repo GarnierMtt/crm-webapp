@@ -48,13 +48,13 @@ final class ProjetController extends AbstractController
     #[Route('_api', name: 'api_projet_index', methods: ['GET'])]
     public function apiIndex(ProjetRepository $projetRepository, SerializerInterface $serializer, EntityManagerInterface $em): Response
     {
+        $responce = new JsonResponse($serializer->serialize($projetRepository->findAll(), 'json'), Response::HTTP_OK, [], true);
         
-            $jsonProjets = $serializer->serialize($projetRepository->findAll(), 'json');
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
-            return new JsonResponse($jsonProjets, Response::HTTP_OK, [], true);
+            return $responce;
         }
 
-        return $this->documentation($jsonProjets, $em);
+        return $this->documentation($responce, $em);
     }
 
             // -show

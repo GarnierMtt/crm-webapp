@@ -53,20 +53,22 @@
 
             <!-- ZONE CONTENUS -->
 
-            <div class="documentation">
-                <h1>Documentation API</h1>
-                {% block doc %} 
-                    <p>Toutes les classes disponibles dans l'api :</p>
-                    
-                    <ul>
-                        {% for item in data %}
-                            <li><a href="{{ path('api_' ~ item ~ '_index') }}">{{ item|capitalize }}s</a></li>
-                        {% endfor %}
-                    </ul>
-                {% endblock %}
-            </div>
+            <div class="content">
+                <div class="documentation">
+                    <h1>Documentation API</h1>
+                    {% block doc %} 
+                        <p>Toutes les classes disponibles dans l'api :</p>
+                        
+                        <ul>
+                            {% for item in data %}
+                                <li><a href="{{ path('api_' ~ item ~ '_index') }}">{{ item|capitalize }}s</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% endblock %}
+                </div>
 
-            <div class="content">{% block content %}{% endblock %}</div>
+                {% block content %}{% endblock %}
+            </div>
             {# <div id="footer"> {% block footer %}{% endblock %}</div> #}
 
         </div>

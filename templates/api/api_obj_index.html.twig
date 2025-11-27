@@ -19,37 +19,91 @@
 
     <p>Liste des endpoints pour la ressource {{ class|capitalize }} :</p>
 
-    <table class="endpoints">
-        <tr>
-            <td>GET</td>
-            <td>/{{ class }}_api : Récupère la liste des {{ class }}s</td>
-        </tr>
-        <tr>
-            <td>GET</td>
-            <td>/{{ class }}_api/{id} : Récupère un élément {{ class }} par son id</td>
-        </tr>
-        <tr>
-            <td>POST</td>
-            <td>/{{ class }}_api : Crée un nouvel élément {{ class }}</td>
-        </tr>
-        <tr>
-            <td>POST</td>
-            <td>/{{ class }}_api/{id} : Met à jour un élément {{ class }} existante</td>
-        </tr>
-        <tr>
-            <td>DELETE</td>
-            <td>/{{ class }}_api/{id} : Supprime un élément {{ class }} par son id</td>
-        </tr>
-    </table>
+    <div class="endpoints">
+        <div class="endpoint" onclick="selectUnwrap(this)">
+            <div class="method" style="color:green">GET</div>
+            <div>
+                <span>/{{ class }}_api</span>
+                Récupère la liste des {{ class }}s
+            </div>
+        </div>
+        <div class="selectWrapper">
+            <div>
+                <p>JS code:<p>
+                <div class="jsonDisplay">
+                    <p>const myHeaders = new Headers(); <br>
+                        myHeaders.append("Accept", "application/json"); <br>
+                        <br>
+                        const requestOptions = { <br>
+                        method: "GET", <br>
+                        headers: myHeaders, <br>
+                        redirect: "follow" <br>
+                        }; <br>
+                        <br>
+                        fetch("http://192.168.10.2/projet_api", requestOptions) <br>
+                        .then((response) => response.text()) <br>
+                        .then((result) => console.log(result)) <br>
+                        .catch((error) => console.error(error));
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="endpoint" onclick="selectUnwrap(this)">
+            <div class="method" style="color:green">GET</div>
+            <div>
+                <span>/{{ class }}_api/{id}</span>
+                Récupère un élément {{ class }} par son id
+            </div>
+        </div>
+        <div class="selectWrapper">
+            <div>
+                <br>
+            </div>
+        </div>
+        <div class="endpoint" onclick="selectUnwrap(this)">
+            <div class="method" style="color:orange">POST</div>
+            <div>
+                <span>/{{ class }}_api</span>
+                Crée un nouvel élément {{ class }}
+            </div>
+        </div>
+        <div class="selectWrapper">
+            <div>
+                <br>
+            </div>
+        </div>
+        <div class="endpoint" onclick="selectUnwrap(this)">
+            <div class="method" style="color:orange">POST</div>
+            <div>
+                <span>/{{ class }}_api/{id}</span>
+                Met à jour un élément {{ class }} existante
+            </div>
+        </div>
+        <div class="selectWrapper">
+            <div>
+                <br>
+            </div>
+        </div>
+        <div class="endpoint" onclick="selectUnwrap(this)">
+            <div class="method" style="color:red">DELETE</div>
+            <div>
+                <span>/{{ class }}_api/{id}</span>
+                Supprime un élément {{ class }} par son id
+            </div>
+        </div>
+        <div class="selectWrapper">
+            <div>
+                <br>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block content %}
     <p> Données retournées pour <span style="font-weight:bold">/{{ class }}_api</span> :</p>
     <div class="jsonDisplay">
         {% if data %}
-            <ul>
-                <li>{{ data }}</li>
-            </ul>
+            <div>{{ data|wraped_json|raw }}</div>
         {% else %}
             <ul>
                 <li>aucune entrée</li>

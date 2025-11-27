@@ -46,13 +46,14 @@ final class ContactController extends AbstractController
     #[Route('_api',name: 'api_contact_index', methods: ['GET'])]
     public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer, EntityManagerInterface $em): Response
     {
-        $jsonContacts = $serializer->serialize($contactRepository->findAll(), 'json');
+        $response = new JsonResponse($serializer->serialize($contactRepository->findAll(), 'json'), Response::HTTP_OK, [], true);
+        
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
-            return new JsonResponse($jsonContacts, Response::HTTP_OK, [], true);
+            return $response;
         }
 
-
-        return $this->documentation($jsonContacts, $em);
+        $response->setEncodingOptions( $response->getEncodingOptions() | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+        return $this->documentation($response, $em);
     }
 
             // -show

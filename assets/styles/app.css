@@ -100,7 +100,7 @@ body{
 }
 
 
-.content, .documentation{
+.content{
     width: calc(100% - 2em);
     height: 100%;
     padding: 1em;
@@ -117,6 +117,28 @@ body{
     z-index: 10;
 }
 
+
+/* JSON DISPLAY */
+
+.jsonDisplay {
+    background-color: black;
+    color: white;
+    padding: .5em;
+    border-radius: 8px;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.jsonDisplay .deploy{
+    font-weight: bold;
+    cursor: pointer;
+    padding-right: 2em;
+    background-color: gray;
+    border-radius: 2px;
+}
+
+
+/* WRAPPER */
+
 .wrapper {
   display: grid;
   grid-template-rows: 0fr;
@@ -127,32 +149,75 @@ body{
   grid-template-rows: 1fr;
 }
 
-.inner {
+.wrapper > * {
+    border-left: 1px solid gray;
   overflow: hidden;
+  padding-left: 1em;
 }
 
-.jsonDisplay {
-    background-color: black;
-    color: white;
-    padding: .5em;
-    border-radius: 8px;
-    font-family: 'Courier New', Courier, monospace;
+
+/* SELECT WRAPPER */
+
+.selectWrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s ease-out;
 }
+
+.selectWrapper > * {
+    overflow: hidden;
+    box-sizing: border-box;
+    border-bottom: 2px solid var(--accentColour);
+    padding-left: 1em;
+}
+
+.selectWrapper.is-open {
+    grid-template-rows: 1fr;
+}
+
+
+/* ENDPOINTS */
 
 .endpoints {
-  margin-left: 2em;
-  border-collapse: collapse;
-  width: calc(100% - 3em);
+    margin-left: 2em;
+    width: calc(100% - 2em);
 }
 
-.endpoints td {
-    border: 1px solid var(--accentColour);
+.endpoints > .endpoint > div {
+    display: flex;
     align-items: center;
+    padding-left: .5em;
     height: 2em;
 }
 
-.endpoints tr {
+.endpoints > .endpoint > div > span {
+    font-weight: bold;
+    padding-right: .5em;
+}
+
+.endpoints .method {
+    border-right: 1px solid var(--accentColour);
+    font-weight: bold;
+    width: 6em;
+    justify-content: center;
+}
+
+.endpoints > .endpoint {
+    border: 1px solid var(--accentColour);
     background-color: var(--objectColour);
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+}
+
+.endpoints > .selectWrapper{
     margin-bottom: .5em;
+}
+
+
+
+/* OVERRIDES */
+.endpoints > .endpoint:hover {
+    background-color: var(--accentColour);
+    transition: 0.2s;
 }
