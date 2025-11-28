@@ -136,23 +136,30 @@ body{
     border-radius: 2px;
 }
 
+.jsonDisplay div{
+    border-left: 1px solid gray;
+    padding-left: 1em;
+}
+
+.jsonDisplay .highlight{
+    color: greenyellow;
+}
+
 
 /* WRAPPER */
 
 .wrapper {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.5s ease-out;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s ease-out;
 }
 
 .wrapper.is-open {
-  grid-template-rows: 1fr;
+    grid-template-rows: 1fr;
 }
 
 .wrapper > * {
-    border-left: 1px solid gray;
-  overflow: hidden;
-  padding-left: 1em;
+    overflow: hidden;
 }
 
 
@@ -214,10 +221,14 @@ body{
     margin-bottom: .5em;
 }
 
-
-
-/* OVERRIDES */
 .endpoints > .endpoint:hover {
     background-color: var(--accentColour);
     transition: 0.2s;
+}
+
+
+/* API FORM */
+
+.apiForm {
+    margin-bottom: 1em;
 }

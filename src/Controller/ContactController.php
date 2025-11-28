@@ -56,20 +56,25 @@ final class ContactController extends AbstractController
         return $this->documentation($response, $em);
     }
 
+
             // -show
     #[Route('_api/{id}',name: 'api_contact_show', methods: ['GET'])]
-    public function apiShow(Contact $contact, SerializerInterface $serializer): JsonResponse
+    public function apiShow(Contact $contact, SerializerInterface $serializer, EntityManagerInterface $em): Response
     {
-        $jsonContact = $serializer->serialize($contact, 'json');
+        $response = new JsonResponse($serializer->serialize($contact, 'json'), Response::HTTP_OK, [], true);
+        
+        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
+            return $response;
+        }
 
-
-
-        return new JsonResponse($jsonContact, Response::HTTP_OK, [], true);
+        $response->setEncodingOptions( $response->getEncodingOptions() | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+        return $this->documentation($response, $em);
     }
+
 
             // -new
     #[Route('_api/new', name: 'api_contact_new', methods: ['POST'])]
-    public function apiNew(Request $request, EntityManagerInterface $entityManager): Response
+    public function apiNew(Request $request, EntityManagerInterface $em): Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactForm::class, $contact);
@@ -77,16 +82,24 @@ final class ContactController extends AbstractController
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($contact);
-            $entityManager->flush();
+            $em->persist($contact);
+            $em->flush();
 
-            return new Response('', Response::HTTP_CREATED);
+            $response = new Response('', Response::HTTP_CREATED);
+        }
+        else{
+            $response = new Response('', Response::HTTP_EXPECTATION_FAILED);
         }
 
-
         
-        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+
+        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
+            return $response;
+        }
+
+        return $this->documentation($response, $em);
     }
+
 
             // -edit
     #[Route('_api/{id}', name: 'api_contact_edit', methods: ['POST'])]
@@ -106,16 +119,23 @@ final class ContactController extends AbstractController
         return new Response('', Response::HTTP_EXPECTATION_FAILED);
     }
 
+
             // -delete
     #[Route('_api/{id}', name: 'api_contact_delete', methods: ['DELETE'])]
-    public function apiDelete(Contact $contact, EntityManagerInterface $entityManager): Response
+    public function apiDelete(Contact $contact, EntityManagerInterface $em): Response
     {
-        $entityManager->remove($contact);
-        $entityManager->flush();
+        $em->remove($contact);
+        $em->flush();
 
 
 
-        return new Response('', Response::HTTP_NO_CONTENT);
+        $response = new Response('', Response::HTTP_NO_CONTENT);
+        
+        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
+            return $response;
+        }
+
+        return $this->documentation($response, $em);
     }
 
 

@@ -1,16 +1,17 @@
 {% extends 'base.html.twig' %}
-{% set contact = render(path('api_contact_show', {'id': id}))|json_decode %}
+{#% set contact = render(path('api_contact_show', {'id': id}))|json_decode %#}
+
 
 {% block title %} - Contact{% endblock %}
 
 
-{% block path %}
+{#% block path %}
     <a href="{{ path('app_contact_index') }}">Contacts/</a>
     <a href="{{ path('app_contact_show', {'id': id}) }}">{{ contact.nom }} {{ contact.prenom }}</a>
-{% endblock %}
+{% endblock %#}
 {% block content %}
     <table class="table">
-        <tbody>
+        <tbody>{#
                 <tr>
                     <th>Nom</th>
                     <td>{{ contact.nom }}</td>
@@ -33,7 +34,7 @@
                 </tr>
                     <th>Société</th>
                     <td>{{ contact.societe.nom is defined ? contact.societe.nom }}</td>
-                </tr>
+                </tr>#}
         </tbody>
     </table>
 

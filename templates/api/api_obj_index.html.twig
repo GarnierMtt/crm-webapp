@@ -18,12 +18,12 @@
 
 
     <p>Liste des endpoints pour la ressource {{ class|capitalize }} :</p>
-
+            <!-- INDEX -->
     <div class="endpoints">
         <div class="endpoint" onclick="selectUnwrap(this)">
             <div class="method" style="color:green">GET</div>
             <div>
-                <span>/{{ class }}_api</span>
+                <span>api_{{ class }}_index</span>
                 Récupère la liste des {{ class }}s
             </div>
         </div>
@@ -31,82 +31,201 @@
             <div>
                 <p>JS code:<p>
                 <div class="jsonDisplay">
-                    <p>const myHeaders = new Headers(); <br>
-                        myHeaders.append("Accept", "application/json"); <br>
-                        <br>
-                        const requestOptions = { <br>
-                        method: "GET", <br>
-                        headers: myHeaders, <br>
-                        redirect: "follow" <br>
-                        }; <br>
-                        <br>
-                        fetch("http://192.168.10.2/projet_api", requestOptions) <br>
+                    <div>
+                        fetch("<span class="highlight">{{ url('api_' ~ class ~ '_index') }}</span>", {
+                            <div>
+                                method: "<span class="highlight">GET</span>", <br>
+                                headers: {
+                                    <div>
+                                        "Accept": "application/json",
+                                    </div>
+                                },
+                            </div>
+                        }) <br>
                         .then((response) => response.text()) <br>
                         .then((result) => console.log(result)) <br>
                         .catch((error) => console.error(error));
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
+
+                <!-- SHOW -->
         <div class="endpoint" onclick="selectUnwrap(this)">
             <div class="method" style="color:green">GET</div>
             <div>
-                <span>/{{ class }}_api/{id}</span>
+                <span>api_{{ class }}_show</span>
                 Récupère un élément {{ class }} par son id
             </div>
         </div>
         <div class="selectWrapper">
             <div>
-                <br>
+                <p>JS code:<p>
+                <div class="jsonDisplay">
+                    <div>
+                        fetch("<span class="highlight">{{ url('api_' ~ class ~ '_index') }}/{id}</span>", {
+                            <div>
+                                method: "<span class="highlight">GET</span>", <br>
+                                headers: {
+                                    <div>
+                                        "Accept": "application/json",
+                                    </div>
+                                },
+                            </div>
+                        }) <br>
+                        .then((response) => response.text()) <br>
+                        .then((result) => console.log(result)) <br>
+                        .catch((error) => console.error(error));
+                    </div>
+                </div>
             </div>
         </div>
+
+                <!-- CREATE -->
         <div class="endpoint" onclick="selectUnwrap(this)">
             <div class="method" style="color:orange">POST</div>
             <div>
-                <span>/{{ class }}_api</span>
+                <span>api_{{ class }}_new</span>
                 Crée un nouvel élément {{ class }}
             </div>
         </div>
         <div class="selectWrapper">
             <div>
-                <br>
+                <p>JS code:<p>
+                <div class="jsonDisplay">
+                    <div>
+                        fetch("<span class="highlight">{{ url('api_' ~ class ~ '_new') }}</span>", {
+                            <div>
+                                method: "<span class="highlight">POST</span>", <br>
+                                headers: {
+                                    <div>
+                                        "Accept": "application/json",
+                                    </div>
+                                }, <br>
+                                body: {
+                                    <div>
+                                        "contact_form[nom]": "",
+                                    </div>
+                                },
+                            </div>
+                        }) <br>
+                        .then((response) => response.text()) <br>
+                        .then((result) => console.log(result)) <br>
+                        .catch((error) => console.error(error));
+                    </div>
+                </div>
             </div>
         </div>
+
+                <!-- UPDATE -->
         <div class="endpoint" onclick="selectUnwrap(this)">
             <div class="method" style="color:orange">POST</div>
             <div>
-                <span>/{{ class }}_api/{id}</span>
+                <span>api_{{ class }}_edit</span>
                 Met à jour un élément {{ class }} existante
             </div>
         </div>
         <div class="selectWrapper">
             <div>
-                <br>
+                <p>JS code:<p>
+                <div class="jsonDisplay">
+                    <div>
+                        fetch("<span class="highlight">{{ url('api_' ~ class ~ '_index') }}/{id}</span>", {
+                            <div>
+                                method: "<span class="highlight">POST</span>", <br>
+                                headers: {
+                                    <div>
+                                        "Accept": "application/json",
+                                    </div>
+                                },
+                            </div>
+                        }) <br>
+                        .then((response) => response.text()) <br>
+                        .then((result) => console.log(result)) <br>
+                        .catch((error) => console.error(error));
+                    </div>
+                </div>
             </div>
         </div>
+
+                <!-- DELETE -->
         <div class="endpoint" onclick="selectUnwrap(this)">
             <div class="method" style="color:red">DELETE</div>
             <div>
-                <span>/{{ class }}_api/{id}</span>
+                <span>api_{{ class }}_delete</span>
                 Supprime un élément {{ class }} par son id
             </div>
         </div>
         <div class="selectWrapper">
             <div>
-                <br>
+                <p>JS code:<p>
+                <div class="jsonDisplay">
+                    <div>
+                        fetch("<span class="highlight">{{ url('api_' ~ class ~ '_index') }}/<span id="deleteId">{id}</span></span>", {
+                            <div>
+                                method: "<span class="highlight">DELETE</span>", <br>
+                                headers: {
+                                    <div>
+                                        "Accept": "application/json",
+                                    </div>
+                                },
+                            </div>
+                        }) <br>
+                        .then((response) => response.text()) <br>
+                        .then((result) => console.log(result)) <br>
+                        .catch((error) => console.error(error));
+                    </div>
+                </div>
+
+                <p> Options :</p>
+                <div>
+                    <form class="apiForm" id="deleteForm">
+                        <table>
+                            <tr>
+                                <td><label for="deleteInputId">id:</label></td>
+                                <td><input type="number" id="deleteInputId" name="id"></td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2"><input type="submit" value="Submit"></td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
+
+
+    <script>
+        $("#deleteInputId").on("input", function() {
+            $("#deleteId").text($(this).val());
+        });
+        $("#deleteForm").on('submit', function(e) {
+            e.preventDefault(); // prevent native submit
+
+
+            /*
+            //$(this) = '';
+            this.action = "{{ path('api_' ~ class ~ '_index') }}/"+$("#deleteInputId").val();
+            $(this).children().remove();
+            this.method = "DELETE";
+            console.log(this);
+            //this.submit();*/
+
+            open("DELETE", "{{ path('api_' ~ class ~ '_index') }}/"+$("#deleteInputId").val(), false);
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
-    <p> Données retournées pour <span style="font-weight:bold">/{{ class }}_api</span> :</p>
+    <p> Données retournées pour <span style="font-weight:bold">{{ app.request.get('_route') }}</span> :</p>
     <div class="jsonDisplay">
         {% if data %}
             <div>{{ data|wraped_json|raw }}</div>
         {% else %}
             <ul>
-                <li>aucune entrée</li>
+                <li>aucune réponse</li>
             </ul>
         {% endif %}
     </div>

@@ -15,7 +15,12 @@ async function urlToJsonObj(source) {
     * -TkT
     */
       // Generate the Response object
-      const response = await fetch(source);
+      const response = await fetch(source, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+        },
+      });
       if (response.ok) {
         // Get JSON value from the response body
         //console.log("responce: " + response);
