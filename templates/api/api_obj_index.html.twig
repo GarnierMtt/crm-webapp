@@ -33,12 +33,12 @@
                     <p>JS code:<p>
                     <div class="jsonDisplay">
                         <div class="indent">
-                            fetch("<span class="highlight">{{ url('api_' ~ class ~ '_index') }}</span>", {
+                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}"</span>, {
                                 <div class="indent">
-                                    method: "<span class="highlight">GET</span>", <br>
+                                    method: <span class="highlight">"GET"</span>, <br>
                                     headers: {
                                         <div class="indent">
-                                            "Accept": "application/json",
+                                            <span class="highlight">"Accept": "application/json"</span>,
                                         </div>
                                     },
                                 </div>
@@ -48,12 +48,28 @@
                             .catch((error) => console.error(error));
                         </div>
                     </div>
+                    
+                    <p> Options :</p>
+                    <div class="apiForm">
+                        <form id="indexForm">
+                            <table>
+                                <!--tr>
+                                    <td><label for="deleteInputId">id:</label></td>
+                                    <td><input type="number" id="deleteInputId" name="id"></td>
+                                </tr!-->
+
+                                <tr>
+                                    <td colspan="2"><input type="submit" class="btn" value="Envoyer"></td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
                 </div>
             </div>
 
                     <!-- SHOW -->
             <div class="endpoint" onclick="selectUnwrap(this)">
-                <div class="method" style="color:green">GET</div>
+                <div class="method" style="color:green">"GET"</div>
                 <div>
                     <span>api_{{ class }}_show</span>
                     Récupère un élément {{ class }} par son id
@@ -64,12 +80,12 @@
                     <p>JS code:<p>
                     <div class="jsonDisplay">
                         <div class="indent">
-                            fetch("<span class="highlight">{{ url('api_' ~ class ~ '_index') }}/{id}</span>", {
+                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/{id}"</span>, {
                                 <div class="indent">
-                                    method: "<span class="highlight">GET</span>", <br>
+                                    method: <span class="highlight">"GET"</span>, <br>
                                     headers: {
                                         <div class="indent">
-                                            "Accept": "application/json",
+                                            <span class="highlight">"Accept": "application/json"</span>,
                                         </div>
                                     },
                                 </div>
@@ -95,17 +111,21 @@
                     <p>JS code:<p>
                     <div class="jsonDisplay">
                         <div class="indent">
-                            fetch("<span class="highlight">{{ url('api_' ~ class ~ '_new') }}</span>", {
+                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_new') }}"</span>, {
                                 <div class="indent">
-                                    method: "<span class="highlight">POST</span>", <br>
+                                    method: <span class="highlight">"POST"</span>, <br>
                                     headers: {
                                         <div class="indent">
-                                            "Accept": "application/json",
+                                            <span class="highlight">"Accept": "application/json"</span>,
                                         </div>
                                     }, <br>
                                     body: {
                                         <div class="indent">
-                                            "contact_form[nom]": "",
+                                            <span class="highlight" id="crateBody">
+                                                &#x2022;&#x2022;&#x2022;<br> 
+                                                &nbsp;form data<br> 
+                                                &#x2022;&#x2022;&#x2022;
+                                            </span>
                                         </div>
                                     },
                                 </div>
@@ -137,12 +157,12 @@
                     <p>JS code:<p>
                     <div class="jsonDisplay">
                         <div class="indent">
-                            fetch("<span class="highlight">{{ url('api_' ~ class ~ '_index') }}/{id}</span>", {
+                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/{id}"</span>, {
                                 <div class="indent">
-                                    method: "<span class="highlight">POST</span>", <br>
+                                    method: <span class="highlight">"POST"</span>, <br>
                                     headers: {
                                         <div class="indent">
-                                            "Accept": "application/json",
+                                            <span class="highlight">"Accept": "application/json"</span>,
                                         </div>
                                     },
                                 </div>
@@ -168,12 +188,12 @@
                     <p>JS code:<p>
                     <div class="jsonDisplay">
                         <div class="indent">
-                            fetch("<span class="highlight">{{ url('api_' ~ class ~ '_index') }}/<span id="deleteId">{id}</span></span>", {
+                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="deleteId">{id}</span>"</span>, {
                                 <div class="indent">
-                                    method: "<span class="highlight">DELETE</span>", <br>
+                                    method: <span class="highlight">"DELETE"</span>, <br>
                                     headers: {
                                         <div class="indent">
-                                            "Accept": "application/json",
+                                            <span class="highlight">"Accept": "application/json"</span>,
                                         </div>
                                     },
                                 </div>
@@ -207,9 +227,50 @@
 
 
     <script>
-        $("#deleteInputId").on("input", function() {
-            $("#deleteId").text($(this).val());
+        // -- INDEX --
+            // Update display
+        
+            // Submit form
+        $("#indexForm").on('submit', function(e) {
+            e.preventDefault(); // prevent native submit
+
+            fetch("{{ path('api_' ~ class ~ '_index') }}", {
+                method: "GET",
+            })
+            .then((response) => response.text())
+            .then((html) => displayResponse(html))
+            .catch((error) => console.error(error));
         });
+
+
+        // -- CREATE --
+            /*/ Update display
+        $("form").on("input change", function() {
+            let formData = $(this).serializeArray();
+            let bodyContent = formData.map(item => `"${item.name}": "${item.value}"`).join(",<br>");
+            $("#crateBody").html(bodyContent);
+        });
+            // Submit form
+        $("form").on('submit', function(e) {
+            e.preventDefault(); // prevent native submit
+
+            let formData = new FormData(this);
+            fetch("{{ path('api_' ~ class ~ '_new') }}", {
+                method: "POST",
+                body: formData
+            })
+            .then((response) => response.text())
+            .then((html) => displayResponse(html))
+            .catch((error) => console.error(error));
+        });//*/
+        
+
+        // -- DELETE --
+            // Update display
+        $("#deleteInputId").on("input", function() {
+            $("#deleteId").html($(this).val());
+        });
+            // Submit form
         $("#deleteForm").on('submit', function(e) {
             e.preventDefault(); // prevent native submit
 
@@ -217,35 +278,32 @@
                 method: "DELETE",
             })
             .then((response) => response.text())
-            .then(function (html) {
-
-                // Convert the HTML string into a document object
-                var parser = new DOMParser();
-                var doc = parser.parseFromString(html, 'text/html');
-
-                // Extract the content inside the 'response' div
-                var newContent = doc.getElementById('response').innerHTML;
-
-                // Replace the current 'response' div content with the new content
-                document.getElementById('response').innerHTML = newContent;
-            })
+            .then((html) => displayResponse(html))
             .catch((error) => console.error(error));
-
-            
         });
+
+        // -- RESPONSE DISPLAY --
+        function displayResponse(html) {
+
+            // Convert the HTML string into a document object
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(html, 'text/html');
+
+            // Extract the content inside the 'response' div
+            var newContent = doc.getElementById('response').innerHTML;
+
+            // Replace the current 'response' div content with the new content
+            document.getElementById('response').innerHTML = newContent;
+        }
     </script>
 {% endblock %}
 
 {% block content %}
     <div id="response">
-        <p> Données retournées pour <span style="font-weight:bold">{{ app.request.get('_route') }}</span> :</p>
+        <p> Données retournées pour <span style="font-weight:bold">[ &#x2022;&#x2022;&#x2022; ]</span> :</p>
         <div class="section">
             <div class="jsonDisplay">
-                {% if data %}
-                    <div class="indent">{{ data|wraped_json|raw }}</div>
-                {% else %}
-                    <div class="indent">Aucune donnée retournée.</div>
-                {% endif %}
+                <div class="indent">Aucune donnée retournée.</div>
             </div>
         </div>
     </div>

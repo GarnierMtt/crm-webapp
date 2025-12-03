@@ -18,6 +18,35 @@ use App\Repository\ResetPasswordRequestRepository;
 #[Route('/user')]
 final class UserController extends AbstractController
 {
+    //// api documentation
+    #[Route('_api_docs',name: 'api_user_documentation', methods: ['GET'])]
+    public function documentation(EntityManagerInterface $em, Request $request): Response
+    {
+        $mappings = array();
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\User')->getFieldNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\User')->getTypeOfField($atribute)];
+        }
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\User')->getAssociationNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\User')->getAssociationTargetClass($atribute)];
+        }
+
+
+        $user = new User();
+        $form = $this->createForm(UserForm::class, $user);
+        $form->handleRequest($request);
+
+
+
+        return $this->render('api/api_obj_index.html.twig', [
+            'class' => "user",
+            'atributes' => $mappings,
+            'form' => $form,
+        ]);
+    }
 
     //// routes pour l'api
             // -index

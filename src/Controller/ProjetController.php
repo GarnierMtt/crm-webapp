@@ -19,7 +19,8 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProjetController extends AbstractController
 {
     //// api documentation
-    public function documentation($data, $em): Response
+    #[Route('_api_docs',name: 'api_projet_documentation', methods: ['GET'])]
+    public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
 
@@ -34,11 +35,16 @@ final class ProjetController extends AbstractController
         }
 
 
+        $projet = new Projet();
+        $form = $this->createForm(ProjetForm::class, $projet);
+        $form->handleRequest($request);
+
+
 
         return $this->render('api/api_obj_index.html.twig', [
             'class' => "projet",
             'atributes' => $mappings,
-            'data' => $data,
+            'form' => $form,
         ]);
     }
 
@@ -48,13 +54,15 @@ final class ProjetController extends AbstractController
     #[Route('_api', name: 'api_projet_index', methods: ['GET'])]
     public function apiIndex(ProjetRepository $projetRepository, SerializerInterface $serializer, EntityManagerInterface $em): Response
     {
-        $responce = new JsonResponse($serializer->serialize($projetRepository->findAll(), 'json'), Response::HTTP_OK, [], true);
+        $response = new JsonResponse($serializer->serialize($projetRepository->findAll(), 'json'), Response::HTTP_OK, [], true);
         
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
-            return $responce;
+            return $response;
         }
 
-        return $this->documentation($responce, $em);
+        return $this->render('api/api_obj_response.html.twig', [
+            'data' => $response,
+        ]);
     }
 
             // -show

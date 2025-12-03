@@ -16,6 +16,35 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/adresse')]
 final class AdresseController extends AbstractController
 {
+    //// api documentation
+    #[Route('_api_docs',name: 'api_adresse_documentation', methods: ['GET'])]
+    public function documentation(EntityManagerInterface $em, Request $request): Response
+    {
+        $mappings = array();
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Adresse')->getFieldNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Adresse')->getTypeOfField($atribute)];
+        }
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Adresse')->getAssociationNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Adresse')->getAssociationTargetClass($atribute)];
+        }
+
+
+        $adresse = new Adresse();
+        $form = $this->createForm(AdresseForm::class, $adresse);
+        $form->handleRequest($request);
+
+
+
+        return $this->render('api/api_obj_index.html.twig', [
+            'class' => "adresse",
+            'atributes' => $mappings,
+            'form' => $form,
+        ]);
+    }
 
     //// routes pour l'api
             // -index

@@ -1,0 +1,17 @@
+
+
+<div id="response">
+
+    <p> Données retournées pour <span style="font-weight:bold">{{ app.request.get('_route') }}</span> :</p>
+
+    <div class="section">
+        <div class="jsonDisplay">
+            {% if data %}
+                <div class="indent">{{ data|wraped_json|raw }}</div>
+            {% else %}
+                <div class="indent">Aucune donnée retournée.</div>
+            {% endif %}
+        </div>
+    </div>
+    
+</div>

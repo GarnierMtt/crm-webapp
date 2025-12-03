@@ -22,6 +22,35 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/societe')]
 final class SocieteController extends AbstractController
 {
+    //// api documentation
+    #[Route('_api_docs',name: 'api_societe_documentation', methods: ['GET'])]
+    public function documentation(EntityManagerInterface $em, Request $request): Response
+    {
+        $mappings = array();
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Societe')->getFieldNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Societe')->getTypeOfField($atribute)];
+        }
+
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Societe')->getAssociationNames();
+        foreach($atributes as $atribute){
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Societe')->getAssociationTargetClass($atribute)];
+        }
+
+
+        $societe = new Societe();
+        $form = $this->createForm(SocieteForm::class, $societe);
+        $form->handleRequest($request);
+
+
+
+        return $this->render('api/api_obj_index.html.twig', [
+            'class' => "societe",
+            'atributes' => $mappings,
+            'form' => $form,
+        ]);
+    }
 
     //// routes pour l'api
             // -index

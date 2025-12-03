@@ -17,7 +17,8 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ContactController extends AbstractController
 {
     //// api documentation
-    public function documentation($data, $em, $form): Response
+    #[Route('_api_docs',name: 'api_contact_documentation', methods: ['GET'])]
+    public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
 
@@ -32,11 +33,15 @@ final class ContactController extends AbstractController
         }
 
 
+        $contact = new Contact();
+        $form = $this->createForm(ContactForm::class, $contact);
+        $form->handleRequest($request);
+
+
 
         return $this->render('api/api_obj_index.html.twig', [
             'class' => "contact",
             'atributes' => $mappings,
-            'data' => $data,
             'form' => $form,
         ]);
     }
@@ -45,12 +50,8 @@ final class ContactController extends AbstractController
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_contact_index', methods: ['GET'])]
-    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer, Request $request, EntityManagerInterface $em): Response
+    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer): Response
     {
-        $contact = new Contact();
-        $form = $this->createForm(ContactForm::class, $contact);
-        $form->handleRequest($request);
-
         $response = new JsonResponse($serializer->serialize($contactRepository->findAll(), 'json'), Response::HTTP_OK, [], true);
         
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
@@ -58,18 +59,16 @@ final class ContactController extends AbstractController
         }
 
         $response->setEncodingOptions( $response->getEncodingOptions() | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
-        return $this->documentation($response, $em, $form);
+        return $this->render('api/api_obj_response.html.twig', [
+            'data' => $response,
+        ]);
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_contact_show', methods: ['GET'])]
-    public function apiShow(Contact $contact, Request $request, SerializerInterface $serializer, EntityManagerInterface $em): Response
+    public function apiShow(Contact $contact, SerializerInterface $serializer): Response
     {
-        $contact = new Contact();
-        $form = $this->createForm(ContactForm::class, $contact);
-        $form->handleRequest($request);
-
         $response = new JsonResponse($serializer->serialize($contact, 'json'), Response::HTTP_OK, [], true);
         
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
@@ -77,7 +76,9 @@ final class ContactController extends AbstractController
         }
 
         $response->setEncodingOptions( $response->getEncodingOptions() | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
-        return $this->documentation($response, $em, $form);
+        return $this->render('api/api_obj_response.html.twig', [
+            'data' => $response,
+        ]);
     }
 
 
@@ -106,7 +107,9 @@ final class ContactController extends AbstractController
             return $response;
         }
 
-        return $this->documentation($response, $em, $form);
+        return $this->render('api/api_obj_response.html.twig', [
+            'data' => $response,
+        ]);
     }
 
 
@@ -131,12 +134,8 @@ final class ContactController extends AbstractController
 
             // -delete
     #[Route('_api/{id}', name: 'api_contact_delete', methods: ['DELETE'])]
-    public function apiDelete(Contact $contact, Request $request, EntityManagerInterface $em): Response
+    public function apiDelete(Contact $contact, EntityManagerInterface $em): Response
     {
-        $contact = new Contact();
-        $form = $this->createForm(ContactForm::class, $contact);
-        $form->handleRequest($request);
-        
         $em->remove($contact);
         $em->flush();
 
@@ -148,7 +147,9 @@ final class ContactController extends AbstractController
             return $response;
         }
 
-        return $this->documentation($response, $em, $form);
+        return $this->render('api/api_obj_response.html.twig', [
+            'data' => $response,
+        ]);
     }
 
 

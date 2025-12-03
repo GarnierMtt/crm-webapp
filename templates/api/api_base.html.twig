@@ -61,7 +61,7 @@
                         
                         <ul>
                             {% for item in data %}
-                                <li><a href="{{ path('api_' ~ item ~ '_index') }}">{{ item|capitalize }}s</a></li>
+                                <li><a href="{{ path('api_' ~ item ~ '_documentation') }}">{{ item|capitalize }}s</a></li>
                             {% endfor %}
                         </ul>
                     {% endblock %}
