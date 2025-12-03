@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ContactController extends AbstractController
 {
     //// api documentation
-    public function documentation($data, $em): Response
+    public function documentation($data, $em, $form): Response
     {
         $mappings = array();
 
@@ -37,6 +37,7 @@ final class ContactController extends AbstractController
             'class' => "contact",
             'atributes' => $mappings,
             'data' => $data,
+            'form' => $form,
         ]);
     }
 
@@ -44,8 +45,12 @@ final class ContactController extends AbstractController
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_contact_index', methods: ['GET'])]
-    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer, EntityManagerInterface $em): Response
+    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer, Request $request, EntityManagerInterface $em): Response
     {
+        $contact = new Contact();
+        $form = $this->createForm(ContactForm::class, $contact);
+        $form->handleRequest($request);
+
         $response = new JsonResponse($serializer->serialize($contactRepository->findAll(), 'json'), Response::HTTP_OK, [], true);
         
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
@@ -53,14 +58,18 @@ final class ContactController extends AbstractController
         }
 
         $response->setEncodingOptions( $response->getEncodingOptions() | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
-        return $this->documentation($response, $em);
+        return $this->documentation($response, $em, $form);
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_contact_show', methods: ['GET'])]
-    public function apiShow(Contact $contact, SerializerInterface $serializer, EntityManagerInterface $em): Response
+    public function apiShow(Contact $contact, Request $request, SerializerInterface $serializer, EntityManagerInterface $em): Response
     {
+        $contact = new Contact();
+        $form = $this->createForm(ContactForm::class, $contact);
+        $form->handleRequest($request);
+
         $response = new JsonResponse($serializer->serialize($contact, 'json'), Response::HTTP_OK, [], true);
         
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
@@ -68,7 +77,7 @@ final class ContactController extends AbstractController
         }
 
         $response->setEncodingOptions( $response->getEncodingOptions() | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
-        return $this->documentation($response, $em);
+        return $this->documentation($response, $em, $form);
     }
 
 
@@ -97,7 +106,7 @@ final class ContactController extends AbstractController
             return $response;
         }
 
-        return $this->documentation($response, $em);
+        return $this->documentation($response, $em, $form);
     }
 
 
@@ -122,8 +131,12 @@ final class ContactController extends AbstractController
 
             // -delete
     #[Route('_api/{id}', name: 'api_contact_delete', methods: ['DELETE'])]
-    public function apiDelete(Contact $contact, EntityManagerInterface $em): Response
+    public function apiDelete(Contact $contact, Request $request, EntityManagerInterface $em): Response
     {
+        $contact = new Contact();
+        $form = $this->createForm(ContactForm::class, $contact);
+        $form->handleRequest($request);
+        
         $em->remove($contact);
         $em->flush();
 
@@ -135,7 +148,7 @@ final class ContactController extends AbstractController
             return $response;
         }
 
-        return $this->documentation($response, $em);
+        return $this->documentation($response, $em, $form);
     }
 
 

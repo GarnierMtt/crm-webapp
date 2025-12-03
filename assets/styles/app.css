@@ -117,6 +117,10 @@ body{
     z-index: 10;
 }
 
+.section{
+    margin-left: 2em;
+}
+
 
 /* JSON DISPLAY */
 
@@ -136,7 +140,7 @@ body{
     border-radius: 2px;
 }
 
-.jsonDisplay div{
+.jsonDisplay .indent{
     border-left: 1px solid gray;
     padding-left: 1em;
 }
@@ -186,8 +190,7 @@ body{
 /* ENDPOINTS */
 
 .endpoints {
-    margin-left: 2em;
-    width: calc(100% - 2em);
+    width: 100%;
 }
 
 .endpoints > .endpoint > div {

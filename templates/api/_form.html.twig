@@ -1,0 +1,19 @@
+{{ form_start(form) }}
+
+    <table>
+        {% for row in form_entrys(form) %}
+            {% if row != form._token %}
+                <tr>
+                    <td>{{ form_label(row) }}</td>
+                    <td>{{ form_widget(row) }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+
+        <tr>
+            <td colspan="2"><input type="submit" class="btn" value="Envoyer"></td>
+        </tr>
+    </table>
+
+    
+{{ form_end(form) }}

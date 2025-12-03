@@ -2,8 +2,9 @@
 
 namespace App\Utils;
 
-use Twig\Attribute\AsTwigFilter;  
-
+use Symfony\Component\Form\FormView;
+use Twig\Attribute\AsTwigFilter;
+use Twig\Attribute\AsTwigFunction;
 
 class AppExtension
 {
@@ -18,7 +19,7 @@ class AppExtension
         $string = '';
         foreach(preg_split("/((\r?\n)|(\r\n?))/", $str) as $line){
             if (str_ends_with($line, "{") || str_ends_with($line, "[")){
-                $string .= '<span class="deploy" onclick="unwrap(this)">'.$line.'</span> <div class="wrapper"> <div>';
+                $string .= '<span class="deploy" onclick="unwrap(this)">'.$line.'</span> <div class="wrapper"> <div class="indent">';
             }
             else if(str_ends_with($line, "[]") == FALSE && (str_ends_with($line, "]") || str_ends_with($line, "],") || str_ends_with($line, "}") || str_ends_with($line, "},"))){
                 $string .= "</div> </div>".$line."<br>";
@@ -30,5 +31,11 @@ class AppExtension
 
 
         return $string;
+    }
+
+
+    #[AsTwigFunction('form_entrys')]
+    public function formEntrys(FormView $form){
+        return $form->children;
     }
 }
