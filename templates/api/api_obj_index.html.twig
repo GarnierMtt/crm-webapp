@@ -1,10 +1,13 @@
 {% extends 'api/api_base.html.twig' %}
 
 {% block title %} - Index {{ class }}{% endblock %}
+{% block head %}
+    <script src="{{ asset('scripts/docs.js') }}"></script>
+{% endblock %}
 
 
 {% block path %}
-    <a href="{{ path('api_' ~ class ~ '_index') }}">{{ class|capitalize }}s</a>
+    <a href="{{ path('api_' ~ class ~ '_documentation') }}">{{ class|capitalize }}s</a>
 {% endblock %}
 
 {% block doc %}
@@ -19,8 +22,9 @@
 
     <p>Liste des endpoints pour la ressource {{ class|capitalize }} :</p>
     <div class="section">
-                <!-- INDEX -->
         <div class="endpoints">
+
+                    <!-- INDEX -->
             <div class="endpoint" onclick="selectUnwrap(this)">
                 <div class="method" style="color:green">GET</div>
                 <div>
@@ -69,7 +73,7 @@
 
                     <!-- SHOW -->
             <div class="endpoint" onclick="selectUnwrap(this)">
-                <div class="method" style="color:green">"GET"</div>
+                <div class="method" style="color:green">GET</div>
                 <div>
                     <span>api_{{ class }}_show</span>
                     Récupère un élément {{ class }} par son id
@@ -80,7 +84,7 @@
                     <p>JS code:<p>
                     <div class="jsonDisplay">
                         <div class="indent">
-                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/{id}"</span>, {
+                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="showId">{id}</span>"</span>, {
                                 <div class="indent">
                                     method: <span class="highlight">"GET"</span>, <br>
                                     headers: {
@@ -95,6 +99,23 @@
                             .catch((error) => console.error(error));
                         </div>
                     </div>
+
+                    <p> Options :</p>
+                    <div class="apiForm">
+                        <form id="showForm">
+                            <table>
+                                <tr>
+                                    <td><label for="showInputId">id:</label></td>
+                                    <td><input type="number" id="showInputId" name="id"></td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="2"><input type="submit" class="btn" value="Envoyer"></td>
+                                </tr>
+                            </table>
+                        </form>
+                    </div>
+
                 </div>
             </div>
 
@@ -138,7 +159,8 @@
 
                     <p> Options :</p>
                     <div class="apiForm">
-                        {{ include('api/_form.html.twig') }}
+                        {% set formRender = include('api/_form.html.twig') %}
+                        {{ formRender|raw }}
                     </div>
 
                 </div>
@@ -157,12 +179,21 @@
                     <p>JS code:<p>
                     <div class="jsonDisplay">
                         <div class="indent">
-                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/{id}"</span>, {
+                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="updateId">{id}</span>"</span>, {
                                 <div class="indent">
                                     method: <span class="highlight">"POST"</span>, <br>
                                     headers: {
                                         <div class="indent">
                                             <span class="highlight">"Accept": "application/json"</span>,
+                                        </div>
+                                    }, <br>
+                                    body: {
+                                        <div class="indent">
+                                            <span class="highlight" id="updateBody">
+                                                &#x2022;&#x2022;&#x2022;<br> 
+                                                &nbsp;form data<br> 
+                                                &#x2022;&#x2022;&#x2022;
+                                            </span>
                                         </div>
                                     },
                                 </div>
@@ -172,6 +203,19 @@
                             .catch((error) => console.error(error));
                         </div>
                     </div>
+
+                    <p> Options :</p>
+                    <div class="apiForm">
+                        <table>
+                            <tr>
+                                <td><label for="updateInputId">id:</label></td>
+                                <td><input type="number" id="updateInputId" name="id"></td>
+                            </tr>
+                        </table>
+
+                        {{ formRender|replace({'id="createForm"': 'id="updateForm"'})|raw }}
+                    </div>
+
                 </div>
             </div>
 
@@ -219,6 +263,7 @@
                             </table>
                         </form>
                     </div>
+
                 </div>
             </div>
 
@@ -227,74 +272,169 @@
 
 
     <script>
-        // -- INDEX --
-            // Update display
-        
-            // Submit form
-        $("#indexForm").on('submit', function(e) {
-            e.preventDefault(); // prevent native submit
 
-            fetch("{{ path('api_' ~ class ~ '_index') }}", {
-                method: "GET",
-            })
-            .then((response) => response.text())
-            .then((html) => displayResponse(html))
-            .catch((error) => console.error(error));
-        });
+        // *** ENDPOINTS SCRIPTS ***
+            // -- INDEX --
+                    // Update display
+
+                    // Submit form
+                $("#indexForm").on('submit', function(e) {
+                    e.preventDefault(); // prevent native submit
+
+                    fetch("{{ path('api_' ~ class ~ '_index') }}", {
+                        method: "GET",
+                    })
+                    .then((response) => response.text())
+                    .then((html) => displayResponse(html))
+                    .catch((error) => console.error(error));
+                });
 
 
-        // -- CREATE --
-            /*/ Update display
-        $("form").on("input change", function() {
-            let formData = $(this).serializeArray();
-            let bodyContent = formData.map(item => `"${item.name}": "${item.value}"`).join(",<br>");
-            $("#crateBody").html(bodyContent);
-        });
-            // Submit form
-        $("form").on('submit', function(e) {
-            e.preventDefault(); // prevent native submit
+            // -- SHOW --
+                // Update display
+                    $("#showInputId").on("input", function() {
+                        $("#showId").html($(this).val());
+                    });
+                // Submit form
+                    $("#showForm").on('submit', function(e) {
+                        e.preventDefault(); // prevent native submit
 
-            let formData = new FormData(this);
-            fetch("{{ path('api_' ~ class ~ '_new') }}", {
-                method: "POST",
-                body: formData
-            })
-            .then((response) => response.text())
-            .then((html) => displayResponse(html))
-            .catch((error) => console.error(error));
-        });//*/
-        
+                        fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#showInputId").val(), {
+                            method: "GET",
+                        })
+                        .then((response) => response.text())
+                        .then((html) => displayResponse(html))
+                        .catch((error) => console.error(error));
+                    });
 
-        // -- DELETE --
-            // Update display
-        $("#deleteInputId").on("input", function() {
-            $("#deleteId").html($(this).val());
-        });
-            // Submit form
-        $("#deleteForm").on('submit', function(e) {
-            e.preventDefault(); // prevent native submit
 
-            fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#deleteInputId").val(), {
-                method: "DELETE",
-            })
-            .then((response) => response.text())
-            .then((html) => displayResponse(html))
-            .catch((error) => console.error(error));
-        });
+            // -- CREATE --
+                // Update display
+                    $("#createForm").on("input change", function() {
+                        let formData = $(this).serializeArray();
+                        let bodyContent = formData.map(item => `"${item.name}": "${item.value}"`).join(",<br>");
+                        $("#crateBody").html(bodyContent);
+                    });
+                // Submit form
+                    $("#createForm").on('submit', function(e) {
+                        e.preventDefault(); // prevent native submit
 
-        // -- RESPONSE DISPLAY --
-        function displayResponse(html) {
+                        let formData = new FormData(this);
+                        fetch("{{ path('api_' ~ class ~ '_new') }}", {
+                            method: "POST",
+                            body: formData
+                        })
+                        .then((response) => response.text())
+                        .then((html) => displayResponse(html))
+                        .catch((error) => console.error(error));
+                    });
 
-            // Convert the HTML string into a document object
-            var parser = new DOMParser();
-            var doc = parser.parseFromString(html, 'text/html');
 
-            // Extract the content inside the 'response' div
-            var newContent = doc.getElementById('response').innerHTML;
+            // -- UPDATE --
+                // Update display
+                    $("#updateInputId").on("input", function() {
+                        $("#updateId").html($(this).val());
+                    });
+                    //*
+                    $('#updateInputId').on('change', function() {
+                        fetch("{{ path('api_' ~ class ~ '_index') }}/"+$(this).val(), {
+                            method: "GET",
+                            headers: {
+                                "Accept": "application/json",
+                            },
+                        })
+                        .then((response) =>{
+                            if (!response.ok) {
+                                throw new Error("Network response was not ok " + response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            // Populate form fields with fetched data
+                            //itterate form elements
+                            for(var key of $("#updateForm")[0]){  
+                                var m;
+                                if(m = key.name.match(/\[(.+)\]/)){
+                                    //check if key exists in object
+                                    if(data[m[1]]){ 
+                                        if(data[m[1]].id){
+                                            //set form element value for related objects
+                                            key.value = data[m[1]].id; 
+                                        }
+                                        else{
+                                            //set form element value
+                                            key.value = data[m[1]]; 
+                                        }
+                                    }
+                                }
+                            }
+                            // Trigger input/change to update body display
+                            $("#updateForm").trigger("change");
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            // Clear form fields
+                            //itterate form elements
+                            for(var key of $("#updateForm")[0]){ 
+                                if(!key.name.match(/\[_token\]/) && key.name != ""){
+                                    key.value = "";
+                                }
+                            }
+                            // Trigger input/change to update body display
+                            $("#updateForm").trigger("change");
+                        });
+                    }); //*/
+                    $("#updateForm").on("input change", function() {
+                        let formData = $(this).serializeArray();
+                        let bodyContent = formData.map(item => `"${item.name}": "${item.value}"`).join(",<br>");
+                        $("#updateBody").html(bodyContent);
+                    });
+                // Submit form
+                    $("#updateForm").on('submit', function(e) {
+                        e.preventDefault(); // prevent native submit
 
-            // Replace the current 'response' div content with the new content
-            document.getElementById('response').innerHTML = newContent;
-        }
+                        let formData = new FormData(this);
+                        fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#updateInputId").val(), {
+                            method: "POST",
+                            body: formData
+                        })
+                        .then((response) => response.text())
+                        .then((html) => displayResponse(html))
+                        .catch((error) => console.error(error));
+                    });
+
+
+            // -- DELETE --
+                // Update display
+                    $("#deleteInputId").on("input", function() {
+                        $("#deleteId").html($(this).val());
+                    });
+                // Submit form
+                    $("#deleteForm").on('submit', function(e) {
+                        e.preventDefault(); // prevent native submit
+
+                        fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#deleteInputId").val(), {
+                            method: "DELETE",
+                        })
+                        .then((response) => response.text())
+                        .then((html) => displayResponse(html))
+                        .catch((error) => console.error(error));
+                    });
+
+            // -- RESPONSE DISPLAY --
+                function displayResponse(html) {
+
+                    // Convert the HTML string into a document object
+                    var parser = new DOMParser();
+                    var doc = parser.parseFromString(html, 'text/html');
+
+                    // Extract the content inside the 'response' div
+                    var newContent = doc.getElementById('response').innerHTML;
+
+                    // Replace the current 'response' div content with the new content
+                    document.getElementById('response').innerHTML = newContent;
+                }
+                
     </script>
 {% endblock %}
 

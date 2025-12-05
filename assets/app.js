@@ -4,11 +4,12 @@
  * This file will be included onto the page via the importmap() Twig function,
  * which should already be in your base.html.twig.
  */
-import './styles/normalize.css';
-import './styles/colours.css';
-import './styles/uiStyle.css';
-import './styles/app.css';
-import './styles/buttons.css';
-import './styles/indexTable.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+// CSS imports
+    import './styles/normalize.css';
+    import './styles/app.css';
+
+// JS
+
+// test log
+    console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

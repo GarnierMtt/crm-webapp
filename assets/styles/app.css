@@ -1,64 +1,296 @@
-body{
-    margin: 0;
-    height: 100%;
-    overflow-x: hidden;
-    background-color: var(--mainBgColour);
-}
 
-#banner{
-    background-color: var(--objectColour);
-    height: 3em;
-    width: 100%;
-    position: fixed;
-    right: 0;
-    z-index: 10; /* Stay on top */
-    display: flex;
-    align-items: center;
-    border-style: solid;
-    border-color: var(--accentColour);
-    border-width: 1px;
-}
-.currentUser{
-    height: 100%;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-.dropdown{
-    height: 100%;
-    margin: auto;
-    margin-right: 2px;
-    display: flex;
-    align-items: center;
-    position: relative;
-    display: inline-block;
-}
+/* VARIABLES */
 
-.dropdown-content{
-    display: none;
-    position: absolute;
-    background-color: var(--objectColour);
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px  var(--shadowColour);
-    right: 0;
-}
+    :root{
+        font-family: Arial, Helvetica, sans-serif;
+        
+        --noColour: #00000000;
+        --mainBgColour: #e6e6e6;
+        --secondBgColour: #f1f1f1;
+        --objectColour: white;
+        --fontColour: black;
+        --accentColour: #c7c7c7;
+        --highlightColour: #a4a4a4;
+        --shadowColour: #0000002a;
+        --headdingColour: #2196f3;
+        
+        --createColour: #04aa6d;
+        --createColourHighlight: #d5f6ea;
+        --deleteColour: #f44336;
 
-.dropdown-content a{
-    color: var(--fontColour);
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
+        --codeBackgroundColour: black;
+        --codeFontColour: white;
+        --codeFontHilhlightColour: greenyellow;
+    }
 
-.dropdown-content a:hover{background-color: var(--mainBgColour);}
+/**/
 
-.dropdown:hover .dropdown-content{
-    display: block;
-}
 
-.dropdown:hover .currentUser{
-    background-color: var(--mainBgColour);
-}
+
+/* GLOBAL STYLES */
+
+    body{
+        margin: 0;
+        height: 100%;
+        overflow-x: hidden;
+        background-color: var(--mainBgColour);
+    }
+
+    #banner{
+        background-color: var(--objectColour);
+        height: 3em;
+        width: 100%;
+        position: fixed;
+        right: 0;
+        z-index: 10; /* Stay on top */
+        display: flex;
+        align-items: center;
+        border-style: solid;
+        border-color: var(--accentColour);
+        border-width: 1px;
+    }
+
+    #main{
+        margin-left: 0;
+        width: 100%;
+        height: 100%;
+        transition: .5s;
+    }
+
+    .content{
+        width: calc(100% - 2em);
+        height: 100%;
+        padding: 1em;
+        padding-top: 4em;
+    }
+
+    .section{
+        margin-left: 2em;
+    }
+
+/**/
+
+
+
+/* USER MENUE */
+    
+    .currentUser{
+        height: 100%;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .dropdown{
+        height: 100%;
+        margin: auto;
+        margin-right: 2px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown-content{
+        display: none;
+        position: absolute;
+        background-color: var(--objectColour);
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px  var(--shadowColour);
+        right: 0;
+    }
+
+    .dropdown-content a{
+        color: var(--fontColour);
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover{
+        background-color: var(--mainBgColour);
+    }
+
+    .dropdown:hover .dropdown-content{
+        display: block;
+    }
+
+    .dropdown:hover .currentUser{
+        background-color: var(--mainBgColour);
+    }
+
+/**/
+
+
+
+/* BUTTONS */
+
+    .btn{
+        background-color: var(--accentColour); 
+        border: none;
+        color: var(--fontColour);
+        padding: 2px 5px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        box-sizing: border-box;
+    }.btn:hover {
+        background-color: var(--highlightColour);
+    }
+
+
+    .btn.create {
+        background-color: var(--createColour);
+        color: var(--objectColour);
+    }.btn.create:hover {
+        background-color: var(--createColourHighlight); 
+        color: var(--fontColour);
+    }
+
+    .btn.delete {
+        background-color: var(--deleteColour);
+        color: var(--objectColour);
+    }.btn.delete:hover {
+        background-color: var(--objectColour); 
+        color: var(--deleteColour);
+    }
+
+/**/
+
+
+
+/* NAVIGATOR */
+
+    .navigator > a{
+        font-size: 2em;
+        cursor: pointer;
+        margin-left: 10px;
+        color: var(--fontColour);
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .navigator > a:hover {
+        text-decoration: underline;
+    }
+
+/**/
+
+
+
+/* JSON DISPLAY */
+
+    .jsonDisplay {
+        background-color: var(--codeBackgroundColour);
+        color: var(--codeFontColour);
+        padding: .5em;
+        border-radius: 8px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .jsonDisplay .deploy{
+        font-weight: bold;
+        cursor: pointer;
+        padding-right: 2em;
+        background-color: var(--highlightColour);
+        border-radius: 2px;
+    }
+
+    .jsonDisplay .indent{
+        border-left: 1px solid var(--highlightColour);
+        padding-left: 1em;
+    }
+
+    .jsonDisplay .highlight{
+        color: var(--codeFontHilhlightColour);
+    }
+
+/**/
+
+
+
+/* WRAPPER ; SELECT WRAPPER */
+
+    .wrapper, .selectWrapper {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.5s ease-out;
+    }
+
+    .wrapper.is-open, .selectWrapper.is-open {
+        grid-template-rows: 1fr;
+    }
+
+    .wrapper > *, .selectWrapper > * {
+        overflow: hidden;
+    }
+
+    .selectWrapper > * {
+        border-bottom: 2px solid var(--accentColour);
+        padding-left: 1em;
+    }
+
+/**/
+
+
+
+/* ENDPOINTS */
+
+    .endpoints > .endpoint {
+        border: 1px solid var(--accentColour);
+        background-color: var(--objectColour);
+        cursor: pointer;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .endpoints > .endpoint:hover {
+        background-color: var(--accentColour);
+        transition: 0.2s;
+    }
+
+    .endpoints .method {
+        border-right: 1px solid var(--accentColour);
+        font-weight: bold;
+        width: 6em;
+        justify-content: center;
+    }
+
+    .endpoints > .endpoint > div {
+        display: flex;
+        align-items: center;
+        height: 2em;
+    }
+
+    .endpoints > .endpoint > div > span {
+        font-weight: bold;
+        padding: 0 .5em 0 .5em;
+    }
+
+    .endpoints > .selectWrapper{
+        margin-bottom: .5em;
+    }
+
+/**/
+
+
+
+/* API FORM */
+
+    .apiForm {
+        margin-bottom: 1em;
+    }
+
+/**/
+
+
+
+
+
+
+
+
 
 
 #sideMenue{
@@ -91,147 +323,4 @@ body{
         right: 8px;
     font-size: 36px;
     margin-left: 50px;
-}
-#main{
-    margin-left: 0;
-    width: 100%;
-    height: 100%;
-    transition: .5s;
-}
-
-
-.content{
-    width: calc(100% - 2em);
-    height: 100%;
-    padding: 1em;
-    padding-top: 4em;
-}
-
-
-#footer{
-    width: 100%;
-    height: 100px;
-    background-color: var(--accentColour);;
-    position: relative;
-    bottom: 0;
-    z-index: 10;
-}
-
-.section{
-    margin-left: 2em;
-}
-
-
-/* JSON DISPLAY */
-
-.jsonDisplay {
-    background-color: black;
-    color: white;
-    padding: .5em;
-    border-radius: 8px;
-    font-family: 'Courier New', Courier, monospace;
-}
-
-.jsonDisplay .deploy{
-    font-weight: bold;
-    cursor: pointer;
-    padding-right: 2em;
-    background-color: gray;
-    border-radius: 2px;
-}
-
-.jsonDisplay .indent{
-    border-left: 1px solid gray;
-    padding-left: 1em;
-}
-
-.jsonDisplay .highlight{
-    color: greenyellow;
-}
-
-
-/* WRAPPER */
-
-.wrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.5s ease-out;
-}
-
-.wrapper.is-open {
-    grid-template-rows: 1fr;
-}
-
-.wrapper > * {
-    overflow: hidden;
-}
-
-
-/* SELECT WRAPPER */
-
-.selectWrapper {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.5s ease-out;
-}
-
-.selectWrapper > * {
-    overflow: hidden;
-    box-sizing: border-box;
-    border-bottom: 2px solid var(--accentColour);
-    padding-left: 1em;
-}
-
-.selectWrapper.is-open {
-    grid-template-rows: 1fr;
-}
-
-
-/* ENDPOINTS */
-
-.endpoints {
-    width: 100%;
-}
-
-.endpoints > .endpoint > div {
-    display: flex;
-    align-items: center;
-    padding-left: .5em;
-    height: 2em;
-}
-
-.endpoints > .endpoint > div > span {
-    font-weight: bold;
-    padding-right: .5em;
-}
-
-.endpoints .method {
-    border-right: 1px solid var(--accentColour);
-    font-weight: bold;
-    width: 6em;
-    justify-content: center;
-}
-
-.endpoints > .endpoint {
-    border: 1px solid var(--accentColour);
-    background-color: var(--objectColour);
-    cursor: pointer;
-    display: flex;
-    flex-direction: row;
-}
-
-.endpoints > .selectWrapper{
-    margin-bottom: .5em;
-}
-
-.endpoints > .endpoint:hover {
-    background-color: var(--accentColour);
-    transition: 0.2s;
-}
-
-
-/* API FORM */
-
-.apiForm {
-    margin-bottom: 1em;
 }

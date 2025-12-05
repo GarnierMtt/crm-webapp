@@ -4,11 +4,12 @@
         <meta charset="UTF-8">
 
         <title>- CRM - api{% block title %}{% endblock %}</title>
+        <link rel="icon" href="{{ asset('img/H.png') }}">
 
         {{ importmap('app') }}
-        <link rel="icon" href="{{ asset('img/H.png') }}">
+        
         <script src="{{ asset('scripts/jquery-3.7.1.min.js') }}"></script>
-        <script src="{{ asset('scripts/uiScripts.js') }}"></script>
+        <!-- script src="{{ asset('scripts/uiScripts.js') }}"></script !-->
         {% block head %}{% endblock %}
 
     </head>
@@ -69,7 +70,6 @@
 
                 {% block content %}{% endblock %}
             </div>
-            {# <div id="footer"> {% block footer %}{% endblock %}</div> #}
 
         </div>
         

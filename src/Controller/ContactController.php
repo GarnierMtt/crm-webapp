@@ -123,12 +123,21 @@ final class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
             
-            return new Response('', Response::HTTP_ACCEPTED);
+            $response = new Response('', Response::HTTP_ACCEPTED);
+        }else{
+            $response = new Response('', Response::HTTP_EXPECTATION_FAILED);
         }
 
+        
 
 
-        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
+            return $response;
+        }
+
+        return $this->render('api/api_obj_response.html.twig', [
+            'data' => $response,
+        ]);
     }
 
 
