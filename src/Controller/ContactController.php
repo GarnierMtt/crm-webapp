@@ -6,12 +6,13 @@ use App\Entity\Contact;
 use App\Form\ContactForm;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/contact')]
 final class ContactController extends AbstractController
@@ -50,17 +51,50 @@ final class ContactController extends AbstractController
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_contact_index', methods: ['GET'])]
-    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer): Response
+    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer, Request $request): Response
     {
-        $response = new JsonResponse($serializer->serialize($contactRepository->findAll(), 'json'), Response::HTTP_OK, [], true);
+        // pagination
+        $page = $request->query->get("page", 1);
+        $perPage = $request->query->get("per_page");
+
+        // filter
+        $filter = $request->query->get("filter");
+        if($filter){
+            
+        }
+
+        // query
+        $qb = $contactRepository->createQueryBuilder('c')
+            ->leftJoin('c.societe', 's')
+            ->addSelect('s');
+        $qb->setFirstResult(($page - 1) * $perPage)
+           ->setMaxResults($perPage);
+
+        $countQb = clone $qb;
+        $total = (int) $countQb->select('COUNT(c.id)')->resetDQLPart('orderBy')->getQuery()->getSingleScalarResult();
+
+
+        // response
+        $payload = [
+            'data' => $qb->getQuery()->getArrayResult(),
+            'meta' => [
+                'page' => $page,
+                'per_page' => $perPage,
+                'total' => $total,
+                'total_pages' => $perPage > 0 ? (int) ceil($total / $perPage) : 1,
+            ],
+        ];
+
+        $response = new JsonResponse(json_encode($payload, JSON_UNESCAPED_UNICODE), Response::HTTP_OK, [], true);
         
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
             return $response;
         }
 
-        $response->setEncodingOptions( $response->getEncodingOptions() | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
+        $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
         return $this->render('api/api_obj_response.html.twig', [
             'data' => $response,
+            'test' => $filter,
         ]);
     }
 

@@ -120,12 +120,17 @@ class Contact
 
         return $this;
     }
-
+    /*
     public function getSociete(): ?Societe
     {
         return $this->societe;
-    }
+    }//*/
 
+    public function getSociete(): ?int
+    {
+        return $this->societe->getId();
+    }
+    
     public function setSociete(?Societe $societe): static
     {
         $this->societe = $societe;

@@ -37,7 +37,7 @@
                     <p>JS code:<p>
                     <div class="jsonDisplay">
                         <div class="indent">
-                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}"</span>, {
+                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}<span id="indexFilter"></span>"</span>, {
                                 <div class="indent">
                                     method: <span class="highlight">"GET"</span>, <br>
                                     headers: {
@@ -57,10 +57,10 @@
                     <div class="apiForm">
                         <form id="indexForm">
                             <table>
-                                <!--tr>
-                                    <td><label for="deleteInputId">id:</label></td>
-                                    <td><input type="number" id="deleteInputId" name="id"></td>
-                                </tr!-->
+                                <tr>
+                                    <td><label for="indexInputFilter">filter:</label></td>
+                                    <td><input type="text" id="indexInputFilter" name="filter"></td>
+                                </tr>
 
                                 <tr>
                                     <td colspan="2"><input type="submit" class="btn" value="Envoyer"></td>
@@ -276,18 +276,31 @@
         // *** ENDPOINTS SCRIPTS ***
             // -- INDEX --
                     // Update display
+                        $("#indexInputFilter").on("input", function() {
+                            if($(this).val() != ""){
+                                $("#indexFilter").html("?"+$(this).val());
+                            }
+                            else{
+                                $("#indexFilter").html("");
+                            }
+                        });
 
                     // Submit form
-                $("#indexForm").on('submit', function(e) {
-                    e.preventDefault(); // prevent native submit
+                        $("#indexForm").on('submit', function(e) {
+                            e.preventDefault(); // prevent native submit
 
-                    fetch("{{ path('api_' ~ class ~ '_index') }}", {
-                        method: "GET",
-                    })
-                    .then((response) => response.text())
-                    .then((html) => displayResponse(html))
-                    .catch((error) => console.error(error));
-                });
+                            let filter = "";
+                            if($("#indexInputFilter").val() != ""){
+                                filter = "?"+$("#indexInputFilter").val();
+                            }
+
+                            fetch("{{ path('api_' ~ class ~ '_index') }}" + filter, {
+                                method: "GET",
+                            })
+                            .then((response) => response.text())
+                            .then((html) => displayResponse(html))
+                            .catch((error) => console.error(error));
+                        });
 
 
             // -- SHOW --
