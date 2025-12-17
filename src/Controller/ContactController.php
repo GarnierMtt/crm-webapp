@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Form\ContactForm;
+use App\Utils\ApiQueryBuilder;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\Criteria;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/contact')]
@@ -51,50 +53,55 @@ final class ContactController extends AbstractController
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_contact_index', methods: ['GET'])]
-    public function apiIndex(ContactRepository $contactRepository, SerializerInterface $serializer, Request $request): Response
+    public function apiIndex(ContactRepository $contactRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // pagination
-        $page = $request->query->get("page", 1);
-        $perPage = $request->query->get("per_page");
+        // return for api collection
+        $response = $apiQueryBuilder->returnCollection($qb = $contactRepository->createQueryBuilder('contact'), $request);
 
-        // filter
-        $filter = $request->query->get("filter");
-        if($filter){
-            
+
+        // left join
+        $qb->leftJoin('contact.societe', 'societe');
+
+        // fields
+        $apiQueryBuilder->applyFields($qb, $request);
+        if (!$request->query->get("fields")) {
+            $qb->addSelect('societe');
         }
 
-        // query
-        $qb = $contactRepository->createQueryBuilder('c')
-            ->leftJoin('c.societe', 's')
-            ->addSelect('s');
-        $qb->setFirstResult(($page - 1) * $perPage)
-           ->setMaxResults($perPage);
+        // filter
+        $apiQueryBuilder->applyFilters($qb, $request);
 
-        $countQb = clone $qb;
-        $total = (int) $countQb->select('COUNT(c.id)')->resetDQLPart('orderBy')->getQuery()->getSingleScalarResult();
+        // order
+        $apiQueryBuilder->applyOrder($qb, $request);
 
+        // count query elements
+        $total = $apiQueryBuilder->getTotal($qb);
+        $totalPages = $perPage > 0 ? (int) ceil($total / $perPage) : 1;
 
-        // response
+        // build links
+        $links = $apiQueryBuilder->buildLinks('api_contact_index', $page, $perPage, $total, $request);
+
         $payload = [
             'data' => $qb->getQuery()->getArrayResult(),
             'meta' => [
                 'page' => $page,
                 'per_page' => $perPage,
                 'total' => $total,
-                'total_pages' => $perPage > 0 ? (int) ceil($total / $perPage) : 1,
+                'total_pages' => $totalPages,
+                'links' => $links,
             ],
         ];
 
-        $response = new JsonResponse(json_encode($payload, JSON_UNESCAPED_UNICODE), Response::HTTP_OK, [], true);
+        $response = new JsonResponse($payload, Response::HTTP_OK, [], false);
+        $response->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
             return $response;
         }
 
-        $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
+        $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT);
         return $this->render('api/api_obj_response.html.twig', [
             'data' => $response,
-            'test' => $filter,
         ]);
     }
 
