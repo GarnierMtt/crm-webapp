@@ -7,13 +7,11 @@ use App\Form\ContactForm;
 use App\Utils\ApiQueryBuilder;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Common\Collections\Criteria;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/contact')]
@@ -55,45 +53,14 @@ final class ContactController extends AbstractController
     #[Route('_api',name: 'api_contact_index', methods: ['GET'])]
     public function apiIndex(ContactRepository $contactRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // return for api collection
-        $response = $apiQueryBuilder->returnCollection($qb = $contactRepository->createQueryBuilder('contact'), $request);
 
+        // base query
+        $qb = $contactRepository->createQueryBuilder('contact');
+        $qb->leftJoin('contact.societe', 'societe')
+           ->addSelect('societe');
 
-        // left join
-        $qb->leftJoin('contact.societe', 'societe');
-
-        // fields
-        $apiQueryBuilder->applyFields($qb, $request);
-        if (!$request->query->get("fields")) {
-            $qb->addSelect('societe');
-        }
-
-        // filter
-        $apiQueryBuilder->applyFilters($qb, $request);
-
-        // order
-        $apiQueryBuilder->applyOrder($qb, $request);
-
-        // count query elements
-        $total = $apiQueryBuilder->getTotal($qb);
-        $totalPages = $perPage > 0 ? (int) ceil($total / $perPage) : 1;
-
-        // build links
-        $links = $apiQueryBuilder->buildLinks('api_contact_index', $page, $perPage, $total, $request);
-
-        $payload = [
-            'data' => $qb->getQuery()->getArrayResult(),
-            'meta' => [
-                'page' => $page,
-                'per_page' => $perPage,
-                'total' => $total,
-                'total_pages' => $totalPages,
-                'links' => $links,
-            ],
-        ];
-
-        $response = new JsonResponse($payload, Response::HTTP_OK, [], false);
-        $response->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        // JsonResponse for api collection
+        $response = $apiQueryBuilder->returnCollection($qb, $request, "contact");
         
         if($_SERVER["HTTP_ACCEPT"] == "application/json"){
             return $response;
