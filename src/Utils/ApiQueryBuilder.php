@@ -3,21 +3,25 @@
 namespace App\Utils;
 
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ApiQueryBuilder
 {
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
+        private NormalizerInterface $normalizer,
+        private EntityManagerInterface $em,
     ) {}
 
     /**
-     * function for array colection
+     * function for INDEX
      */
-    public function returnCollection(QueryBuilder $qb, Request $request, $entity): JsonResponse
+    public function returnIndex(QueryBuilder $qb, Request $request, $entity): JsonResponse
     {
         // pagination
         $page = max(1, $request->query->get("page"));
@@ -141,14 +145,77 @@ class ApiQueryBuilder
             ],
         ];
 
+        // return JSON
         return new JsonResponse($payload, Response::HTTP_OK, [], false)->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 
 
     /**
+     * function for SHOW
+     */
+    public function returnShow($entity): JsonResponse
+    {
+        // set paylod and normalize
+        $payload = ['data' => $this->normalizer->normalize($entity, 'object')];
+
+        // return JSON
+        return new JsonResponse($payload, Response::HTTP_OK, [], false)
+        ->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+
+    /**
+     * function for NEW
+     */
+    public function returnNew($entity, $form): JsonResponse
+    {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->persist($entity);
+            $this->em->flush();
+
+            return new JsonResponse('', Response::HTTP_CREATED, [], false);
+        }
+        else{
+            return new JsonResponse('', Response::HTTP_EXPECTATION_FAILED, [], false);
+        }
+    }
+
+
+    /**
+     * function for EDIT
+     */
+    public function returnEdit($form): JsonResponse
+    {
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->flush();
+            
+            return new JsonResponse('', Response::HTTP_ACCEPTED, [], false);
+        }else{
+            return new JsonResponse('', Response::HTTP_EXPECTATION_FAILED, [], false);
+        }
+    }
+
+
+    /**
+     * function for DELETE
+     */
+    public function returnDelete($entity): JsonResponse
+    {
+        $this->em->remove($entity);
+        $this->em->flush();
+
+        return new JsonResponse('', Response::HTTP_NO_CONTENT, [], false);
+    }
+
+
+
+
+
+
+    /**
      * Apply field selection to query builder
      */
-    public function advancedQuery(QueryBuilder $qb, Request $request, $entity): void
+    private function advancedQuery(QueryBuilder $qb, Request $request, $entity): void
     {
         if ($fields = $request->query->get("fields")) {
             $selects = [];
@@ -164,6 +231,9 @@ class ApiQueryBuilder
         }
     }
 
+    /**
+     * reconstruct URL query
+     */
     private function buildUnencodedQuery(array $params): string 
     {
         $queryParts = [];

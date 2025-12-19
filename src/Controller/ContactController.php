@@ -10,8 +10,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/contact')]
@@ -48,125 +46,81 @@ final class ContactController extends AbstractController
     }
 
 
+    // api return
+    private function apiReturn($response): Response
+    {
+        // response
+        if($_SERVER["HTTP_ACCEPT"] == "text/html"){
+            $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
+            return $this->render('api/api_obj_response.html.twig', [
+                'data' => $response,
+            ]);
+        }
+        return $response;
+    }
+
+
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_contact_index', methods: ['GET'])]
     public function apiIndex(ContactRepository $contactRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-
         // base query
         $qb = $contactRepository->createQueryBuilder('contact');
         $qb->leftJoin('contact.societe', 'societe')
-           ->addSelect('societe');
+           ->addSelect('societe')
+           ->leftJoin('contact.adresses', 'adresses')
+           ->addSelect('adresses')
+           ->leftJoin('adresses.adresse', 'adresse')
+           ->addSelect('adresse');
 
-        // JsonResponse for api collection
-        $response = $apiQueryBuilder->returnCollection($qb, $request, "contact");
         
-        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
-            return $response;
-        }
-
-        $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT);
-        return $this->render('api/api_obj_response.html.twig', [
-            'data' => $response,
-        ]);
+        return $this->apiReturn($apiQueryBuilder->returnIndex($qb, $request, "contact"));
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_contact_show', methods: ['GET'])]
-    public function apiShow(Contact $contact, SerializerInterface $serializer): Response
+    public function apiShow(Contact $contact, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $response = new JsonResponse($serializer->serialize($contact, 'json'), Response::HTTP_OK, [], true);
-        
-        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
-            return $response;
-        }
 
-        $response->setEncodingOptions( $response->getEncodingOptions() | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT );
-        return $this->render('api/api_obj_response.html.twig', [
-            'data' => $response,
-        ]);
+
+        return $this->apiReturn($apiQueryBuilder->returnShow($contact));
     }
 
 
             // -new
     #[Route('_api/new', name: 'api_contact_new', methods: ['POST'])]
-    public function apiNew(Request $request, EntityManagerInterface $em): Response
+    public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactForm::class, $contact);
         $form->handleRequest($request);
 
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($contact);
-            $em->flush();
-
-            $response = new Response('', Response::HTTP_CREATED);
-        }
-        else{
-            $response = new Response('', Response::HTTP_EXPECTATION_FAILED);
-        }
-
-        
-
-        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
-            return $response;
-        }
-
-        return $this->render('api/api_obj_response.html.twig', [
-            'data' => $response,
-        ]);
+        return $this->apiReturn($apiQueryBuilder->returnNew($contact, $form));
     }
 
 
             // -edit
     #[Route('_api/{id}', name: 'api_contact_edit', methods: ['POST'])]
-    public function apiEdit(Request $request, Contact $contact, EntityManagerInterface $entityManager): Response
+    public function apiEdit(Request $request, Contact $contact, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(ContactForm::class, $contact);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-            
-            $response = new Response('', Response::HTTP_ACCEPTED);
-        }else{
-            $response = new Response('', Response::HTTP_EXPECTATION_FAILED);
-        }
 
-        
-
-
-        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
-            return $response;
-        }
-
-        return $this->render('api/api_obj_response.html.twig', [
-            'data' => $response,
-        ]);
+        return $this->apiReturn($apiQueryBuilder->returnEdit($form));
     }
 
 
             // -delete
     #[Route('_api/{id}', name: 'api_contact_delete', methods: ['DELETE'])]
-    public function apiDelete(Contact $contact, EntityManagerInterface $em): Response
+    public function apiDelete(Contact $contact, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $em->remove($contact);
-        $em->flush();
+       
 
-
-
-        $response = new Response('', Response::HTTP_NO_CONTENT);
-        
-        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
-            return $response;
-        }
-
-        return $this->render('api/api_obj_response.html.twig', [
-            'data' => $response,
-        ]);
+        return $this->apiReturn($apiQueryBuilder->returnDelete($contact));
     }
 
 

@@ -39,12 +39,7 @@
                         <div class="indent">
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}<span id="indexFilter"></span>"</span>, {
                                 <div class="indent">
-                                    method: <span class="highlight">"GET"</span>, <br>
-                                    headers: {
-                                        <div class="indent">
-                                            <span class="highlight">"Accept": "application/json"</span>,
-                                        </div>
-                                    },
+                                    method: <span class="highlight">"GET"</span>,
                                 </div>
                             }) <br>
                             .then((response) => response.text()) <br>
@@ -86,12 +81,7 @@
                         <div class="indent">
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="showId">{id}</span>"</span>, {
                                 <div class="indent">
-                                    method: <span class="highlight">"GET"</span>, <br>
-                                    headers: {
-                                        <div class="indent">
-                                            <span class="highlight">"Accept": "application/json"</span>,
-                                        </div>
-                                    },
+                                    method: <span class="highlight">"GET"</span>,
                                 </div>
                             }) <br>
                             .then((response) => response.text()) <br>
@@ -135,11 +125,6 @@
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_new') }}"</span>, {
                                 <div class="indent">
                                     method: <span class="highlight">"POST"</span>, <br>
-                                    headers: {
-                                        <div class="indent">
-                                            <span class="highlight">"Accept": "application/json"</span>,
-                                        </div>
-                                    }, <br>
                                     body: {
                                         <div class="indent">
                                             <span class="highlight" id="crateBody">
@@ -182,11 +167,6 @@
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="updateId">{id}</span>"</span>, {
                                 <div class="indent">
                                     method: <span class="highlight">"POST"</span>, <br>
-                                    headers: {
-                                        <div class="indent">
-                                            <span class="highlight">"Accept": "application/json"</span>,
-                                        </div>
-                                    }, <br>
                                     body: {
                                         <div class="indent">
                                             <span class="highlight" id="updateBody">
@@ -234,12 +214,7 @@
                         <div class="indent">
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="deleteId">{id}</span>"</span>, {
                                 <div class="indent">
-                                    method: <span class="highlight">"DELETE"</span>, <br>
-                                    headers: {
-                                        <div class="indent">
-                                            <span class="highlight">"Accept": "application/json"</span>,
-                                        </div>
-                                    },
+                                    method: <span class="highlight">"DELETE"</span>,
                                 </div>
                             }) <br>
                             .then((response) => response.text()) <br>
@@ -296,6 +271,9 @@
 
                             fetch("{{ path('api_' ~ class ~ '_index') }}" + filter, {
                                 method: "GET",
+                            headers: {
+                                "Accept": "text/html",
+                            },
                             })
                             .then((response) => response.text())
                             .then((html) => displayResponse(html))
@@ -314,6 +292,9 @@
 
                         fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#showInputId").val(), {
                             method: "GET",
+                            headers: {
+                                "Accept": "text/html",
+                            },
                         })
                         .then((response) => response.text())
                         .then((html) => displayResponse(html))
@@ -335,7 +316,10 @@
                         let formData = new FormData(this);
                         fetch("{{ path('api_' ~ class ~ '_new') }}", {
                             method: "POST",
-                            body: formData
+                            headers: {
+                                "Accept": "text/html",
+                            },
+                            body: formData,
                         })
                         .then((response) => response.text())
                         .then((html) => displayResponse(html))
@@ -352,9 +336,6 @@
                     $('#updateInputId').on('change', function() {
                         fetch("{{ path('api_' ~ class ~ '_index') }}/"+$(this).val(), {
                             method: "GET",
-                            headers: {
-                                "Accept": "application/json",
-                            },
                         })
                         .then((response) =>{
                             if (!response.ok) {
@@ -369,14 +350,14 @@
                                 var m;
                                 if(m = key.name.match(/\[(.+)\]/)){
                                     //check if key exists in object
-                                    if(data[m[1]]){ 
-                                        if(data[m[1]].id){
+                                    if(data['data'][m[1]]){ 
+                                        if(data['data'][m[1]].id){
                                             //set form element value for related objects
-                                            key.value = data[m[1]].id; 
+                                            key.value = data['data'][m[1]].id; 
                                         }
                                         else{
                                             //set form element value
-                                            key.value = data[m[1]]; 
+                                            key.value = data['data'][m[1]]; 
                                         }
                                     }
                                 }
@@ -409,7 +390,10 @@
                         let formData = new FormData(this);
                         fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#updateInputId").val(), {
                             method: "POST",
-                            body: formData
+                            headers: {
+                                "Accept": "text/html",
+                            },
+                            body: formData,
                         })
                         .then((response) => response.text())
                         .then((html) => displayResponse(html))
@@ -428,6 +412,9 @@
 
                         fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#deleteInputId").val(), {
                             method: "DELETE",
+                            headers: {
+                                "Accept": "text/html",
+                            },
                         })
                         .then((response) => response.text())
                         .then((html) => displayResponse(html))

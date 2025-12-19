@@ -21,7 +21,19 @@ class AppExtension
             if (str_ends_with($line, "{") || str_ends_with($line, "[")){
                 $string .= '<span class="deploy" onclick="unwrap(this)">'.$line.'</span> <div class="wrapper"> <div class="indent">';
             }
-            else if(str_ends_with($line, "[],") == FALSE && (str_ends_with($line, "]") || str_ends_with($line, "],") || str_ends_with($line, "}") || str_ends_with($line, "},"))){
+            else if(
+                (
+                    str_ends_with($line, "[]") || 
+                    str_ends_with($line, "[],") || 
+                    str_ends_with($line, "{}") || 
+                    str_ends_with($line, "{},")
+                ) == FALSE && (
+                    str_ends_with($line, "]") || 
+                    str_ends_with($line, "],") || 
+                    str_ends_with($line, "}") || 
+                    str_ends_with($line, "},")
+                )
+            ){
                 $string .= "</div> </div>".$line."<br>";
             }
             else {
