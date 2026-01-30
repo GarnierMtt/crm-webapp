@@ -3,13 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Form\RegistrationForm;
+use App\Form\UserForm;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -36,10 +37,10 @@ class RegistrationController extends AbstractController
 
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): JsonResponse
     {
         $user = new User();
-        $form = $this->createForm(RegistrationForm::class, $user);
+        $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -73,14 +74,12 @@ class RegistrationController extends AbstractController
 
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('app_user_index');
+
+            
+            return new JsonResponse('', Response::HTTP_CREATED, [], false);
         }
 
-
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
-        ]);
+        return new JsonResponse('', Response::HTTP_EXPECTATION_FAILED, [], false);
     }
 
 

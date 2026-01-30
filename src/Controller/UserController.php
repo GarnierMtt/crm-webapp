@@ -4,16 +4,16 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserForm;
+use App\Utils\ApiQueryBuilder;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use App\Repository\ResetPasswordRequestRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Route('/user')]
 final class UserController extends AbstractController
@@ -48,79 +48,84 @@ final class UserController extends AbstractController
         ]);
     }
 
+
+    // api return
+    private function apiReturn(JsonResponse $response): Response
+    {
+        // response
+        if($_SERVER["HTTP_ACCEPT"] == "text/html"){
+            $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
+            return $this->render('api/api_obj_response.html.twig', [
+                'data' => $response,
+            ]);
+        }
+        return $response;
+    }
+
+
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_user_index', methods: ['GET'])]
-    public function apiIndex(UserRepository $userRepository, SerializerInterface $serializer): JsonResponse
+    public function apiIndex(UserRepository $userRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $users = $userRepository->findAll();
-        $jsonUsers = $serializer->serialize($users, 'json');
+        // base query
+        $qb = $userRepository->createQueryBuilder('user');
 
 
 
-        return new JsonResponse($jsonUsers, Response::HTTP_OK, [], true);
+        return $this->apiReturn($apiQueryBuilder->returnIndex($qb, $request, "user"));
     }
+
 
             // -show
     #[Route('_api/{id}', name: 'api_user_show', methods: ['GET'])]
-    public function apiShow(User $user, SerializerInterface $serializer): JsonResponse
+    public function apiShow(User $user, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $jsonUser = $serializer->serialize($user, 'json');
 
 
 
-        return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
+        return $this->apiReturn($apiQueryBuilder->returnShow($user));
     }
+
 
             // -new
     #[Route('_api/new', name: 'api_user_new', methods: ['POST'])]
-    public function apiNew(Request $request, EntityManagerInterface $entityManager): Response
+    public function apiNew(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $user = new User();
-        $form = $this->createForm(UserForm::class, $user);
-        $form->handleRequest($request);
-
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($user);
-            $entityManager->flush();
-            
-            return new Response('', Response::HTTP_CREATED);
-        }
-
-
+        $response = $this->forward('App\Controller\RegistrationController::register', [
+            'request' => $request,
+            'userPasswordHasher' => $userPasswordHasher,
+            'entityManager' => $entityManager,
+        ]);
         
-        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+
+
+
+        return $this->apiReturn($response);
     }
+    
 
             // -edit
     #[Route('_api/{id}', name: 'api_user_edit', methods: ['POST'])]
-    public function apiEdit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function apiEdit(Request $request, User $user, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(UserForm::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return new Response('', Response::HTTP_ACCEPTED);
-        }
 
 
-
-        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+        return $this->apiReturn($apiQueryBuilder->returnEdit($form));
     }
+    
 
             // -delete
     #[Route('_api/{id}', name: 'api_user_delete', methods: ['DELETE'])]
-    public function apiDelete(User $user, EntityManagerInterface $entityManager): Response
+    public function apiDelete(User $user, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $entityManager->remove($user);
-        $entityManager->flush();
 
 
 
-        return new Response('', Response::HTTP_NO_CONTENT);
+        return $this->apiReturn($apiQueryBuilder->returnDelete($user));
     }
 
 

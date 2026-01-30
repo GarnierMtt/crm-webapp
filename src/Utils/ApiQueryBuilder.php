@@ -106,7 +106,7 @@ class ApiQueryBuilder
         $queryClone = clone $qb;
         $queryClone->setFirstResult(null)
                    ->setMaxResults(null);
-        $total = $queryClone->select('COUNT(contact.id)')
+        $total = $queryClone->select('COUNT(' . $entity . '.id)')
                             ->resetDQLPart('orderBy')
                             ->getQuery()
                             ->getSingleScalarResult();
@@ -175,9 +175,8 @@ class ApiQueryBuilder
 
             return new JsonResponse('', Response::HTTP_CREATED, [], false);
         }
-        else{
-            return new JsonResponse('', Response::HTTP_EXPECTATION_FAILED, [], false);
-        }
+
+        return new JsonResponse('', Response::HTTP_EXPECTATION_FAILED, [], false);
     }
 
 
@@ -190,9 +189,9 @@ class ApiQueryBuilder
             $this->em->flush();
             
             return new JsonResponse('', Response::HTTP_ACCEPTED, [], false);
-        }else{
-            return new JsonResponse('', Response::HTTP_EXPECTATION_FAILED, [], false);
         }
+        
+        return new JsonResponse('', Response::HTTP_EXPECTATION_FAILED, [], false);
     }
 
 
