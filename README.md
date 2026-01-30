@@ -29,6 +29,8 @@ php bin/console doctrine:migrations:diff
 php bin/console doctrine:migrations:migrate
 php bin/console cache:clear
 
+php bin/console make:entity
+
 ## Features
 
 * Production, development and CI ready

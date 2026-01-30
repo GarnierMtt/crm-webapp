@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\ContactRepository;
+use App\Repository\ContactsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Attribute\Context;
@@ -10,9 +10,9 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-#[ORM\Entity(repositoryClass: ContactRepository::class)]
+#[ORM\Entity(repositoryClass: ContactsRepository::class)]
 #[Gedmo\Loggable]
-class Contact
+class Contacts
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -35,10 +35,10 @@ class Contact
     #[Gedmo\Versioned]
     private ?string $telephone = null;
 
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['societe' => ['id', 'nom']]])]
-    #[ORM\ManyToOne(inversedBy: 'contacts')]
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['societes' => ['id', 'nom']]])]
+    #[ORM\ManyToOne(inversedBy: 'fk_contacts')]
     #[Gedmo\Versioned]
-    private ?Societe $societe = null;
+    private ?Societes $fk_societes = null;
 
     public function __construct()
     {
@@ -97,14 +97,14 @@ class Contact
         return $this;
     }
 
-    public function getSociete(): ?Societe
+    public function getFkSocietes(): ?Societes
     {
-        return $this->societe;
+        return $this->fk_societes;
     }
     
-    public function setSociete(?Societe $societe): static
+    public function setFkSocietes(?Societes $fk_societes): static
     {
-        $this->societe = $societe;
+        $this->fk_societes = $fk_societes;
 
         return $this;
     }

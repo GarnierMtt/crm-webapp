@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\SocieteRepository;
+use App\Repository\SocietesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Serializer\Attribute\Context;
@@ -10,9 +10,9 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-#[ORM\Entity(repositoryClass: SocieteRepository::class)]
+#[ORM\Entity(repositoryClass: SocietesRepository::class)]
 #[Gedmo\Loggable]
-class Societe
+class Societes
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -25,22 +25,22 @@ class Societe
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Gedmo\Versioned]
-    private ?string $telephoneStandard = null;
+    private ?string $telephone_standard = null;
 
     #[ORM\Column(length: 255)]
     #[Gedmo\Versioned]
     private ?string $siret = null;
 
     /**
-     * @var Collection<int, Contact>
+     * @var Collection<int, Contacts>
      */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['contacts' => ['id', 'nom', 'prenom', 'mel', 'telephone', 'post']]])]
-    #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'societe')]
-    private Collection $contacts;
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fk_contacts' => ['id', 'nom', 'prenom', 'mel', 'telephone', 'post']]])]
+    #[ORM\OneToMany(targetEntity: Contacts::class, mappedBy: 'fk_societes')]
+    private Collection $fk_contacts;
 
     public function __construct()
     {
-        $this->contacts = new ArrayCollection();
+        $this->fk_contacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,12 +62,12 @@ class Societe
 
     public function getTelephoneStandard(): ?string
     {
-        return $this->telephoneStandard;
+        return $this->telephone_standard;
     }
 
-    public function setTelephoneStandard(?string $telephoneStandard): static
+    public function setTelephoneStandard(?string $telephone_standard): static
     {
-        $this->telephoneStandard = $telephoneStandard;
+        $this->telephone_standard = $telephone_standard;
 
         return $this;
     }
@@ -85,29 +85,29 @@ class Societe
     }
 
     /**
-     * @return Collection<int, Contact>
+     * @return Collection<int, Contacts>
      */
-    public function getContacts(): Collection
+    public function getFkContacts(): Collection
     {
-        return $this->contacts;
+        return $this->fk_contacts;
     }
 
-    public function addContact(Contact $contact): static
+    public function addFkContacts(Contacts $fk_contacts): static
     {
-        if (!$this->contacts->contains($contact)) {
-            $this->contacts->add($contact);
-            $contact->setSociete($this);
+        if (!$this->fk_contacts->contains($fk_contacts)) {
+            $this->fk_contacts->add($fk_contacts);
+            $fk_contacts->setFkSocietes($this);
         }
 
         return $this;
     }
 
-    public function removeContact(Contact $contact): static
+    public function removeFkContacts(Contacts $fk_contacts): static
     {
-        if ($this->contacts->removeElement($contact)) {
+        if ($this->fk_contacts->removeElement($fk_contacts)) {
             // set the owning side to null (unless already changed)
-            if ($contact->getSociete() === $this) {
-                $contact->setSociete(null);
+            if ($fk_contacts->getFkSocietes() === $this) {
+                $fk_contacts->setFkSocietes(null);
             }
         }
 

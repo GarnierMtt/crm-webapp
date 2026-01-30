@@ -2,14 +2,14 @@
 
 namespace App\Form;
 
-use App\Entity\Contact;
-use App\Entity\Societe;
+use App\Entity\Contacts;
+use App\Entity\Societes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ContactForm extends AbstractType
+class ContactsForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -18,8 +18,8 @@ class ContactForm extends AbstractType
             ->add('prenom')
             ->add('mel')
             ->add('telephone')
-            ->add('societe', EntityType::class, [
-                'class' => Societe::class,
+            ->add('fk_societes', EntityType::class, [
+                'class' => Societes::class,
                 'choice_label' => 'nom',
             ])
         ;
@@ -28,7 +28,7 @@ class ContactForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Contact::class,
+            'data_class' => Contacts::class,
         ]);
     }
 }

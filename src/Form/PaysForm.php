@@ -2,26 +2,25 @@
 
 namespace App\Form;
 
-use App\Entity\Societe;
+use App\Entity\Pays;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SocieteForm extends AbstractType
+class PaysForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nom')
-            ->add('telephoneStandard')
-            ->add('siret')
+            ->add('libelle')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Societe::class,
+            'data_class' => Pays::class,
         ]);
     }
 }
