@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\Adresse;
 use App\Entity\LienFibre;
 use App\Entity\Projet;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -24,14 +23,14 @@ class LienFibreForm extends AbstractType
             ->add('dateLivraison')
             ->add('dateActivation')
             ->add('lienActive')
-            ->add('pointA', EntityType::class, [
+            /*->add('pointA', EntityType::class, [
                 'class' => Adresse::class,
                 'choice_label' => 'nomSite',
             ])
             ->add('pointB', EntityType::class, [
                 'class' => Adresse::class,
                 'choice_label' => 'nomSite',
-            ])
+            ])//*/
             ->add('projet', EntityType::class, [
                 'class' => Projet::class,
                 'choice_label' => 'nom',

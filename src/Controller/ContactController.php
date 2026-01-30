@@ -69,10 +69,11 @@ final class ContactController extends AbstractController
         $qb = $contactRepository->createQueryBuilder('contact');
         $qb->leftJoin('contact.societe', 'societe')
            ->addSelect('societe')
-           ->leftJoin('contact.adresses', 'adresses')
+           /*->leftJoin('contact.adresses', 'adresses')
            ->addSelect('adresses')
            ->leftJoin('adresses.adresse', 'adresse')
-           ->addSelect('adresse');
+           ->addSelect('adresse')//*/
+           ;
 
         
         return $this->apiReturn($apiQueryBuilder->returnIndex($qb, $request, "contact"));

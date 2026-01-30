@@ -74,13 +74,6 @@ class Projet
     */
 
     /**
-     * @var Collection<int, RelationProjetSociete>
-     */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['societes' => ['societe', 'role', 'notes']]])]
-    #[ORM\OneToMany(targetEntity: RelationProjetSociete::class, mappedBy: 'projet', orphanRemoval: true)]
-    private Collection $societes;
-
-    /**
      * @var Collection<int, LienFibre>
      */
     #[Context([AbstractNormalizer::ATTRIBUTES => ['lienFibres' => ['id']]])]
@@ -90,7 +83,6 @@ class Projet
     public function __construct()
     {
         //$this->children = new ArrayCollection();
-        $this->societes = new ArrayCollection();
         $this->lienFibres = new ArrayCollection();
     }
 
@@ -225,40 +217,6 @@ class Projet
         return $this;
     }
     //*/
-
-    /**
-     * @return Collection<int, RelationProjetSociete>
-     */
-    public function getSocietes(): Collection
-    {
-        return $this->societes->map(
-            fn($relation) => [
-                'relation' => $relation,
-                'societe' => $relation->getSociete(),
-        ]);
-    }
-
-    public function addSociete(RelationProjetSociete $societe): static
-    {
-        if (!$this->societes->contains($societe)) {
-            $this->societes->add($societe);
-            $societe->setProjet($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSociete(RelationProjetSociete $societe): static
-    {
-        if ($this->societes->removeElement($societe)) {
-            // set the owning side to null (unless already changed)
-            if ($societe->getProjet() === $this) {
-                $societe->setProjet(null);
-            }
-        }
-
-        return $this;
-    }
 
     /**
      * @return Collection<int, LienFibre>

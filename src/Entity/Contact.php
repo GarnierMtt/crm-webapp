@@ -35,25 +35,13 @@ class Contact
     #[Gedmo\Versioned]
     private ?string $telephone = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Gedmo\Versioned]
-    private ?string $post = null;
-
     #[Context([AbstractNormalizer::ATTRIBUTES => ['societe' => ['id', 'nom']]])]
     #[ORM\ManyToOne(inversedBy: 'contacts')]
     #[Gedmo\Versioned]
     private ?Societe $societe = null;
 
-    /**
-     * @var Collection<int, RelationContactAdresse>
-     */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['adresse', 'role', 'notes']]])]
-    #[ORM\OneToMany(targetEntity: RelationContactAdresse::class, mappedBy: 'contact')]
-    private Collection $adresses;
-
     public function __construct()
     {
-        $this->adresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -109,18 +97,6 @@ class Contact
         return $this;
     }
 
-    public function getPost(): ?string
-    {
-        return $this->post;
-    }
-
-    public function setPost(?string $post): static
-    {
-        $this->post = $post;
-
-        return $this;
-    }
-
     public function getSociete(): ?Societe
     {
         return $this->societe;
@@ -129,36 +105,6 @@ class Contact
     public function setSociete(?Societe $societe): static
     {
         $this->societe = $societe;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, RelationContactAdresse>
-     */
-    public function getAdresses(): Collection
-    {
-        return $this->adresses;
-    }
-
-    public function addAdresse(RelationContactAdresse $relationContactAdresse): static
-    {
-        if (!$this->adresses->contains($relationContactAdresse)) {
-            $this->adresses->add($relationContactAdresse);
-            $relationContactAdresse->setContact($this);
-        }
-
-        return $this;
-    }
-
-    public function removetAdresse(RelationContactAdresse $relationContactAdresse): static
-    {
-        if ($this->adresses->removeElement($relationContactAdresse)) {
-            // set the owning side to null (unless already changed)
-            if ($relationContactAdresse->getContact() === $this) {
-                $relationContactAdresse->setContact(null);
-            }
-        }
 
         return $this;
     }

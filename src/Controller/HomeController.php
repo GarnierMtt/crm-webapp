@@ -21,7 +21,7 @@ final class HomeController extends AbstractController
         foreach ($metas as $meta) {//getFieldNames()
                 $classes[] = $meta->getName()->getShortName();
         }//*/
-        $classes = ["user", "projet", "contact", "adresse", "societe"];
+        $classes = ["user", "projet", "contact", "societe"];
 
         return $this->render('api/api_base.html.twig', [
             'data' => $classes,

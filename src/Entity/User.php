@@ -45,7 +45,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     #[Gedmo\Versioned]
-    private bool $isVerified = false;
+    private bool $active = false;
 
     public function getId(): ?int
     {
@@ -132,14 +132,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isVerified(): bool
+    public function active(): bool
     {
-        return $this->isVerified;
+        return $this->active;
     }
 
-    public function setIsVerified(bool $isVerified): static
+    public function setActive(bool $active): static
     {
-        $this->isVerified = $isVerified;
+        $this->active = $active;
 
         return $this;
     }

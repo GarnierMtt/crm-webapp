@@ -38,25 +38,9 @@ class Societe
     #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'societe')]
     private Collection $contacts;
 
-    /**
-     * @var Collection<int, RelationProjetSociete>
-     */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['projets' => ['id', 'role', 'notes', 'projet']]])]
-    #[ORM\OneToMany(targetEntity: RelationProjetSociete::class, mappedBy: 'societe')]
-    private Collection $projets;
-
-    /**
-     * @var Collection<int, Adresse>
-     */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['id', 'nomSite', 'numeroVoie', 'nomVoie', 'codePostal', 'commune', 'pays', 'complement', 'contacts']]])]
-    #[ORM\OneToMany(targetEntity: Adresse::class, mappedBy: 'societe')]
-    private Collection $adresses;
-
     public function __construct()
     {
         $this->contacts = new ArrayCollection();
-        $this->projets = new ArrayCollection();
-        $this->adresses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,66 +108,6 @@ class Societe
             // set the owning side to null (unless already changed)
             if ($contact->getSociete() === $this) {
                 $contact->setSociete(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, RelationProjetSociete>
-     */
-    public function getProjets(): Collection
-    {
-        return $this->projets;
-    }
-
-    public function addProjet(RelationProjetSociete $projet): static
-    {
-        if (!$this->projets->contains($projet)) {
-            $this->projets->add($projet);
-            $projet->setSociete($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProjet(RelationProjetSociete $projet): static
-    {
-        if ($this->projets->removeElement($projet)) {
-            // set the owning side to null (unless already changed)
-            if ($projet->getSociete() === $this) {
-                $projet->setSociete(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Adresse>
-     */
-    public function getAdresses(): Collection
-    {
-        return $this->adresses;
-    }
-
-    public function addAdress(Adresse $adress): static
-    {
-        if (!$this->adresses->contains($adress)) {
-            $this->adresses->add($adress);
-            $adress->setSociete($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAdress(Adresse $adress): static
-    {
-        if ($this->adresses->removeElement($adress)) {
-            // set the owning side to null (unless already changed)
-            if ($adress->getSociete() === $this) {
-                $adress->setSociete(null);
             }
         }
 

@@ -18,7 +18,6 @@ class ContactForm extends AbstractType
             ->add('prenom')
             ->add('mel')
             ->add('telephone')
-            ->add('post')
             ->add('societe', EntityType::class, [
                 'class' => Societe::class,
                 'choice_label' => 'nom',

@@ -18,18 +18,6 @@ class LienFibre
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['id', 'nomSite']]])]
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Gedmo\Versioned]
-    private ?Adresse $pointA = null;
-
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['adresses' => ['id', 'nomSite']]])]
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Gedmo\Versioned]
-    private ?Adresse $pointB = null;
-
     #[ORM\Column(type: Types::SMALLINT)]
     #[Gedmo\Versioned]
     private ?int $nombreFibres = null;
@@ -74,30 +62,6 @@ class LienFibre
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getPointA(): ?Adresse
-    {
-        return $this->pointA;
-    }
-
-    public function setPointA(?Adresse $pointA): static
-    {
-        $this->pointA = $pointA;
-
-        return $this;
-    }
-
-    public function getPointB(): ?Adresse
-    {
-        return $this->pointB;
-    }
-
-    public function setPointB(?Adresse $pointB): static
-    {
-        $this->pointB = $pointB;
-
-        return $this;
     }
 
     public function getNombreFibres(): ?int
