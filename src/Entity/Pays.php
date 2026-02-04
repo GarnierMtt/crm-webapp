@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\PaysRepository;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaysRepository::class)]
+#[Gedmo\Loggable]
 class Pays
 {
     #[ORM\Id]
@@ -49,6 +53,7 @@ class Pays
     /**
      * @return Collection<int, Communes>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkCommunes' => ['id', 'libelle']]])]
     public function getFkCommunes(): Collection
     {
         return $this->fk_communes;

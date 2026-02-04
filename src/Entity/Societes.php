@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\SocietesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: SocietesRepository::class)]
 #[Gedmo\Loggable]
@@ -34,7 +34,6 @@ class Societes
     /**
      * @var Collection<int, Contacts>
      */
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['fk_contacts' => ['id', 'nom', 'prenom', 'mel', 'telephone', 'post']]])]
     #[ORM\OneToMany(targetEntity: Contacts::class, mappedBy: 'fk_societes')]
     private Collection $fk_contacts;
 
@@ -87,6 +86,7 @@ class Societes
     /**
      * @return Collection<int, Contacts>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkContacts' => ['id', 'nom', 'prenom', 'mel', 'telephone']]])]
     public function getFkContacts(): Collection
     {
         return $this->fk_contacts;

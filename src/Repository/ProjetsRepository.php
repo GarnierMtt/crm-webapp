@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Projet;
+use App\Entity\Projets;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Projet>
+ * @extends ServiceEntityRepository<Projets>
  */
-class ProjetRepository extends ServiceEntityRepository
+class ProjetsRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Projet::class);
+        parent::__construct($registry, Projets::class);
     }
 
     //    /**
-    //     * @return Projet[] Returns an array of Projet objects
+    //     * @return Projets[] Returns an array of Projets objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -31,7 +31,7 @@ class ProjetRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Projet
+    //    public function findOneBySomeField($value): ?Projets
     //    {
     //        return $this->createQueryBuilder('p')
     //            ->andWhere('p.exampleField = :val')

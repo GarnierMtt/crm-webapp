@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Pays;
 use App\Form\PaysForm;
 use App\Utils\ApiQueryBuilder;
+use App\Entity\Pays;
 use App\Repository\PaysRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -67,8 +67,8 @@ final class PaysController extends AbstractController
     {
         // base query
         $qb = $paysRepository->createQueryBuilder('pays');
-        $qb->leftJoin('pays.societe', 'societe')
-           ->addSelect('societe')
+        $qb->leftJoin('pays.fk_communes', 'communes')
+           ->addSelect('communes')
            /*->leftJoin('pays.adresses', 'adresses')
            ->addSelect('adresses')
            ->leftJoin('adresses.adresse', 'adresse')

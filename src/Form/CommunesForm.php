@@ -15,8 +15,8 @@ class CommunesForm extends AbstractType
     {
         $builder
             ->add('libelle')
-            ->add('code_postal')
-            ->add('fk_pays', EntityType::class, [
+            ->add('codePostal')
+            ->add('fkPays', EntityType::class, [
                 'class' => Pays::class,
                 'choice_label' => 'libelle',
             ])

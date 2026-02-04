@@ -2,19 +2,19 @@
 
 namespace App\Form;
 
-use App\Entity\Projet;
+use App\Entity\Projets;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProjetForm extends AbstractType
+class ProjetsForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('nom')
             ->add('description')
-            ->add('dateDeb')
+            ->add('dateDebut')
             ->add('dateFin')
         ;
     }
@@ -22,7 +22,7 @@ class ProjetForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Projet::class,
+            'data_class' => Projets::class,
         ]);
     }
 }

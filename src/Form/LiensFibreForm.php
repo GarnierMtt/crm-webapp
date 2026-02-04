@@ -2,14 +2,14 @@
 
 namespace App\Form;
 
-use App\Entity\LienFibre;
-use App\Entity\Projet;
+use App\Entity\LiensFibre;
+use App\Entity\Projets;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class LienFibreForm extends AbstractType
+class LiensFibreForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -31,8 +31,8 @@ class LienFibreForm extends AbstractType
                 'class' => Adresse::class,
                 'choice_label' => 'nomSite',
             ])//*/
-            ->add('projet', EntityType::class, [
-                'class' => Projet::class,
+            ->add('fkProjets', EntityType::class, [
+                'class' => Projets::class,
                 'choice_label' => 'nom',
             ])
         ;
@@ -41,7 +41,7 @@ class LienFibreForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => LienFibre::class,
+            'data_class' => LiensFibre::class,
         ]);
     }
 }

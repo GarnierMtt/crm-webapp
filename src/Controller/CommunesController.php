@@ -67,8 +67,8 @@ final class CommunesController extends AbstractController
     {
         // base query
         $qb = $communesRepository->createQueryBuilder('communes');
-        $qb->leftJoin('communes.societe', 'societe')
-           ->addSelect('societe')
+        $qb->leftJoin('communes.fk_pays', 'pays')
+           ->addSelect('pays')
            /*->leftJoin('communes.adresses', 'adresses')
            ->addSelect('adresses')
            ->leftJoin('adresses.adresse', 'adresse')

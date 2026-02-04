@@ -2,16 +2,16 @@
 
 namespace App\Entity;
 
-use App\Repository\LienFibreRepository;
-use Doctrine\DBAL\Types\Types;
+use App\Repository\LiensFibreRepository;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
-#[ORM\Entity(repositoryClass: LienFibreRepository::class)]
+#[ORM\Entity(repositoryClass: LiensFibreRepository::class)]
 #[Gedmo\Loggable]
-class LienFibre
+class LiensFibre
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,7 +20,7 @@ class LienFibre
 
     #[ORM\Column(type: Types::SMALLINT)]
     #[Gedmo\Versioned]
-    private ?int $nombreFibres = null;
+    private ?int $nombre_fibres = null;
 
     #[ORM\Column]
     #[Gedmo\Versioned]
@@ -32,32 +32,31 @@ class LienFibre
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Gedmo\Versioned]
-    private ?string $referenceFibre = null;
+    private ?string $reference_fibre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Gedmo\Versioned]
-    private ?string $referenceOperateur = null;
+    private ?string $reference_operateur = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Gedmo\Versioned]
-    private ?string $referenceLiaison = null;
+    private ?string $reference_liaison = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Gedmo\Versioned]
-    private ?\DateTime $dateLivraison = null;
+    private ?\DateTime $date_livraison = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Gedmo\Versioned]
-    private ?\DateTime $dateActivation = null;
+    private ?\DateTime $date_activation = null;
 
     #[ORM\Column]
     #[Gedmo\Versioned]
-    private ?bool $lienActive = null;
+    private ?bool $active = null;
 
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['projet' => ['id', 'nom']]])]
-    #[ORM\ManyToOne(inversedBy: 'lienFibres')]
+    #[ORM\ManyToOne(inversedBy: 'fk_liens_fibre')]
     #[Gedmo\Versioned]
-    private ?Projet $projet = null;
+    private ?Projets $fk_projets = null;
 
     public function getId(): ?int
     {
@@ -66,12 +65,12 @@ class LienFibre
 
     public function getNombreFibres(): ?int
     {
-        return $this->nombreFibres;
+        return $this->nombre_fibres;
     }
 
-    public function setNombreFibres(int $nombreFibres): static
+    public function setNombreFibres(int $nombre_fibres): static
     {
-        $this->nombreFibres = $nombreFibres;
+        $this->nombre_fibres = $nombre_fibres;
 
         return $this;
     }
@@ -102,84 +101,85 @@ class LienFibre
 
     public function getReferenceFibre(): ?string
     {
-        return $this->referenceFibre;
+        return $this->reference_fibre;
     }
 
-    public function setReferenceFibre(?string $referenceFibre): static
+    public function setReferenceFibre(?string $reference_fibre): static
     {
-        $this->referenceFibre = $referenceFibre;
+        $this->reference_fibre = $reference_fibre;
 
         return $this;
     }
 
     public function getReferenceOperateur(): ?string
     {
-        return $this->referenceOperateur;
+        return $this->reference_operateur;
     }
 
-    public function setReferenceOperateur(?string $referenceOperateur): static
+    public function setReferenceOperateur(?string $reference_operateur): static
     {
-        $this->referenceOperateur = $referenceOperateur;
+        $this->reference_operateur = $reference_operateur;
 
         return $this;
     }
 
     public function getReferenceLiaison(): ?string
     {
-        return $this->referenceLiaison;
+        return $this->reference_liaison;
     }
 
-    public function setReferenceLiaison(?string $referenceLiaison): static
+    public function setReferenceLiaison(?string $reference_liaison): static
     {
-        $this->referenceLiaison = $referenceLiaison;
+        $this->reference_liaison = $reference_liaison;
 
         return $this;
     }
 
     public function getDateLivraison(): ?\DateTime
     {
-        return $this->dateLivraison;
+        return $this->date_livraison;
     }
 
-    public function setDateLivraison(?\DateTime $dateLivraison): static
+    public function setDateLivraison(?\DateTime $date_livraison): static
     {
-        $this->dateLivraison = $dateLivraison;
+        $this->date_livraison = $date_livraison;
 
         return $this;
     }
 
     public function getDateActivation(): ?\DateTime
     {
-        return $this->dateActivation;
+        return $this->date_activation;
     }
 
-    public function setDateActivation(?\DateTime $dateActivation): static
+    public function setDateActivation(?\DateTime $date_activation): static
     {
-        $this->dateActivation = $dateActivation;
+        $this->date_activation = $date_activation;
 
         return $this;
     }
 
-    public function isLienActive(): ?bool
+    public function isActive(): ?bool
     {
-        return $this->lienActive;
+        return $this->active;
     }
 
-    public function setLienActive(bool $lienActive): static
+    public function setActive(bool $active): static
     {
-        $this->lienActive = $lienActive;
+        $this->active = $active;
 
         return $this;
     }
 
-    public function getProjet(): ?Projet
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkProjets' => ['id', 'nom']]])]
+    public function getFkProjets(): ?Projets
     {
-        return $this->projet;
+        return $this->fk_projets;
     }
 
-    public function setProjet(?Projet $projet): static
+    public function setFkProjets(?Projets $fk_projets): static
     {
-        $this->projet = $projet;
+        $this->fk_projets = $fk_projets;
 
         return $this;
     }

@@ -3,12 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\ContactsRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ContactsRepository::class)]
 #[Gedmo\Loggable]
@@ -35,7 +33,6 @@ class Contacts
     #[Gedmo\Versioned]
     private ?string $telephone = null;
 
-    #[Context([AbstractNormalizer::ATTRIBUTES => ['societes' => ['id', 'nom']]])]
     #[ORM\ManyToOne(inversedBy: 'fk_contacts')]
     #[Gedmo\Versioned]
     private ?Societes $fk_societes = null;
@@ -97,6 +94,7 @@ class Contacts
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkSocietes' => ['id', 'nom']]])]
     public function getFkSocietes(): ?Societes
     {
         return $this->fk_societes;

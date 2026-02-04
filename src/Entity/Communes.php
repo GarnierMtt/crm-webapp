@@ -3,9 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\CommunesRepository;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommunesRepository::class)]
+#[Gedmo\Loggable]
 class Communes
 {
     #[ORM\Id]
@@ -52,6 +56,7 @@ class Communes
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkPays' => ['id', 'libelle']]])]
     public function getFkPays(): ?Pays
     {
         return $this->fk_pays;

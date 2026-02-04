@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Societes;
 use App\Form\SocietesForm;
+use App\Utils\ApiQueryBuilder;
+use App\Entity\Societes;
 use App\Repository\SocietesRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/societes')]
 final class SocietesController extends AbstractController
@@ -46,74 +47,83 @@ final class SocietesController extends AbstractController
         ]);
     }
 
+
+    // api return
+    private function apiReturn($response): Response
+    {
+        // response
+        if($_SERVER["HTTP_ACCEPT"] == "text/html"){
+            $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
+            return $this->render('api/api_obj_response.html.twig', [
+                'data' => $response,
+            ]);
+        }
+        return $response;
+    }
+
+
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_societes_index', methods: ['GET'])]
-    public function apiIndex(SocietesRepository $societesRepository, SerializerInterface $serializer): JsonResponse
+    public function apiIndex(SocietesRepository $societesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $societes = $societesRepository->findAll();
-        $jsonSocietes = $serializer->serialize($societes, 'json');
+        // base query
+        $qb = $societesRepository->createQueryBuilder('societes');
+        $qb->leftJoin('societes.fk_contacts', 'contacts')
+           ->addSelect('contacts')
+           /*->leftJoin('contacts.adresses', 'adresses')
+           ->addSelect('adresses')
+           ->leftJoin('adresses.adresse', 'adresse')
+           ->addSelect('adresse')//*/
+           ;
 
-
-
-        return new JsonResponse($jsonSocietes, Response::HTTP_OK, [], true);
+        
+        return $this->apiReturn($apiQueryBuilder->returnIndex($qb, $request, "societes"));
     }
+
 
             // -show
     #[Route('_api/{id}',name: 'api_societes_show', methods: ['GET'])]
-    public function apiShow(Societes $societes, SerializerInterface $serializer): JsonResponse
+    public function apiShow(Societes $societes, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $jsonSocietes = $serializer->serialize($societes, 'json');
 
 
-
-        return new JsonResponse($jsonSocietes, Response::HTTP_OK, [], true);
+        return $this->apiReturn($apiQueryBuilder->returnShow($societes));;
     }
+
 
             // -new
     #[Route('_api/new', name: 'api_societes_new', methods: ['POST'])]
-    public function apiNew(Request $request, EntityManagerInterface $entityManager): Response
+    public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $societes = new Societes();
         $form = $this->createForm(SocietesForm::class, $societes);
         $form->handleRequest($request);
 
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($societes);
-            $entityManager->flush();
-        }
-
-
-        return new Response('', Response::HTTP_CREATED);
+        return $this->apiReturn($apiQueryBuilder->returnNew($societes, $form));
     }
+
 
             // -edit
     #[Route('_api/{id}', name: 'api_societes_edit', methods: ['POST'])]
-    public function apiEdit(Request $request, Societes $societes, EntityManagerInterface $entityManager): Response
+    public function apiEdit(Request $request, Societes $societes, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(SocietesForm::class, $societes);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-        }
-
-
-
-        return new Response('', Response::HTTP_ACCEPTED);
+        
+        return $this->apiReturn($apiQueryBuilder->returnEdit($form));
     }
+
 
             // -delete
     #[Route('_api/{id}', name: 'api_societes_delete', methods: ['DELETE'])]
-    public function apiDelete(Societes $societes, EntityManagerInterface $entityManager): Response
+    public function apiDelete(Societes $societes, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $entityManager->remove($societes);
-        $entityManager->flush();
+        
 
-
-
-        return new Response('', Response::HTTP_NO_CONTENT);
+        return $this->apiReturn($apiQueryBuilder->returnDelete($societes));
     }
 
 

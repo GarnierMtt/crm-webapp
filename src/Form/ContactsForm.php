@@ -18,7 +18,7 @@ class ContactsForm extends AbstractType
             ->add('prenom')
             ->add('mel')
             ->add('telephone')
-            ->add('fk_societes', EntityType::class, [
+            ->add('fkSocietes', EntityType::class, [
                 'class' => Societes::class,
                 'choice_label' => 'nom',
             ])
