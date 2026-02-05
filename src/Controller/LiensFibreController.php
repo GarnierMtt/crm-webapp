@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\LiensFibreForm;
+use App\Utils\ApiQueryBuilder;
 use App\Entity\LiensFibre;
 use App\Repository\LiensFibreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,114 +46,63 @@ final class LiensFibreController extends AbstractController
     }
 
 
-
-
-
-
-
-
-    #[Route(name: 'app_lien_fibre_index', methods: ['GET'])]
-    public function index(LiensFibreRepository $liensFibreRepository): Response
+    //// routes pour l'api
+            // -index
+    #[Route('_api',name: 'api_liensFibre_index', methods: ['GET'])]
+    public function apiIndex(LiensFibreRepository $liensFibreRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
+        // base query
+        $qb = $liensFibreRepository->createQueryBuilder('liensFibre');
+        $qb->leftJoin('liensFibre.fk_projets', 'projets')
+           ->addSelect('projets')
+           ;
 
-
-
-        return $this->render('lien_fibre/index.html.twig', [
-            'lien_fibres' => $liensFibreRepository->findAll(),
-        ]);
+        
+        return $apiQueryBuilder->returnIndex($qb, $request, "liensFibre");
     }
 
 
+            // -show
+    #[Route('_api/{id}',name: 'api_liensFibre_show', methods: ['GET'])]
+    public function apiShow(LiensFibre $liensFibre, ApiQueryBuilder $apiQueryBuilder): Response
+    {
 
 
+        return $apiQueryBuilder->returnShow($liensFibre);
+    }
 
 
-
-
-    #[Route('/new', name: 'app_lien_fibre_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+            // -new
+    #[Route('_api/new', name: 'api_liensFibre_new', methods: ['POST'])]
+    public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $liensFibre = new LiensFibre();
         $form = $this->createForm(LiensFibreForm::class, $liensFibre);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($liensFibre);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('app_lien_fibre_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-
-
-        return $this->render('lien_fibre/new.html.twig', [
-            'lien_fibre' => $liensFibre,
-            'form' => $form,
-        ]);
+        return $apiQueryBuilder->returnNew($liensFibre, $form);
     }
 
 
-
-
-
-
-
-
-    #[Route('/{id}', name: 'app_lien_fibre_show', methods: ['GET'])]
-    public function show(LiensFibre $liensFibre): Response
-    {
-
-
-
-        return $this->render('lien_fibre/show.html.twig', [
-            'lien_fibre' => $liensFibre,
-        ]);
-    }
-
-
-
-
-
-
-
-
-    #[Route('/{id}/edit', name: 'app_lien_fibre_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, LiensFibre $liensFibre, EntityManagerInterface $entityManager): Response
+            // -edit
+    #[Route('_api/{id}', name: 'api_liensFibre_edit', methods: ['POST'])]
+    public function apiEdit(Request $request, LiensFibre $liensFibre, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(LiensFibreForm::class, $liensFibre);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
 
-            return $this->redirectToRoute('app_lien_fibre_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-
-
-        return $this->render('lien_fibre/edit.html.twig', [
-            'lien_fibre' => $liensFibre,
-            'form' => $form,
-        ]);
+        return $apiQueryBuilder->returnEdit($form);
     }
 
 
-
-
-
-
-
-
-    #[Route('/{id}', name: 'app_lien_fibre_delete', methods: ['POST'])]
-    public function delete(Request $request, LiensFibre $liensFibre, EntityManagerInterface $entityManager): Response
+            // -delete
+    #[Route('_api/{id}', name: 'api_liensFibre_delete', methods: ['DELETE'])]
+    public function apiDelete(LiensFibre $liensFibre, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$liensFibre->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($liensFibre);
-            $entityManager->flush();
-        }
+       
 
-
-        
-        return $this->redirectToRoute('app_lien_fibre_index', [], Response::HTTP_SEE_OTHER);
+        return $apiQueryBuilder->returnDelete($liensFibre);
     }
 }

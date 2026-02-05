@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ProjetsForm;
+use App\Utils\ApiQueryBuilder;
 use App\Entity\Projets;
 use App\Repository\ProjetsRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -50,79 +51,61 @@ final class ProjetsController extends AbstractController
     //// routes pour l'api
             // -index
     #[Route('_api', name: 'api_projets_index', methods: ['GET'])]
-    public function apiIndex(ProjetsRepository $projetsRepository, SerializerInterface $serializer, EntityManagerInterface $em): Response
+    public function apiIndex(ProjetsRepository $projetsRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $response = new JsonResponse($serializer->serialize($projetsRepository->findAll(), 'json'), Response::HTTP_OK, [], true);
-        
-        if($_SERVER["HTTP_ACCEPT"] == "application/json"){
-            return $response;
-        }
+        // base query
+        $qb = $projetsRepository->createQueryBuilder('projets');
+        $qb->leftJoin('projets.fk_liens_fibre', 'liens_fibre')
+           ->addSelect('liens_fibre')
+           ;
 
-        return $this->render('api/api_obj_response.html.twig', [
-            'data' => $response,
-        ]);
+
+        return $apiQueryBuilder->returnIndex($qb, $request, "projets");
     }
+
 
             // -show
     #[Route('_api/{id}', name: 'api_projets_show', methods: ['GET'])]
-    public function apiShow(Projets $projets, SerializerInterface $serializer): JsonResponse
+    public function apiShow(Projets $projets, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $jsonProjets = $serializer->serialize($projets, 'json');
 
 
-
-        return new JsonResponse($jsonProjets, Response::HTTP_OK, [], true);
+        return $apiQueryBuilder->returnShow($projets);
     }
+
 
             // -new
     #[Route('_api/new', name: 'api_projets_new', methods: ['POST'])]
-    public function apiNew(Request $request, EntityManagerInterface $entityManager): Response
+    public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $projets = new Projets();
         $form = $this->createForm(ProjetsForm::class, $projets);
         $form->handleRequest($request);
 
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($projets);
-            $entityManager->flush();
-            
-            return new Response('', Response::HTTP_CREATED);
-        }
-
-
-        
-        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+        return $apiQueryBuilder->returnNew($projets, $form);
     }
+
 
             // -edit
     #[Route('_api/{id}', name: 'api_projets_edit', methods: ['POST'])]
-    public function apiEdit(Request $request, Projets $projets, EntityManagerInterface $entityManager): Response
+    public function apiEdit(Request $request, Projets $projets, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(ProjetsForm::class, $projets);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
 
-            return new Response('', Response::HTTP_ACCEPTED);
-        }
-
-
-
-        return new Response('', Response::HTTP_EXPECTATION_FAILED);
+        return $apiQueryBuilder->returnEdit($form);
     }
+
 
             // -delete
     #[Route('_api/{id}', name: 'api_projets_delete', methods: ['DELETE'])]
-    public function apiDelete(Projets $projets, EntityManagerInterface $entityManager): Response
+    public function apiDelete(Projets $projets, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $entityManager->remove($projets);
-        $entityManager->flush();
 
 
-
-        return new Response('', Response::HTTP_NO_CONTENT);
+        return $apiQueryBuilder->returnDelete($projets);
     }
 
 

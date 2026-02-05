@@ -46,20 +46,6 @@ final class CommunesController extends AbstractController
     }
 
 
-    // api return
-    private function apiReturn($response): Response
-    {
-        // response
-        if($_SERVER["HTTP_ACCEPT"] == "text/html"){
-            $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
-            return $this->render('api/api_obj_response.html.twig', [
-                'data' => $response,
-            ]);
-        }
-        return $response;
-    }
-
-
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_communes_index', methods: ['GET'])]
@@ -76,7 +62,7 @@ final class CommunesController extends AbstractController
            ;
 
         
-        return $this->apiReturn($apiQueryBuilder->returnIndex($qb, $request, "communes"));
+        return $apiQueryBuilder->returnIndex($qb, $request, "communes");
     }
 
 
@@ -86,7 +72,7 @@ final class CommunesController extends AbstractController
     {
 
 
-        return $this->apiReturn($apiQueryBuilder->returnShow($communes));
+        return $apiQueryBuilder->returnShow($communes);
     }
 
 
@@ -99,7 +85,7 @@ final class CommunesController extends AbstractController
         $form->handleRequest($request);
 
 
-        return $this->apiReturn($apiQueryBuilder->returnNew($communes, $form));
+        return $apiQueryBuilder->returnNew($communes, $form);
     }
 
 
@@ -111,7 +97,7 @@ final class CommunesController extends AbstractController
         $form->handleRequest($request);
 
 
-        return $this->apiReturn($apiQueryBuilder->returnEdit($form));
+        return $apiQueryBuilder->returnEdit($form);
     }
 
 
@@ -121,7 +107,7 @@ final class CommunesController extends AbstractController
     {
        
 
-        return $this->apiReturn($apiQueryBuilder->returnDelete($communes));
+        return $apiQueryBuilder->returnDelete($communes);
     }
 
 

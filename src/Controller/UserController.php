@@ -49,20 +49,6 @@ final class UserController extends AbstractController
     }
 
 
-    // api return
-    private function apiReturn(JsonResponse $response): Response
-    {
-        // response
-        if($_SERVER["HTTP_ACCEPT"] == "text/html"){
-            $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
-            return $this->render('api/api_obj_response.html.twig', [
-                'data' => $response,
-            ]);
-        }
-        return $response;
-    }
-
-
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_user_index', methods: ['GET'])]
@@ -73,7 +59,7 @@ final class UserController extends AbstractController
 
 
 
-        return $this->apiReturn($apiQueryBuilder->returnIndex($qb, $request, "user"));
+        return $apiQueryBuilder->returnIndex($qb, $request, "user");
     }
 
 
@@ -84,13 +70,13 @@ final class UserController extends AbstractController
 
 
 
-        return $this->apiReturn($apiQueryBuilder->returnShow($user));
+        return $apiQueryBuilder->returnShow($user);
     }
 
 
             // -new
     #[Route('_api/new', name: 'api_user_new', methods: ['POST'])]
-    public function apiNew(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function apiNew(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $response = $this->forward('App\Controller\RegistrationController::register', [
             'request' => $request,
@@ -101,7 +87,7 @@ final class UserController extends AbstractController
 
 
 
-        return $this->apiReturn($response);
+        return $apiQueryBuilder->apiReturn($response);
     }
     
 
@@ -114,7 +100,7 @@ final class UserController extends AbstractController
 
 
 
-        return $this->apiReturn($apiQueryBuilder->returnEdit($form));
+        return $apiQueryBuilder->returnEdit($form);
     }
     
 
@@ -125,7 +111,7 @@ final class UserController extends AbstractController
 
 
 
-        return $this->apiReturn($apiQueryBuilder->returnDelete($user));
+        return $apiQueryBuilder->returnDelete($user);
     }
 
 

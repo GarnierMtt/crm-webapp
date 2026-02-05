@@ -48,20 +48,6 @@ final class SocietesController extends AbstractController
     }
 
 
-    // api return
-    private function apiReturn($response): Response
-    {
-        // response
-        if($_SERVER["HTTP_ACCEPT"] == "text/html"){
-            $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
-            return $this->render('api/api_obj_response.html.twig', [
-                'data' => $response,
-            ]);
-        }
-        return $response;
-    }
-
-
     //// routes pour l'api
             // -index
     #[Route('_api',name: 'api_societes_index', methods: ['GET'])]
@@ -78,7 +64,7 @@ final class SocietesController extends AbstractController
            ;
 
         
-        return $this->apiReturn($apiQueryBuilder->returnIndex($qb, $request, "societes"));
+        return $apiQueryBuilder->returnIndex($qb, $request, "societes");
     }
 
 
@@ -88,7 +74,7 @@ final class SocietesController extends AbstractController
     {
 
 
-        return $this->apiReturn($apiQueryBuilder->returnShow($societes));;
+        return $apiQueryBuilder->returnShow($societes);;
     }
 
 
@@ -101,7 +87,7 @@ final class SocietesController extends AbstractController
         $form->handleRequest($request);
 
 
-        return $this->apiReturn($apiQueryBuilder->returnNew($societes, $form));
+        return $apiQueryBuilder->returnNew($societes, $form);
     }
 
 
@@ -113,7 +99,7 @@ final class SocietesController extends AbstractController
         $form->handleRequest($request);
 
         
-        return $this->apiReturn($apiQueryBuilder->returnEdit($form));
+        return $apiQueryBuilder->returnEdit($form);
     }
 
 
@@ -123,7 +109,7 @@ final class SocietesController extends AbstractController
     {
         
 
-        return $this->apiReturn($apiQueryBuilder->returnDelete($societes));
+        return $apiQueryBuilder->returnDelete($societes);
     }
 
 

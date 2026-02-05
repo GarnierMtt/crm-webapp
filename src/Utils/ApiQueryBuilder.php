@@ -2,15 +2,16 @@
 
 namespace App\Utils;
 
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\EntityManagerInterface;
 
-class ApiQueryBuilder
+class ApiQueryBuilder extends AbstractController
 {
     public function __construct(
         private UrlGeneratorInterface $urlGenerator,
@@ -21,7 +22,7 @@ class ApiQueryBuilder
     /**
      * function for INDEX
      */
-    public function returnIndex(QueryBuilder $qb, Request $request, $entity): JsonResponse
+    public function returnIndex(QueryBuilder $qb, Request $request, $entity): Response
     {
         // pagination
         $page = max(1, $request->query->get("page"));
@@ -146,21 +147,38 @@ class ApiQueryBuilder
         ];
 
         // return JSON
-        return new JsonResponse($payload, Response::HTTP_OK, [], false)->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return $this
+            ->apiReturn(new JsonResponse(
+                $payload, 
+                Response::HTTP_OK, 
+                [], 
+                false)
+            ->setEncodingOptions(
+                JSON_UNESCAPED_UNICODE | 
+                JSON_UNESCAPED_SLASHES)
+            );
     }
 
 
     /**
      * function for SHOW
      */
-    public function returnShow($entity): JsonResponse
+    public function returnShow($entity): Response
     {
         // set paylod and normalize
         $payload = ['data' => $this->normalizer->normalize($entity, 'object')];
 
         // return JSON
-        return new JsonResponse($payload, Response::HTTP_OK, [], false)
-        ->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return $this
+            ->apiReturn(new JsonResponse(
+                $payload, 
+                Response::HTTP_OK, 
+                [], 
+                false)
+            ->setEncodingOptions(
+                JSON_UNESCAPED_UNICODE | 
+                JSON_UNESCAPED_SLASHES)
+            );
     }
 
 
@@ -173,10 +191,22 @@ class ApiQueryBuilder
             $this->em->persist($entity);
             $this->em->flush();
 
-            return new JsonResponse('', Response::HTTP_CREATED, [], false);
+            return $this
+                ->apiReturn(new JsonResponse(
+                    '', 
+                    Response::HTTP_CREATED, 
+                    [], 
+                    false)
+                );
         }
 
-        return new JsonResponse('', Response::HTTP_EXPECTATION_FAILED, [], false);
+        return $this
+            ->apiReturn(new JsonResponse(
+                '', 
+                Response::HTTP_EXPECTATION_FAILED, 
+                [], 
+                false)
+            );
     }
 
 
@@ -188,10 +218,22 @@ class ApiQueryBuilder
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
             
-            return new JsonResponse('', Response::HTTP_ACCEPTED, [], false);
+            return $this
+                ->apiReturn(new JsonResponse(
+                    '', 
+                    Response::HTTP_ACCEPTED, 
+                    [], 
+                    false)
+                );
         }
         
-        return new JsonResponse('', Response::HTTP_EXPECTATION_FAILED, [], false);
+        return $this
+            ->apiReturn(new JsonResponse(
+                '', 
+                Response::HTTP_EXPECTATION_FAILED, 
+                [], 
+                false)
+            );
     }
 
 
@@ -203,7 +245,13 @@ class ApiQueryBuilder
         $this->em->remove($entity);
         $this->em->flush();
 
-        return new JsonResponse('', Response::HTTP_NO_CONTENT, [], false);
+        return $this
+            ->apiReturn(new JsonResponse(
+                '', 
+                Response::HTTP_NO_CONTENT, 
+                [], 
+                false)
+            );
     }
 
 
@@ -240,5 +288,21 @@ class ApiQueryBuilder
             $queryParts[] = $key . '=' . $value;
         }
         return implode('&', $queryParts);
+    }
+
+
+    /**
+     * api return
+     */
+    public function apiReturn($response): Response
+    {
+        // response
+        if($_SERVER["HTTP_ACCEPT"] == "text/html"){
+            $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
+            return $this->render('api/api_obj_response.html.twig', [
+                'data' => $response,
+            ]);
+        }
+        return $response;
     }
 }

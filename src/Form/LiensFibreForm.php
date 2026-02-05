@@ -22,7 +22,7 @@ class LiensFibreForm extends AbstractType
             ->add('referenceLiaison')
             ->add('dateLivraison')
             ->add('dateActivation')
-            ->add('lienActive')
+            ->add('active')
             /*->add('pointA', EntityType::class, [
                 'class' => Adresse::class,
                 'choice_label' => 'nomSite',
