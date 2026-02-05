@@ -61,11 +61,8 @@
                         <p>Toutes les classes disponibles dans l'api :</p>
                         
                         <ul>
-                            {#% for item in data %}
-                                <li><a href="{{ path('api_' ~ item ~ '_documentation') }}">{{ item|capitalize }}</a></li>
-                            {% endfor %#}
                             {% for item in data %}
-                                <li>{{ item }}</li>
+                                <li><a href="{{ path('api_' ~ item ~ '_documentation') }}">{{ item|capitalize }}</a></li>
                             {% endfor %}
                         </ul>
                     {% endblock %}

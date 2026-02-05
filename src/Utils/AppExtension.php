@@ -2,9 +2,9 @@
 
 namespace App\Utils;
 
-use Symfony\Component\Form\FormView;
 use Twig\Attribute\AsTwigFilter;
 use Twig\Attribute\AsTwigFunction;
+use Symfony\Component\Form\FormView;
 
 class AppExtension
 {

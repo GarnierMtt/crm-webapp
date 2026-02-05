@@ -7,9 +7,9 @@ use App\Utils\ApiQueryBuilder;
 use App\Entity\LiensFibre;
 use App\Repository\LiensFibreRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/lien/fibre')]

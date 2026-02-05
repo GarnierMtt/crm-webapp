@@ -6,11 +6,11 @@ use App\Entity\Communes;
 use App\Form\CommunesForm;
 use App\Utils\ApiQueryBuilder;
 use App\Repository\CommunesRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/communes')]
 final class CommunesController extends AbstractController

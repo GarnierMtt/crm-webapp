@@ -6,11 +6,11 @@ use App\Entity\Contacts;
 use App\Form\ContactsForm;
 use App\Utils\ApiQueryBuilder;
 use App\Repository\ContactsRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/contacts')]
 final class ContactsController extends AbstractController

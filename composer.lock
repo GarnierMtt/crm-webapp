@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1b1907b4fc497e9da2509893ccc3fd4",
+    "content-hash": "f8d765323e7c0c8eb80989660cdb13b1",
     "packages": [
         {
             "name": "composer/semver",

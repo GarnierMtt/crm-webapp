@@ -2,15 +2,12 @@
 
 namespace App\Controller;
 
+use Gedmo\Loggable\Entity\LogEntry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Gedmo\Loggable\Entity\LogEntry;
+use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
-use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
-use Gedmo\Loggable\LoggableListener;
-use App\Entity\Projet;
 
 
 #[Route('/historique')]

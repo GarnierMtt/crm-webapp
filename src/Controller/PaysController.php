@@ -6,11 +6,11 @@ use App\Form\PaysForm;
 use App\Utils\ApiQueryBuilder;
 use App\Entity\Pays;
 use App\Repository\PaysRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/pays')]
 final class PaysController extends AbstractController

@@ -2,8 +2,8 @@
 
 namespace App\Form;
 
-use App\Entity\Communes;
 use App\Entity\Pays;
+use App\Entity\Communes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
