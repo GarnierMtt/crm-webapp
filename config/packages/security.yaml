@@ -8,8 +8,8 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         app_user_provider:
             entity:
-                class: App\Entity\User
-                property: email
+                class: App\Entity\Utilisateurs
+                property: mel
         users_in_memory: { memory: null }
 
     firewalls:

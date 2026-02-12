@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Form\UserForm;
-use App\Entity\User;
+use App\Form\UtilisateursForm;
+use App\Entity\Utilisateurs;
 use App\Security\EmailVerifier;
-use App\Repository\UserRepository;
+use App\Repository\UtilisateursRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mime\Address;
@@ -39,8 +39,8 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): JsonResponse
     {
-        $user = new User();
-        $form = $this->createForm(UserForm::class, $user);
+        $utilisateur = new Utilisateurs();
+        $form = $this->createForm(UtilisateursForm::class, $utilisateur);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -58,16 +58,16 @@ class RegistrationController extends AbstractController
             $plainPassword = implode($pass); //turn the array into a string
 
             // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+            $utilisateur->setPassword($userPasswordHasher->hashPassword($utilisateur, $plainPassword));
 
-            $entityManager->persist($user);
+            $entityManager->persist($utilisateur);
             $entityManager->flush();
 
             // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $utilisateur,
                 (new TemplatedEmail())
                     ->from(new Address('no-reply@horten.fr', 'SupportMailBot'))
-                    ->to((string) $user->getEmail())
+                    ->to((string) $utilisateur->getMel())
                     ->subject('Compte CRM - Horten')
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
@@ -90,7 +90,7 @@ class RegistrationController extends AbstractController
 
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, UserRepository $userRepository, MailerInterface $mailer): Response
+    public function verifyUserEmail(Request $request, UtilisateursRepository $utilisateursRepository, MailerInterface $mailer): Response
     {
         $id = $request->query->get('id'); // retrieve the user id from the url
 
@@ -99,27 +99,27 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('Error');
         }
         
-        /** @var User $user */
-        $user = $userRepository->find($id);
+        /** @var Utilisateurs $utilisateur */
+        $utilisateur = $utilisateursRepository->find($id);
 
         // Ensure the user exists in persistence
-        if (null === $user) {
+        if (null === $utilisateur) {
             return $this->redirectToRoute('Error');
         }
 
-        // validate email confirmation link, sets User::active=true and persists
+        // validate email confirmation link, sets Utilisateurs::actif=true and persists
         try {    
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
+            $this->emailVerifier->handleEmailConfirmation($request, $utilisateur);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('verify_email_error', $exception->getReason());
 
             return $this->redirectToRoute('Error');
         }
 
-        $email = $user->getEmail();
+        $mel = $utilisateur->getMel();
 
 
         
-        return $this->resetPasswordController->processSendingPasswordResetEmail($email, $mailer);
+        return $this->resetPasswordController->processSendingPasswordResetEmail($mel, $mailer);
     }
 }

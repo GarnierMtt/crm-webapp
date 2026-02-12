@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\User;
+use App\Entity\Utilisateurs;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,19 +10,19 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserForm extends AbstractType
+class UtilisateursForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', EmailType::class,[
-                'attr' => ['autocomplete' => 'email'],
+            ->add('mel', EmailType::class,[
+                'attr' => ['autocomplete' => 'mel'],
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('name', null,[
-                'attr' => ['autocomplete' => 'name'],
+            ->add('nom', null,[
+                'attr' => ['autocomplete' => 'nom'],
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -46,7 +46,7 @@ class UserForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => Utilisateurs::class,
         ]);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Form\ChangePasswordForm;
 use App\Form\ResetPasswordRequestForm;
-use App\Entity\User;
+use App\Entity\Utilisateurs;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Mime\Address;
@@ -33,7 +33,7 @@ class ResetPasswordController extends AbstractController
 
     public function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer): RedirectResponse
     {
-        $user = $this->entityManager->getRepository(User::class)->findOneBy([
+        $user = $this->entityManager->getRepository(Utilisateurs::class)->findOneBy([
             'email' => $emailFormData,
         ]);
 
@@ -60,7 +60,7 @@ class ResetPasswordController extends AbstractController
 
         $email = (new TemplatedEmail())
             ->from(new Address('no-reply@horten.fr', 'SupportMailBot'))
-            ->to((string) $user->getEmail())
+            ->to((string) $user->getMel())
             ->subject('Demande de modification du mot de passe')
             ->htmlTemplate('reset_password/email.html.twig')
             ->context([
@@ -153,7 +153,7 @@ class ResetPasswordController extends AbstractController
         }
 
         try {
-            /** @var User $user */
+            /** @var Utilisateurs $user */
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         } catch (ResetPasswordExceptionInterface $e) {
             $this->addFlash('reset_password_error', sprintf(
@@ -185,7 +185,7 @@ class ResetPasswordController extends AbstractController
 
             $email = (new TemplatedEmail())
                     ->from(new Address('no-reply@horten.fr', 'SupportMailBot'))
-                    ->to((string) $user->getEmail())
+                    ->to((string) $user->getMel())
                     ->subject('Confirmation modification du mot de passe')
                     ->htmlTemplate('reset_password/confirmationEmail.html.twig')
             ;

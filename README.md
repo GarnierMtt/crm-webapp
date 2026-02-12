@@ -23,13 +23,16 @@ docker exec -it crm-webapp-php-1 bash
 
 docker compose build --pull --no-cache
 docker compose up --wait
+docker compose --env-file .env.local up --wait
 docker compose down --remove-orphans
+        docker compose --env-file .env.local config
 
 php bin/console doctrine:migrations:diff
 php bin/console doctrine:migrations:migrate
 php bin/console cache:clear
 
 php bin/console make:entity
+        php bin/console mailer:test support@horten.fr
 
 ## Features
 

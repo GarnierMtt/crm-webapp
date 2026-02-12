@@ -15,7 +15,7 @@ final class HomeController extends AbstractController
     public function apiIndex(): Response
     {
         $controllers = [
-            "user", 
+            "utilisateurs", 
             "projets", 
             "liensFibre", 
             "contacts", 

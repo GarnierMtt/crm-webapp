@@ -185,7 +185,7 @@ class ApiQueryBuilder extends AbstractController
     /**
      * function for NEW
      */
-    public function returnNew($entity, $form): JsonResponse
+    public function returnNew($entity, $form): Response
     {
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($entity);
@@ -213,7 +213,7 @@ class ApiQueryBuilder extends AbstractController
     /**
      * function for EDIT
      */
-    public function returnEdit($form): JsonResponse
+    public function returnEdit($form): Response
     {
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
@@ -240,7 +240,7 @@ class ApiQueryBuilder extends AbstractController
     /**
      * function for DELETE
      */
-    public function returnDelete($entity): JsonResponse
+    public function returnDelete($entity): Response
     {
         $this->em->remove($entity);
         $this->em->flush();

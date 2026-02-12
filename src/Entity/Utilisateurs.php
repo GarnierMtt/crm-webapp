@@ -2,19 +2,18 @@
 
 namespace App\Entity;
 
-use App\Repository\UserRepository;
+use App\Repository\UtilisateursRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Entity(repositoryClass: UtilisateursRepository::class)]
 #[Gedmo\Loggable]
-#[ORM\Table(name: '`user`')]
-#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['mel'])]
+#[UniqueEntity(fields: ['mel'], message: 'Il y a déja un utilisateur avec ce mél.')]
+class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,7 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180)]
     #[Gedmo\Versioned]
-    private ?string $email = null;
+    private ?string $mel = null;
 
     /**
      * @var list<string> The user roles
@@ -37,32 +36,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     #[Gedmo\Versioned]
-    private ?string $password = null;
+    private ?string $mot_de_passe = null;
 
     #[ORM\Column(length: 255)]
     #[Gedmo\Versioned]
-    private ?string $name = null;
+    private ?string $nom = null;
 
     #[ORM\Column]
     #[Gedmo\Versioned]
-    private bool $active = false;
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-
-        return $this;
-    }
+    private bool $actif = false;
 
     /**
      * A visual identifier that represents this user.
@@ -71,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->mel;
     }
 
     /**
@@ -101,12 +83,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getPassword(): ?string
     {
-        return $this->password;
+        return $this->mot_de_passe;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $mot_de_passe): static
     {
-        $this->password = $password;
+        $this->mot_de_passe = $mot_de_passe;
 
         return $this;
     }
@@ -121,26 +103,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function getName(): ?string
+    public function getId(): ?int
     {
-        return $this->name;
+        return $this->id;
     }
 
-    public function setName(string $name): static
+    public function getMel(): ?string
     {
-        $this->name = $name;
+        return $this->mel;
+    }
+
+    public function setMel(string $mel): static
+    {
+        $this->mel = $mel;
 
         return $this;
     }
 
-    public function active(): bool
+    public function getNom(): ?string
     {
-        return $this->active;
+        return $this->nom;
     }
 
-    public function setActive(bool $active): static
+    public function setNom(string $nom): static
     {
-        $this->active = $active;
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function actif(): bool
+    {
+        return $this->actif;
+    }
+
+    public function setActif(bool $actif): static
+    {
+        $this->actif = $actif;
 
         return $this;
     }

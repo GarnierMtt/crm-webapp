@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Form\UserForm;
+use App\Form\UtilisateursForm;
 use App\Utils\ApiQueryBuilder;
-use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Entity\Utilisateurs;
+use App\Repository\UtilisateursRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -14,34 +14,34 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
-#[Route('/user')]
-final class UserController extends AbstractController
+#[Route('/utilisateurs')]
+final class UtilisateursController extends AbstractController
 {
     //// api documentation
-    #[Route('_api_docs',name: 'api_user_documentation', methods: ['GET'])]
+    #[Route('_api_docs',name: 'api_utilisateurs_documentation', methods: ['GET'])]
     public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
 
-        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\User')->getFieldNames();
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Utilisateurs')->getFieldNames();
         foreach($atributes as $atribute){
-            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\User')->getTypeOfField($atribute)];
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Utilisateurs')->getTypeOfField($atribute)];
         }
 
-        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\User')->getAssociationNames();
+        $atributes = $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Utilisateurs')->getAssociationNames();
         foreach($atributes as $atribute){
-            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\User')->getAssociationTargetClass($atribute)];
+            $mappings[] = [$atribute, $em->getMetadataFactory()->getMetadataFor('App\\Entity\\Utilisateurs')->getAssociationTargetClass($atribute)];
         }
 
 
-        $user = new User();
-        $form = $this->createForm(UserForm::class, $user);
+        $utilisateur = new Utilisateurs();
+        $form = $this->createForm(UtilisateursForm::class, $utilisateur);
         $form->handleRequest($request);
 
 
 
         return $this->render('api/api_obj_index.html.twig', [
-            'class' => "user",
+            'class' => "utilisateurs",
             'atributes' => $mappings,
             'form' => $form,
         ]);
@@ -50,31 +50,31 @@ final class UserController extends AbstractController
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_user_index', methods: ['GET'])]
-    public function apiIndex(UserRepository $userRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
+    #[Route('_api',name: 'api_utilisateurs_index', methods: ['GET'])]
+    public function apiIndex(UtilisateursRepository $utilisateursRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         // base query
-        $qb = $userRepository->createQueryBuilder('user');
+        $qb = $utilisateursRepository->createQueryBuilder('utilisateurs');
 
 
 
-        return $apiQueryBuilder->returnIndex($qb, $request, "user");
+        return $apiQueryBuilder->returnIndex($qb, $request, "utilisateurs");
     }
 
 
             // -show
-    #[Route('_api/{id}', name: 'api_user_show', methods: ['GET'])]
-    public function apiShow(User $user, ApiQueryBuilder $apiQueryBuilder): Response
+    #[Route('_api/{id}', name: 'api_utilisateurs_show', methods: ['GET'])]
+    public function apiShow(Utilisateurs $utilisateur, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
 
-        return $apiQueryBuilder->returnShow($user);
+        return $apiQueryBuilder->returnShow($utilisateur);
     }
 
 
             // -new
-    #[Route('_api/new', name: 'api_user_new', methods: ['POST'])]
+    #[Route('_api/new', name: 'api_utilisateurs_new', methods: ['POST'])]
     public function apiNew(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $response = $this->forward('App\Controller\RegistrationController::register', [
@@ -91,10 +91,10 @@ final class UserController extends AbstractController
     
 
             // -edit
-    #[Route('_api/{id}', name: 'api_user_edit', methods: ['POST'])]
-    public function apiEdit(Request $request, User $user, ApiQueryBuilder $apiQueryBuilder): Response
+    #[Route('_api/{id}', name: 'api_utilisateurs_edit', methods: ['POST'])]
+    public function apiEdit(Request $request, Utilisateurs $utilisateur, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        $form = $this->createForm(UserForm::class, $user);
+        $form = $this->createForm(UtilisateursForm::class, $utilisateur);
         $form->handleRequest($request);
 
 
@@ -104,13 +104,13 @@ final class UserController extends AbstractController
     
 
             // -delete
-    #[Route('_api/{id}', name: 'api_user_delete', methods: ['DELETE'])]
-    public function apiDelete(User $user, ApiQueryBuilder $apiQueryBuilder): Response
+    #[Route('_api/{id}', name: 'api_utilisateurs_delete', methods: ['DELETE'])]
+    public function apiDelete(Utilisateurs $utilisateur, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
 
-        return $apiQueryBuilder->returnDelete($user);
+        return $apiQueryBuilder->returnDelete($utilisateur);
     }
 
 

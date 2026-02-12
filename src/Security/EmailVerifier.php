@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\User;
+use App\Entity\Utilisateurs;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,13 +19,13 @@ class EmailVerifier
     ) {
     }
 
-    public function sendEmailConfirmation(string $verifyEmailRouteName, User $user, TemplatedEmail $email): void
+    public function sendEmailConfirmation(string $verifyEmailRouteName, Utilisateurs $utilisateur, TemplatedEmail $email): void
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
-            (string) $user->getId(),
-            (string) $user->getEmail(),
-            ['id' => $user->getId()] // add the user's id as an extra query param
+            (string) $utilisateur->getId(),
+            (string) $utilisateur->getMel(),
+            ['id' => $utilisateur->getId()] // add the user's id as an extra query param
         );
 
         $context = $email->getContext();
@@ -41,13 +41,13 @@ class EmailVerifier
     /**
      * @throws VerifyEmailExceptionInterface
      */
-    public function handleEmailConfirmation(Request $request, User $user): void
+    public function handleEmailConfirmation(Request $request, Utilisateurs $utilisateur): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmationFromRequest($request, (string) $user->getId(), (string) $user->getEmail());
+        $this->verifyEmailHelper->validateEmailConfirmationFromRequest($request, (string) $utilisateur->getId(), (string) $utilisateur->getMel());
 
-        $user->setActive(true);
+        $utilisateur->setActif(true);
 
-        $this->entityManager->persist($user);
+        $this->entityManager->persist($utilisateur);
         $this->entityManager->flush();
     }
 }
