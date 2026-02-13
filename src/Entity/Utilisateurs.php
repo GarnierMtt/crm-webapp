@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UtilisateursRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -45,6 +47,17 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     #[Gedmo\Versioned]
     private bool $actif = false;
+
+    /**
+     * @var Collection<int, Taches>
+     */
+    #[ORM\ManyToMany(targetEntity: Taches::class, mappedBy: 'fk_utilisateurs')]
+    private Collection $fk_taches;
+
+    public function __construct()
+    {
+        $this->fk_taches = new ArrayCollection();
+    }
 
     /**
      * A visual identifier that represents this user.
@@ -140,6 +153,33 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActif(bool $actif): static
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Taches>
+     */
+    public function getFkTaches(): Collection
+    {
+        return $this->fk_taches;
+    }
+
+    public function addFkTach(Taches $fkTach): static
+    {
+        if (!$this->fk_taches->contains($fkTach)) {
+            $this->fk_taches->add($fkTach);
+            $fkTach->addFkUtilisateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkTach(Taches $fkTach): static
+    {
+        if ($this->fk_taches->removeElement($fkTach)) {
+            $fkTach->removeFkUtilisateur($this);
+        }
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CommunesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -26,6 +28,17 @@ class Communes
     #[ORM\ManyToOne(inversedBy: 'fk_communes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Pays $fk_pays = null;
+
+    /**
+     * @var Collection<int, Sites>
+     */
+    #[ORM\OneToMany(targetEntity: Sites::class, mappedBy: 'fk_communes')]
+    private Collection $fk_sites;
+
+    public function __construct()
+    {
+        $this->fk_sites = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -65,6 +78,36 @@ class Communes
     public function setFkPays(?Pays $fk_pays): static
     {
         $this->fk_pays = $fk_pays;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sites>
+     */
+    public function getFkSites(): Collection
+    {
+        return $this->fk_sites;
+    }
+
+    public function addFkSite(Sites $fkSite): static
+    {
+        if (!$this->fk_sites->contains($fkSite)) {
+            $this->fk_sites->add($fkSite);
+            $fkSite->setFkCommunes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkSite(Sites $fkSite): static
+    {
+        if ($this->fk_sites->removeElement($fkSite)) {
+            // set the owning side to null (unless already changed)
+            if ($fkSite->getFkCommunes() === $this) {
+                $fkSite->setFkCommunes(null);
+            }
+        }
 
         return $this;
     }

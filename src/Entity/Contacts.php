@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ContactsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -37,8 +39,15 @@ class Contacts
     #[Gedmo\Versioned]
     private ?Societes $fk_societes = null;
 
+    /**
+     * @var Collection<int, SitesContacts>
+     */
+    #[ORM\OneToMany(targetEntity: SitesContacts::class, mappedBy: 'fk_contacts', orphanRemoval: true)]
+    private Collection $fk_sites_contacts;
+
     public function __construct()
     {
+        $this->fk_sites_contacts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -112,5 +121,35 @@ class Contacts
     public function __toString(): string
     {
         return $this->nom . " " . $this->prenom;
+    }
+
+    /**
+     * @return Collection<int, SitesContacts>
+     */
+    public function getFkSitesContacts(): Collection
+    {
+        return $this->fk_sites_contacts;
+    }
+
+    public function addFkSitesContact(SitesContacts $fkSitesContact): static
+    {
+        if (!$this->fk_sites_contacts->contains($fkSitesContact)) {
+            $this->fk_sites_contacts->add($fkSitesContact);
+            $fkSitesContact->setFkContacts($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkSitesContact(SitesContacts $fkSitesContact): static
+    {
+        if ($this->fk_sites_contacts->removeElement($fkSitesContact)) {
+            // set the owning side to null (unless already changed)
+            if ($fkSitesContact->getFkContacts() === $this) {
+                $fkSitesContact->setFkContacts(null);
+            }
+        }
+
+        return $this;
     }
 }

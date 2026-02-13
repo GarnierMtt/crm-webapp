@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LiensFibreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -57,6 +59,25 @@ class LiensFibre
     #[ORM\ManyToOne(inversedBy: 'fk_liens_fibre')]
     #[Gedmo\Versioned]
     private ?Projets $fk_projets = null;
+
+    #[ORM\ManyToOne(inversedBy: 'fk_liensFibre')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Sites $point_a = null;
+
+    #[ORM\ManyToOne(inversedBy: 'fk_liensFibre')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Sites $point_b = null;
+
+    /**
+     * @var Collection<int, Materiels>
+     */
+    #[ORM\OneToMany(targetEntity: Materiels::class, mappedBy: 'fk_liensFibre')]
+    private Collection $fk_materiels;
+
+    public function __construct()
+    {
+        $this->fk_materiels = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -180,6 +201,60 @@ class LiensFibre
     public function setFkProjets(?Projets $fk_projets): static
     {
         $this->fk_projets = $fk_projets;
+
+        return $this;
+    }
+
+    public function getPointA(): ?Sites
+    {
+        return $this->point_a;
+    }
+
+    public function setPointA(?Sites $point_a): static
+    {
+        $this->point_a = $point_a;
+
+        return $this;
+    }
+
+    public function getPointB(): ?Sites
+    {
+        return $this->point_b;
+    }
+
+    public function setPointB(?Sites $point_b): static
+    {
+        $this->point_b = $point_b;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Materiels>
+     */
+    public function getFkMateriels(): Collection
+    {
+        return $this->fk_materiels;
+    }
+
+    public function addFkMateriel(Materiels $fkMateriel): static
+    {
+        if (!$this->fk_materiels->contains($fkMateriel)) {
+            $this->fk_materiels->add($fkMateriel);
+            $fkMateriel->setFkLiensFibre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkMateriel(Materiels $fkMateriel): static
+    {
+        if ($this->fk_materiels->removeElement($fkMateriel)) {
+            // set the owning side to null (unless already changed)
+            if ($fkMateriel->getFkLiensFibre() === $this) {
+                $fkMateriel->setFkLiensFibre(null);
+            }
+        }
 
         return $this;
     }

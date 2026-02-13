@@ -37,9 +37,30 @@ class Societes
     #[ORM\OneToMany(targetEntity: Contacts::class, mappedBy: 'fk_societes')]
     private Collection $fk_contacts;
 
+    /**
+     * @var Collection<int, Projets>
+     */
+    #[ORM\OneToMany(targetEntity: Projets::class, mappedBy: 'societe_client')]
+    private Collection $fk_projets;
+
+    /**
+     * @var Collection<int, Taches>
+     */
+    #[ORM\OneToMany(targetEntity: Taches::class, mappedBy: 'fk_societes')]
+    private Collection $fk_taches;
+
+    /**
+     * @var Collection<int, Sites>
+     */
+    #[ORM\OneToMany(targetEntity: Sites::class, mappedBy: 'fk_societes')]
+    private Collection $fk_sites;
+
     public function __construct()
     {
         $this->fk_contacts = new ArrayCollection();
+        $this->fk_projets = new ArrayCollection();
+        $this->fk_taches = new ArrayCollection();
+        $this->fk_sites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -119,5 +140,95 @@ class Societes
     public function __toString(): string
     {
         return $this->nom;
+    }
+
+    /**
+     * @return Collection<int, Projets>
+     */
+    public function getFkProjets(): Collection
+    {
+        return $this->fk_projets;
+    }
+
+    public function addFkProjet(Projets $fkProjet): static
+    {
+        if (!$this->fk_projets->contains($fkProjet)) {
+            $this->fk_projets->add($fkProjet);
+            $fkProjet->setSocieteClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkProjet(Projets $fkProjet): static
+    {
+        if ($this->fk_projets->removeElement($fkProjet)) {
+            // set the owning side to null (unless already changed)
+            if ($fkProjet->getSocieteClient() === $this) {
+                $fkProjet->setSocieteClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Taches>
+     */
+    public function getFkTaches(): Collection
+    {
+        return $this->fk_taches;
+    }
+
+    public function addFkTach(Taches $fkTach): static
+    {
+        if (!$this->fk_taches->contains($fkTach)) {
+            $this->fk_taches->add($fkTach);
+            $fkTach->setFkSocietes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkTach(Taches $fkTach): static
+    {
+        if ($this->fk_taches->removeElement($fkTach)) {
+            // set the owning side to null (unless already changed)
+            if ($fkTach->getFkSocietes() === $this) {
+                $fkTach->setFkSocietes(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sites>
+     */
+    public function getFkSites(): Collection
+    {
+        return $this->fk_sites;
+    }
+
+    public function addFkSite(Sites $fkSite): static
+    {
+        if (!$this->fk_sites->contains($fkSite)) {
+            $this->fk_sites->add($fkSite);
+            $fkSite->setFkSocietes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkSite(Sites $fkSite): static
+    {
+        if ($this->fk_sites->removeElement($fkSite)) {
+            // set the owning side to null (unless already changed)
+            if ($fkSite->getFkSocietes() === $this) {
+                $fkSite->setFkSocietes(null);
+            }
+        }
+
+        return $this;
     }
 }
