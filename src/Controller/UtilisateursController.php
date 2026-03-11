@@ -55,7 +55,9 @@ final class UtilisateursController extends AbstractController
     {
         // base query
         $qb = $utilisateursRepository->createQueryBuilder('utilisateurs');
-
+        $qb->leftJoin('utilisateurs.fk_taches', 'taches')
+           ->addSelect('taches')
+           ;
 
 
         return $apiQueryBuilder->returnIndex($qb, $request, "utilisateurs");

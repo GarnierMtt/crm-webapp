@@ -109,22 +109,4 @@ final class PaysController extends AbstractController
 
         return $apiQueryBuilder->returnDelete($pays);
     }
-
-
-
-
-    //// routes vues
-            // -index
-    #[Route(name: 'app_pays_index', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('pays/index.html.twig', []);
-    }
-
-            // -show
-    #[Route('/{id}', name: 'app_pays_show', methods: ['GET'])]
-    public function show(int $id): Response
-    {
-        return $this->render('pays/show.html.twig', ['id' => $id]);
-    }
 }

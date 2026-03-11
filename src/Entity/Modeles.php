@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\ModelesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: ModelesRepository::class)]
 class Modeles
@@ -69,6 +72,7 @@ class Modeles
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkMarques' => ['id', 'libelle']]])]
     public function getFkMarques(): ?Marques
     {
         return $this->fk_marques;
@@ -81,6 +85,7 @@ class Modeles
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkTypes' => ['id', 'libelle']]])]
     public function getFkTypes(): ?Types
     {
         return $this->fk_types;
@@ -96,6 +101,7 @@ class Modeles
     /**
      * @return Collection<int, Materiels>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkMateriels' => ['id', 'libelle']]])]
     public function getFkMateriels(): Collection
     {
         return $this->fk_materiels;

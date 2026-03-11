@@ -2,73 +2,71 @@
 
 namespace App\Form;
 
-use App\Entity\Sites;
+use App\Entity\Taches;
 use App\Entity\Projets;
-use App\Entity\LiensFibre;
+use App\Entity\Societes;
+use App\Entity\Utilisateurs;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class LiensFibreForm extends AbstractType
+class TachesForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('nombreFibres', null, [
-                'required' => true,
-            ])
-            ->add('distance')
-            ->add('attenuation')
-            ->add('referenceFibre')
-            ->add('referenceOperateur')
-            ->add('referenceLiaison')
-            ->add('dateLivraison', DateType::class, [
+            ->add('libelle')
+            ->add('description')
+            ->add('dateDebut', DateType::class, [
                 'required' => false,
                 'widget' => 'single_text',
             ])
-            ->add('dateActivation', DateType::class, [
+            ->add('dateFin', DateType::class, [
                 'required' => false,
                 'widget' => 'single_text',
+                //'type' => 'datetime',
             ])
-            ->add('pointA', EntityType::class, [
-                'class' => Sites::class,
-                'choice_label' => 'nom',
-                'placeholder' => ' - - - - -',
-            ])
-            ->add('pointB', EntityType::class, [
-                'class' => Sites::class,
-                'choice_label' => 'nom',
-                'placeholder' => ' - - - - -',
-            ])//*/
             ->add('fkProjets', EntityType::class, [
-                'required' => false,
                 'class' => Projets::class,
                 'choice_label' => 'nom',
                 'placeholder' => ' - - - - -',
             ])
-            ->add('active')
+            ->add('fkSocietes', EntityType::class, [
+                'required' => false,
+                'class' => Societes::class,
+                'choice_label' => 'nom',
+                'placeholder' => ' - - - - -',
+            ])
+            ->add('fkUtilisateurs', EntityType::class, [
+                'required' => false,
+                'class' => Utilisateurs::class,
+                'multiple' => true,
+                'expanded' => true,
+                'choice_label' => 'nom',
+            ])
         ;
         /*
-        $builder->get('active')
+        $builder->get('dateFin')
             ->addModelTransformer(new CallbackTransformer(
-                function ($activeAsInt): int {
+                function ($dateFinAsString): ?string {
                     // get int
-                    return ($activeAsInt == true) ? 1 : 0;
+                    return $dateFinAsString;
                 },
-                function ($activeAsBool): bool {
+                function ($dateFinAsDate): ?\DateTime {
                     // send bool
-                    return ($activeAsBool == 1) ? true : false;
+                    return $dateFinAsDate;
                 }
-            ))//*/
-        ;
+            ))
+        ;//*/
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => LiensFibre::class,
+            'data_class' => Taches::class,
         ]);
     }
 }

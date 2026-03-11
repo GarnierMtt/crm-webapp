@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\ContactsRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: ContactsRepository::class)]
 #[Gedmo\Loggable]
@@ -126,6 +126,7 @@ class Contacts
     /**
      * @return Collection<int, SitesContacts>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkSitesContacts' => ['id']]])]
     public function getFkSitesContacts(): Collection
     {
         return $this->fk_sites_contacts;

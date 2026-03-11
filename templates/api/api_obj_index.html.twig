@@ -329,41 +329,59 @@
 
             // -- UPDATE --
                 // Update display
-                    $("#updateInputId").on("input", function() {
-                        $("#updateId").html($(this).val());
-                    });
                     //*
+                    // update form fields on id change
                     $('#updateInputId').on('change', function() {
+                        // update id display
+                        $("#updateId").html($(this).val());
+                        // fetch data for the entered id
                         fetch("{{ path('api_' ~ class ~ '_index') }}/"+$(this).val(), {
                             method: "GET",
                         })
                         .then((response) =>{
                             if (!response.ok) {
-                                throw new Error("Network response was not ok " + response.statusText);
+                                throw new Error("Bad response: " + response.statusText);
                             }
                             return response.json();
                         })
                         .then((data) => {
                             // Populate form fields with fetched data
                             //itterate form elements
+                            console.log(data);
                             for(var key of $("#updateForm")[0]){  
                                 var m;
-                                if(m = key.name.match(/\[(.+)\]/)){
+                                    console.log(key);
+                                if(m = key.name.match(/\[([^\[].+)\]/)){
+                                    //ignore _token field
+                                    console.log(m);
+                                    if(m[1] == "_token"){
+                                        continue;
+                                    }
+                                    //checkbox handling
+                                    if(key.type == "checkbox"){
+                                        key.checked = (data['data'][m[1]]) ? true : false;
+                                        continue;
+                                    }
                                     //check if key exists in object
                                     if(data['data'][m[1]]){ 
                                         if(data['data'][m[1]].id){
                                             //set form element value for related objects
-                                            key.value = data['data'][m[1]].id; 
+                                            key.value = data['data'][m[1]].id;
                                         }
                                         else{
                                             //set form element value
-                                            key.value = data['data'][m[1]]; 
+                                            key.value = data['data'][m[1]];
                                         }
                                     }
+                                    else{
+                                        //clear form element value
+                                        key.value = ""; 
+                                    }
+                                    
                                 }
                             }
-                            // Trigger input/change to update body display
-                            $("#updateForm").trigger("change");
+                            // Trigger input event to update body display
+                            $("#updateForm").trigger("input");
                         })
                         .catch((error) => {
                             console.error(error);
@@ -374,11 +392,11 @@
                                     key.value = "";
                                 }
                             }
-                            // Trigger input/change to update body display
-                            $("#updateForm").trigger("change");
+                            // Trigger input event to update body display
+                            $("#updateForm").trigger("input");
                         });
                     }); //*/
-                    $("#updateForm").on("input change", function() {
+                    $("#updateForm").on("input", function() {
                         let formData = $(this).serializeArray();
                         let bodyContent = formData.map(item => `"${item.name}": "${item.value}"`).join(",<br>");
                         $("#updateBody").html(bodyContent);

@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\MaterielsRepository;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MaterielsRepository::class)]
@@ -47,6 +50,7 @@ class Materiels
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkModeles' => ['id', 'libelle', 'numeroSerie', 'fkMarques', 'fkTypes']]])]
     public function getFkModeles(): ?Modeles
     {
         return $this->fk_modeles;
@@ -59,6 +63,7 @@ class Materiels
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkProjets' => ['id', 'nom']]])]
     public function getFkProjets(): ?Projets
     {
         return $this->fk_projets;
@@ -71,6 +76,7 @@ class Materiels
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkSites' => ['id', 'nom', 'numeroVoie', 'nomVoie', 'complement', 'fkCommunes']]])]
     public function getFkSites(): ?Sites
     {
         return $this->fk_sites;

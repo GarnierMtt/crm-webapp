@@ -19,8 +19,10 @@ class ContactsForm extends AbstractType
             ->add('mel')
             ->add('telephone')
             ->add('fkSocietes', EntityType::class, [
+                'required' => false,
                 'class' => Societes::class,
                 'choice_label' => 'nom',
+                'placeholder' => ' - - - - -',
             ])
         ;
     }

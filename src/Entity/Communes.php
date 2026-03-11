@@ -3,12 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\CommunesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CommunesRepository::class)]
 #[Gedmo\Loggable]
@@ -85,6 +85,7 @@ class Communes
     /**
      * @return Collection<int, Sites>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkSites' => ['id', 'nom', 'numeroVoie', 'nomVoie', 'complement']]])]
     public function getFkSites(): Collection
     {
         return $this->fk_sites;

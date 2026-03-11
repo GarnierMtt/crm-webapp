@@ -145,6 +145,7 @@ class Societes
     /**
      * @return Collection<int, Projets>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkProjets' => ['id', 'nom', 'description', 'dateDebut', 'dateFin']]])]
     public function getFkProjets(): Collection
     {
         return $this->fk_projets;
@@ -175,6 +176,7 @@ class Societes
     /**
      * @return Collection<int, Taches>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkTaches' => ['id', 'libelle', 'description', 'dateDebut', 'dateFin']]])]
     public function getFkTaches(): Collection
     {
         return $this->fk_taches;
@@ -205,6 +207,7 @@ class Societes
     /**
      * @return Collection<int, Sites>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkSites' => ['id', 'nom', 'numeroVoie', 'nomVoie', 'complement', 'fkCommunes']]])]
     public function getFkSites(): Collection
     {
         return $this->fk_sites;

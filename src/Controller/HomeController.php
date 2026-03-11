@@ -22,6 +22,12 @@ final class HomeController extends AbstractController
             "societes", 
             "pays", 
             "communes",
+            "marques",
+            "types",
+            "sites",
+            "modeles",
+            "taches",
+            "materiels",
         ];
 
 

@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\TachesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: TachesRepository::class)]
 class Taches
@@ -87,9 +90,9 @@ class Taches
         return $this;
     }
 
-    public function getDateFin(): ?\DateTime
+    public function getDateFin(): ?string
     {
-        return $this->date_fin;
+        return $this->date_fin ? $this->date_fin->format('Y-m-d') : null;
     }
 
     public function setDateFin(?\DateTime $date_fin): static
@@ -102,6 +105,7 @@ class Taches
     /**
      * @return Collection<int, Utilisateurs>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkUtilisateurs' => ['id', 'nom']]])]
     public function getFkUtilisateurs(): Collection
     {
         return $this->fk_utilisateurs;
@@ -123,6 +127,7 @@ class Taches
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkProjets' => ['id', 'nom']]])]
     public function getFkProjets(): ?Projets
     {
         return $this->fk_projets;
@@ -135,6 +140,7 @@ class Taches
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkSocietes' => ['id', 'nom']]])]
     public function getFkSocietes(): ?Societes
     {
         return $this->fk_societes;

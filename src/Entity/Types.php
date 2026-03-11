@@ -3,9 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\TypesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: TypesRepository::class)]
 class Types
@@ -49,6 +52,7 @@ class Types
     /**
      * @return Collection<int, Modeles>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkModeles' => ['id', 'libelle', 'numeroSerie']]])]
     public function getFkModeles(): Collection
     {
         return $this->fk_modeles;

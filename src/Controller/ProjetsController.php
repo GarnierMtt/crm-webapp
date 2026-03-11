@@ -55,6 +55,12 @@ final class ProjetsController extends AbstractController
         $qb = $projetsRepository->createQueryBuilder('projets');
         $qb->leftJoin('projets.fk_liens_fibre', 'liens_fibre')
            ->addSelect('liens_fibre')
+           ->leftJoin('projets.societe_client', 'societes')
+           ->addSelect('societes')
+           ->leftJoin('projets.fk_taches', 'taches')
+           ->addSelect('taches')
+           ->leftJoin('projets.fk_materiels', 'materiels')
+           ->addSelect('materiels')
            ;
 
 

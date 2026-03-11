@@ -55,6 +55,12 @@ final class LiensFibreController extends AbstractController
         $qb = $liensFibreRepository->createQueryBuilder('liensFibre');
         $qb->leftJoin('liensFibre.fk_projets', 'projets')
            ->addSelect('projets')
+           ->leftJoin('liensFibre.point_a', 'sitesA')
+           ->addSelect('sitesA')
+           ->leftJoin('liensFibre.point_b', 'sitesB')
+           ->addSelect('sitesB')
+           ->leftJoin('liensFibre.fk_materiels', 'materiels')
+           ->addSelect('materiels')
            ;
 
         

@@ -55,10 +55,12 @@ final class SocietesController extends AbstractController
         $qb = $societesRepository->createQueryBuilder('societes');
         $qb->leftJoin('societes.fk_contacts', 'contacts')
            ->addSelect('contacts')
-           /*->leftJoin('contacts.adresses', 'adresses')
-           ->addSelect('adresses')
-           ->leftJoin('adresses.adresse', 'adresse')
-           ->addSelect('adresse')//*/
+           ->leftJoin('societes.fk_projets', 'projets')
+           ->addSelect('projets')
+           ->leftJoin('societes.fk_taches', 'taches')
+           ->addSelect('taches')
+           ->leftJoin('societes.fk_sites', 'sites')
+           ->addSelect('sites')
            ;
 
         

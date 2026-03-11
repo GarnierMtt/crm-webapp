@@ -3,11 +3,15 @@
 namespace App\Entity;
 
 use App\Repository\SitesRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: SitesRepository::class)]
+#[Gedmo\Loggable]
 class Sites
 {
     #[ORM\Id]
@@ -36,11 +40,6 @@ class Sites
     #[ORM\OneToMany(targetEntity: SitesContacts::class, mappedBy: 'fk_sites', orphanRemoval: true)]
     private Collection $fk_sites_contacts;
 
-    /**
-     * @var Collection<int, LiensFibre>
-     */
-    #[ORM\OneToMany(targetEntity: LiensFibre::class, mappedBy: 'point_a')]
-    private Collection $fk_liensFibre;
 
     #[ORM\ManyToOne(inversedBy: 'fk_sites')]
     #[ORM\JoinColumn(nullable: false)]
@@ -55,7 +54,6 @@ class Sites
     public function __construct()
     {
         $this->fk_sites_contacts = new ArrayCollection();
-        $this->fk_liensFibre = new ArrayCollection();
         $this->fk_materiels = new ArrayCollection();
     }
 
@@ -111,7 +109,8 @@ class Sites
 
         return $this;
     }
-
+    
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkCommunes' => ['id', 'libelle', 'fkPays']]])]
     public function getFkCommunes(): ?Communes
     {
         return $this->fk_communes;
@@ -127,6 +126,7 @@ class Sites
     /**
      * @return Collection<int, SitesContacts>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkSitesContacts' => ['id']]])]
     public function getFkSitesContacts(): Collection
     {
         return $this->fk_sites_contacts;
@@ -154,36 +154,9 @@ class Sites
         return $this;
     }
 
-    /**
-     * @return Collection<int, LiensFibre>
-     */
-    public function getFkLiensFibre(): Collection
-    {
-        return $this->fk_liensFibre;
-    }
 
-    public function addFkLiensFibre(LiensFibre $fkLiensFibre): static
-    {
-        if (!$this->fk_liensFibre->contains($fkLiensFibre)) {
-            $this->fk_liensFibre->add($fkLiensFibre);
-            $fkLiensFibre->setPointA($this);
-        }
 
-        return $this;
-    }
-
-    public function removeFkLiensFibre(LiensFibre $fkLiensFibre): static
-    {
-        if ($this->fk_liensFibre->removeElement($fkLiensFibre)) {
-            // set the owning side to null (unless already changed)
-            if ($fkLiensFibre->getPointA() === $this) {
-                $fkLiensFibre->setPointA(null);
-            }
-        }
-
-        return $this;
-    }
-
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkSocietes' => ['id', 'nom']]])]
     public function getFkSocietes(): ?Societes
     {
         return $this->fk_societes;
@@ -199,6 +172,7 @@ class Sites
     /**
      * @return Collection<int, Materiels>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkMateriels' => ['id', 'libelle', 'fkModeles']]])]
     public function getFkMateriels(): Collection
     {
         return $this->fk_materiels;

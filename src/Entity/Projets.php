@@ -84,9 +84,9 @@ class Projets
         return $this;
     }
 
-    public function getDateDebut(): ?\DateTime
+    public function getDateDebut(): ?string
     {
-        return $this->date_debut;
+        return $this->date_debut->format('Y-m-d');
     }
 
     public function setDateDebut(?\DateTime $date_debut): static
@@ -96,14 +96,26 @@ class Projets
         return $this;
     }
 
-    public function getDateFin(): ?\DateTime
+    public function getDateFin(): ?string
     {
-        return $this->date_fin;
+        return $this->date_fin->format('Y-m-d');
     }
 
     public function setDateFin(?\DateTime $date_fin): static
     {
         $this->date_fin = $date_fin;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -139,18 +151,7 @@ class Projets
         return $this;
     }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['societeClient' => ['id', 'nom']]])]
     public function getSocieteClient(): ?Societes
     {
         return $this->societe_client;
@@ -166,6 +167,7 @@ class Projets
     /**
      * @return Collection<int, Taches>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkTaches' => ['id', 'libelle']]])]
     public function getFkTaches(): Collection
     {
         return $this->fk_taches;
@@ -196,6 +198,7 @@ class Projets
     /**
      * @return Collection<int, Materiels>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkMateriels' => ['id', 'libelle']]])]
     public function getFkMateriels(): Collection
     {
         return $this->fk_materiels;
@@ -223,136 +226,3 @@ class Projets
         return $this;
     }
 }
-
-
-
-    /*
-    #[ORM\Column]
-    #[Gedmo\TreeLeft]
-    #[Gedmo\Versioned]
-    private ?int $lft = null;
-
-    #[ORM\Column]
-    #[Gedmo\TreeRight]
-    #[Gedmo\Versioned]
-    private ?int $rgt = null;
-
-    #[ORM\ManyToOne(inversedBy: 'children')]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
-    #[Gedmo\TreeParent]
-    #[Gedmo\Versioned]
-    private ?Projet $parent = null;
-
-    #[ORM\ManyToOne(targetEntity: Projet::class)]
-    #[ORM\JoinColumn(name: 'tree_root', referencedColumnName: 'id', onDelete: 'CASCADE')]
-    #[Gedmo\TreeRoot]
-    #[Gedmo\Versioned]
-    private ?Projet $root = null;
-
-    #[ORM\Column]
-    #[Gedmo\TreeLevel]
-    #[Gedmo\Versioned]
-    private ?int $level = null;
-
-    /**
-     * @var Collection<int, Projet>
-     /
-    #[ORM\OneToMany(targetEntity: Projet::class, mappedBy: 'parent')]
-    #[ORM\OrderBy(['lft' => 'ASC'])]
-    private Collection $children;
-    */
-
-
-
-    
-
-    /*
-    public function getLft(): ?int
-    {
-        return $this->lft;
-    }
-
-    public function setLft(int $lft): static
-    {
-        $this->lft = $lft;
-
-        return $this;
-    }
-
-    public function getRgt(): ?int
-    {
-        return $this->rgt;
-    }
-
-    public function setRgt(int $rgt): static
-    {
-        $this->rgt = $rgt;
-
-        return $this;
-    }
-
-    public function getRoot(): ?self
-    {
-        return $this->root;
-    }
-
-    public function setRoot(?self $root): static
-    {
-        $this->root = $root;
-        return $this;
-    }
-
-    public function getLevel(): ?int
-    {
-        return $this->level;
-    }
-
-    public function setLevel(int $level): static
-    {
-        $this->level = $level;
-
-        return $this;
-    }
-
-    public function getParent(): ?self
-    {
-        return $this->parent;
-    }
-
-    public function setParent(?self $parent = null): static
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Projet>
-     /
-    public function getChildren(): Collection
-    {
-        return $this->children;
-    }
-
-    public function addChild(Projet $child): static
-    {
-        if (!$this->children->contains($child)) {
-            $this->children->add($child);
-            $child->setParent($this);
-        }
-
-        return $this;
-    }
-
-    public function removeChild(Projet $child): static
-    {
-        if ($this->children->removeElement($child)) {
-            // set the owning side to null (unless already changed)
-            if ($child->getParent() === $this) {
-                $child->setParent(null);
-            }
-        }
-
-        return $this;
-    }
-    //*/

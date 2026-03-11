@@ -55,10 +55,8 @@ final class ContactsController extends AbstractController
         $qb = $contactsRepository->createQueryBuilder('contacts');
         $qb->leftJoin('contacts.fk_societes', 'societes')
            ->addSelect('societes')
-           /*->leftJoin('contacts.adresses', 'adresses')
-           ->addSelect('adresses')
-           ->leftJoin('adresses.adresse', 'adresse')
-           ->addSelect('adresse')//*/
+           ->leftJoin('contacts.fk_sites_contacts', 'sites_contacts')
+           ->addSelect('sites_contacts')
            ;
 
         

@@ -99,12 +99,13 @@
                 {% if is_granted('ROLE_USER') %} <!-- MENUE NAVIGATION -->
                     <div id="sideMenue">
                         <a href="javascript:void(0)" class="closebtn" onclick="closeMenue()">&times;</a>
+                        {#
                             <a href="{{ path('app_home_index') }}">Tableau de bord</a>
                             <a href="{{ path('app_projet_index') }}">Projets</a>
                             <a href="{{ path('app_societe_index') }}">Sociétés</a>
                             <a href="{{ path('app_adresse_index') }}">Adresses</a>
                             <a href="{{ path('app_contact_index') }}">Contacts</a>
-                            <a href="{{ path('app_history_index') }}">Historique</a>
+                            <a href="{{ path('app_history_index') }}">Historique</a> #}
                     </div>
 
                 {% endif %}

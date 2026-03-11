@@ -3,13 +3,13 @@
 namespace App\Entity;
 
 use App\Repository\LiensFibreRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: LiensFibreRepository::class)]
 #[Gedmo\Loggable]
@@ -60,11 +60,11 @@ class LiensFibre
     #[Gedmo\Versioned]
     private ?Projets $fk_projets = null;
 
-    #[ORM\ManyToOne(inversedBy: 'fk_liensFibre')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Sites $point_a = null;
 
-    #[ORM\ManyToOne(inversedBy: 'fk_liensFibre')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Sites $point_b = null;
 
@@ -156,9 +156,9 @@ class LiensFibre
         return $this;
     }
 
-    public function getDateLivraison(): ?\DateTime
+    public function getDateLivraison(): ?string
     {
-        return $this->date_livraison;
+        return $this->date_livraison->format('Y-m-d');
     }
 
     public function setDateLivraison(?\DateTime $date_livraison): static
@@ -168,9 +168,9 @@ class LiensFibre
         return $this;
     }
 
-    public function getDateActivation(): ?\DateTime
+    public function getDateActivation(): ?string
     {
-        return $this->date_activation;
+        return $this->date_activation->format('Y-m-d');
     }
 
     public function setDateActivation(?\DateTime $date_activation): static
@@ -205,6 +205,7 @@ class LiensFibre
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['pointA' => ['id', 'nom', 'numeroVoie', 'nomVoie', 'fkCommunes', 'complement']]])]
     public function getPointA(): ?Sites
     {
         return $this->point_a;
@@ -217,6 +218,7 @@ class LiensFibre
         return $this;
     }
 
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['pointB' => ['id', 'nom', 'numeroVoie', 'nomVoie', 'fkCommunes', 'complement']]])]
     public function getPointB(): ?Sites
     {
         return $this->point_b;
