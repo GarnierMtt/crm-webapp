@@ -2,12 +2,12 @@
 
 namespace App\Form;
 
+use App\Form\Type\DateSelectorType;
 use App\Entity\Projets;
 use App\Entity\Societes;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProjetsForm extends AbstractType
@@ -21,13 +21,11 @@ class ProjetsForm extends AbstractType
                 'choice_label' => 'nom',
                 'placeholder' => ' - - - - -',
             ])
-            ->add('dateDebut', DateType::class, [
+            ->add('dateDebut', DateSelectorType::class, [
                 'required' => false,
-                'widget' => 'single_text',
             ])
-            ->add('dateFin', DateType::class, [
+            ->add('dateFin', DateSelectorType::class, [
                 'required' => false,
-                'widget' => 'single_text',
             ])
             ->add('description')
         ;

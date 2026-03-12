@@ -86,7 +86,7 @@ class Projets
 
     public function getDateDebut(): ?string
     {
-        return $this->date_debut->format('Y-m-d');
+        return $this->date_debut ? $this->date_debut->format('Y-m-d') : null;
     }
 
     public function setDateDebut(?\DateTime $date_debut): static
@@ -98,7 +98,7 @@ class Projets
 
     public function getDateFin(): ?string
     {
-        return $this->date_fin->format('Y-m-d');
+        return $this->date_fin ? $this->date_fin->format('Y-m-d') : null;
     }
 
     public function setDateFin(?\DateTime $date_fin): static

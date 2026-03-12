@@ -158,7 +158,7 @@ class LiensFibre
 
     public function getDateLivraison(): ?string
     {
-        return $this->date_livraison->format('Y-m-d');
+        return $this->date_livraison ? $this->date_livraison->format('Y-m-d') : null;
     }
 
     public function setDateLivraison(?\DateTime $date_livraison): static
@@ -170,7 +170,7 @@ class LiensFibre
 
     public function getDateActivation(): ?string
     {
-        return $this->date_activation->format('Y-m-d');
+        return $this->date_activation ? $this->date_activation->format('Y-m-d') : null;
     }
 
     public function setDateActivation(?\DateTime $date_activation): static

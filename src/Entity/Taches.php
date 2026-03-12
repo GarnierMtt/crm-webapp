@@ -78,9 +78,9 @@ class Taches
         return $this;
     }
 
-    public function getDateDebut(): ?\DateTime
+    public function getDateDebut(): ?string
     {
-        return $this->date_debut;
+        return $this->date_debut ? $this->date_debut->format('Y-m-d') : null;
     }
 
     public function setDateDebut(?\DateTime $date_debut): static

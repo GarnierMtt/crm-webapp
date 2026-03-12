@@ -2,15 +2,14 @@
 
 namespace App\Form;
 
+use App\Form\Type\DateSelectorType;
 use App\Entity\Taches;
 use App\Entity\Projets;
 use App\Entity\Societes;
 use App\Entity\Utilisateurs;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TachesForm extends AbstractType
@@ -20,14 +19,11 @@ class TachesForm extends AbstractType
         $builder
             ->add('libelle')
             ->add('description')
-            ->add('dateDebut', DateType::class, [
+            ->add('dateDebut', DateSelectorType::class, [
                 'required' => false,
-                'widget' => 'single_text',
             ])
-            ->add('dateFin', DateType::class, [
+            ->add('dateFin', DateSelectorType::class, [
                 'required' => false,
-                'widget' => 'single_text',
-                //'type' => 'datetime',
             ])
             ->add('fkProjets', EntityType::class, [
                 'class' => Projets::class,
@@ -48,19 +44,6 @@ class TachesForm extends AbstractType
                 'choice_label' => 'nom',
             ])
         ;
-        /*
-        $builder->get('dateFin')
-            ->addModelTransformer(new CallbackTransformer(
-                function ($dateFinAsString): ?string {
-                    // get int
-                    return $dateFinAsString;
-                },
-                function ($dateFinAsDate): ?\DateTime {
-                    // send bool
-                    return $dateFinAsDate;
-                }
-            ))
-        ;//*/
     }
 
     public function configureOptions(OptionsResolver $resolver): void

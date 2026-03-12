@@ -2,13 +2,13 @@
 
 namespace App\Form;
 
+use App\Form\Type\DateSelectorType;
 use App\Entity\Sites;
 use App\Entity\Projets;
 use App\Entity\LiensFibre;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LiensFibreForm extends AbstractType
@@ -24,13 +24,11 @@ class LiensFibreForm extends AbstractType
             ->add('referenceFibre')
             ->add('referenceOperateur')
             ->add('referenceLiaison')
-            ->add('dateLivraison', DateType::class, [
+            ->add('dateLivraison', DateSelectorType::class, [
                 'required' => false,
-                'widget' => 'single_text',
             ])
-            ->add('dateActivation', DateType::class, [
+            ->add('dateActivation', DateSelectorType::class, [
                 'required' => false,
-                'widget' => 'single_text',
             ])
             ->add('pointA', EntityType::class, [
                 'class' => Sites::class,
@@ -49,19 +47,6 @@ class LiensFibreForm extends AbstractType
                 'placeholder' => ' - - - - -',
             ])
             ->add('active')
-        ;
-        /*
-        $builder->get('active')
-            ->addModelTransformer(new CallbackTransformer(
-                function ($activeAsInt): int {
-                    // get int
-                    return ($activeAsInt == true) ? 1 : 0;
-                },
-                function ($activeAsBool): bool {
-                    // send bool
-                    return ($activeAsBool == 1) ? true : false;
-                }
-            ))//*/
         ;
     }
 
