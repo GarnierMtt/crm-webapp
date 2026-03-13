@@ -159,14 +159,84 @@ class ApiQueryBuilder extends AbstractController
             );
     }
 
+    
+    /**
+     * test function for INDEX
+     */
+    public function returnTestIndex($entity, Request $request, $context = []): Response
+    {
+        $query = [];
+
+        // pagination
+        $page = max(1, $request->query->get("page"));
+        $perPage = max(0, $request->query->get("per_page"));
+        if (!$perPage) {
+            $page = 1;
+            $perPage = null;
+        }
+        $query[2] = $perPage;
+        $query[3] = ($page - 1) * $perPage;
+
+        // element count
+        $total = 0;
+
+        // meta data
+        $totalPages = $perPage > 0 ? (int) ceil($total / $perPage) : 1;
+        // get url without filters
+        $baseUrl = $this->urlGenerator->generate('api_' . $entity . '_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
+        // Build links manually without encoding
+        $queryParams = $request->query->all();
+        $links = [];
+        if ($page > 2) {
+            $links['first'] = $baseUrl . '?' . $this->buildUnencodedQuery(array_merge($queryParams, ['page' => 1]));
+        }
+        if ($page > 1) {
+            $links['prev'] = $baseUrl . '?' . $this->buildUnencodedQuery(array_merge($queryParams, ['page' => $page - 1]));
+        }
+        $links['self'] = $baseUrl . '?' . $this->buildUnencodedQuery($queryParams);
+        if ($page < $totalPages) {
+            $links['next'] = $baseUrl . '?' . $this->buildUnencodedQuery(array_merge($queryParams, ['page' => $page + 1]));
+        }
+        if ($page + 1 < $totalPages) {
+            $links['last'] = $baseUrl . '?' . $this->buildUnencodedQuery(array_merge($queryParams, ['page' => $totalPages]));
+        }
+
+
+        // set paylod and normalize
+        $payload = [
+            'data' => $this->normalizer->normalize($entity->findBy($query), 'object', $context),
+            'meta' => [
+                'page' => $page,
+                'per_page' => $perPage,
+                'total' => $total,
+                'total_pages' => $totalPages,
+                'links' => $links,
+            ],
+        ];
+
+        // return JSON
+        return $this
+            ->apiReturn(new JsonResponse(
+                $payload, 
+                Response::HTTP_OK, 
+                [], 
+                false)
+            ->setEncodingOptions(
+                JSON_UNESCAPED_UNICODE | 
+                JSON_UNESCAPED_SLASHES)
+            );
+    }
+
+
 
     /**
      * function for SHOW
      */
-    public function returnShow($entity): Response
+    public function returnShow($entity, $context = []): Response
     {
         // set paylod and normalize
-        $payload = ['data' => $this->normalizer->normalize($entity, 'object')];
+        $payload = ['data' => $this->normalizer->normalize($entity, 'object', $context)];
 
         // return JSON
         return $this
@@ -254,6 +324,29 @@ class ApiQueryBuilder extends AbstractController
             );
     }
 
+
+
+
+
+
+     /**
+     * Apply field selection to query builder
+     */
+    private function fieldSelector(QueryBuilder $qb, Request $request, $entity): void
+    {
+        if ($fields = $request->query->get("fields")) {
+            $selects = [];
+            foreach (explode(',', $fields) as $f) {
+                if (strpos($f, '.')) {
+                    $g = str_replace(".", "}_{", $f);
+                    $selects[] = "$f as {$g}";
+                } else {
+                    $selects[] = "$entity.$f";
+                }
+            }
+            $qb->select(implode(', ', $selects));
+        }
+    }
 
 
 

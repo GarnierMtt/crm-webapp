@@ -33,11 +33,11 @@ class UtilisateursForm extends AbstractType
             ->addModelTransformer(new CallbackTransformer(
                 function ($rolesAsArray): string {
                     // transform the array to a string
-                    return implode(', ', $rolesAsArray);
+                    return implode(", ", $rolesAsArray);
                 },
                 function ($rolesAsString): array {
                     // transform the string back to an array
-                    return explode(', ', $rolesAsString);
+                    return explode(", ", $rolesAsString);
                 }
             ))
         ;

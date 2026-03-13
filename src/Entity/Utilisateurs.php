@@ -7,6 +7,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Serializer\Attribute\Context;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -160,6 +162,7 @@ class Utilisateurs implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Taches>
      */
+    #[Context([AbstractNormalizer::ATTRIBUTES => ['fkTaches' => ['id', 'libelle']]])]
     public function getFkTaches(): Collection
     {
         return $this->fk_taches;

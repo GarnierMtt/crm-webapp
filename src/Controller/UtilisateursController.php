@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 #[Route('/utilisateurs')]
 final class UtilisateursController extends AbstractController
@@ -53,14 +54,23 @@ final class UtilisateursController extends AbstractController
     #[Route('_api',name: 'api_utilisateurs_index', methods: ['GET'])]
     public function apiIndex(UtilisateursRepository $utilisateursRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
+        /*
         // base query
         $qb = $utilisateursRepository->createQueryBuilder('utilisateurs');
         $qb->leftJoin('utilisateurs.fk_taches', 'taches')
            ->addSelect('taches')
            ;
 
+                AbstractNormalizer::ATTRIBUTES => ['id', 'password'],AbstractNormalizer::IGNORED_ATTRIBUTES => ['password'],;
 
-        return $apiQueryBuilder->returnIndex($qb, $request, "utilisateurs");
+                $utilisateursRepository->FindBy([]);
+
+        //return $apiQueryBuilder->returnIndex($qb, $request, "utilisateurs");
+        //*/
+        //$utilisateursRepository->FindBy([]);
+
+
+        return $apiQueryBuilder->returnTestIndex($utilisateursRepository, $request, [ AbstractNormalizer::IGNORED_ATTRIBUTES => ['password'],]);
     }
 
 
@@ -71,7 +81,7 @@ final class UtilisateursController extends AbstractController
 
 
 
-        return $apiQueryBuilder->returnShow($utilisateur);
+        return $apiQueryBuilder->returnShow($utilisateur, [AbstractNormalizer::IGNORED_ATTRIBUTES => ['password'],]);
     }
 
 
