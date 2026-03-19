@@ -27,24 +27,26 @@
 
                         <div>
                             <span class="navigator">
-                                <a style="font-weight: normal;" href="{{ path('api_home') }}"> API HOME</a> <!-- bouton du menue navigation -->
+                                <a style="font-weight: normal;" href="{{ path('home') }}"> API HOME</a> <!-- bouton du menue navigation -->
                                 {% block path %}{% endblock %}
                             </span>
                         </div>
                         
 
-                        <div class="dropdown"> <!-- menue utilisateur -->
-                            <div class="currentUser">
-                                <img src="{{ asset('img/H.png') }}" style="height:100%">
-                                <span>{{ app.user.nom }}</span>
-                            </div>
+                        {% if is_granted("ROLE_USER") %}
+                            <div class="dropdown"> <!-- menue utilisateur -->
+                                <div class="currentUser">
+                                    <img src="{{ asset('img/H.png') }}" style="height:100%">
+                                    <span>{{ app.user.nom }}</span>
+                                </div>
 
-                            <div class="dropdown-content"> <!-- options -->
-                                <a href="{{ path('app_user_show', {'id': app.user.id}) }}">Modifier profile</a>
-                                <a href="#">Link 2</a>
-                                <a href="#">Link 3</a>
+                                <div class="dropdown-content"> <!-- options -->
+                                    <a href="{{ path('app_logout') }}">Déconnexion</a>
+                                    <a href="#">Link 2</a>
+                                    <a href="#">Link 3</a>
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
 
 
                 </div>

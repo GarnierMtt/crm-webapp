@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'api/api_base.html.twig' %}
 
 {% block title %} - Identification!{% endblock %}
 
 
-{% block content %}
+{% block doc %}
     <form method="post">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>

@@ -11,7 +11,7 @@ final class HomeController extends AbstractController
 
 
 
-    #[Route('/_api', name: 'api_home')]
+    #[Route('/', name: 'home')]
     public function apiIndex(): Response
     {
         $controllers = [
@@ -34,14 +34,5 @@ final class HomeController extends AbstractController
         return $this->render('api/api_base.html.twig', [
             'data' => $controllers,
         ]);
-    }
-
-
-
-    #[Route('/')]
-    public function index(): Response
-    {
-
-        return $this->render('home/index.html.twig', []);
     }
 }

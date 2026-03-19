@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'api/api_base.html.twig' %}
 
 {% block title %} - Réinitialisez votre MDP{% endblock %}
 
 
-{% block content %}
+{% block doc %}
     {% for flash_error in app.flashes('reset_password_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
