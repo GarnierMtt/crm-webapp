@@ -51,36 +51,20 @@ final class MaterielsController extends AbstractController
     #[Route('_api',name: 'api_materiels_index', methods: ['GET'])]
     public function apiIndex(MaterielsRepository $materielsRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $materielsRepository->createQueryBuilder('materiels');
-        $qb->leftJoin('materiels.fk_projets', 'projets')
-           ->addSelect('projets')
-           ->leftJoin('materiels.fk_modeles', 'modeles')
-           ->addSelect('modeles')
-           ->leftJoin('modeles.fk_marques', 'marques')
-           ->addSelect('marques')
-           ->leftJoin('modeles.fk_types', 'types')
-           ->addSelect('types')
-           ->leftJoin('materiels.fk_sites', 'sites')
-           ->addSelect('sites')
-           ->leftJoin('sites.fk_communes', 'communes')
-           ->addSelect('communes')
-           ->leftJoin('communes.fk_pays', 'pays')
-           ->addSelect('pays')
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "materiels");
+
+
+        return $apiQueryBuilder->returnIndex($materielsRepository, $request, "materiels");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_materiels_show', methods: ['GET'])]
-    public function apiShow(Materiels $materiels, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Materiels $materiels, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($materiels);
+        return $apiQueryBuilder->returnShow($materiels, $request);
     }
 
 

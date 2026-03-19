@@ -51,24 +51,20 @@ final class TypesController extends AbstractController
     #[Route('_api',name: 'api_types_index', methods: ['GET'])]
     public function apiIndex(TypesRepository $typesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $typesRepository->createQueryBuilder('types');
-        $qb->leftJoin('types.fk_modeles', 'modeles')
-           ->addSelect('modeles')
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "types");
+
+
+        return $apiQueryBuilder->returnIndex($typesRepository, $request, "types");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_types_show', methods: ['GET'])]
-    public function apiShow(Types $types, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Types $types, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($types);
+        return $apiQueryBuilder->returnShow($types, $request);
     }
 
 

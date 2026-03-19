@@ -51,26 +51,20 @@ final class ContactsController extends AbstractController
     #[Route('_api',name: 'api_contacts_index', methods: ['GET'])]
     public function apiIndex(ContactsRepository $contactsRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $contactsRepository->createQueryBuilder('contacts');
-        $qb->leftJoin('contacts.fk_societes', 'societes')
-           ->addSelect('societes')
-           ->leftJoin('contacts.fk_sites_contacts', 'sites_contacts')
-           ->addSelect('sites_contacts')
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "contacts");
+
+
+        return $apiQueryBuilder->returnIndex($contactsRepository, $request, "contacts");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_contacts_show', methods: ['GET'])]
-    public function apiShow(Contacts $contacts, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Contacts $contacts, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($contacts);
+        return $apiQueryBuilder->returnShow($contacts, $request);
     }
 
 

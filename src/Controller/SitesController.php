@@ -51,28 +51,20 @@ final class SitesController extends AbstractController
     #[Route('_api',name: 'api_sites_index', methods: ['GET'])]
     public function apiIndex(SitesRepository $sitesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $sitesRepository->createQueryBuilder('sites');
-        $qb->leftJoin('sites.fk_societes', 'societes')
-           ->addSelect('societes')
-           ->leftJoin('sites.fk_communes', 'communes')
-           ->addSelect('communes')
-           ->leftJoin('communes.fk_pays', 'pays')
-           ->addSelect('pays')
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "sites");
+
+
+        return $apiQueryBuilder->returnIndex($sitesRepository, $request, "sites");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_sites_show', methods: ['GET'])]
-    public function apiShow(Sites $sites, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Sites $sites, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($sites);
+        return $apiQueryBuilder->returnShow($sites, $request);
     }
 
 

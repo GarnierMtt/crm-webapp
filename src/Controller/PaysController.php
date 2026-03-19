@@ -51,28 +51,20 @@ final class PaysController extends AbstractController
     #[Route('_api',name: 'api_pays_index', methods: ['GET'])]
     public function apiIndex(PaysRepository $paysRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $paysRepository->createQueryBuilder('pays');
-        $qb->leftJoin('pays.fk_communes', 'communes')
-           ->addSelect('communes')
-           /*->leftJoin('pays.adresses', 'adresses')
-           ->addSelect('adresses')
-           ->leftJoin('adresses.adresse', 'adresse')
-           ->addSelect('adresse')//*/
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "pays");
+
+
+        return $apiQueryBuilder->returnIndex($paysRepository, $request, "pays");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_pays_show', methods: ['GET'])]
-    public function apiShow(Pays $pays, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Pays $pays, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($pays);
+        return $apiQueryBuilder->returnShow($pays, $request);
     }
 
 

@@ -51,28 +51,20 @@ final class ModelesController extends AbstractController
     #[Route('_api',name: 'api_modeles_index', methods: ['GET'])]
     public function apiIndex(ModelesRepository $modelesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $modelesRepository->createQueryBuilder('modeles');
-        $qb->leftJoin('modeles.fk_marques', 'marques')
-           ->addSelect('marques')
-           ->leftJoin('modeles.fk_types', 'types')
-           ->addSelect('types')
-           ->leftJoin('modeles.fk_materiels', 'materiels')
-           ->addSelect('materiels')
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "modeles");
+
+
+        return $apiQueryBuilder->returnIndex($modelesRepository, $request, "modeles");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_modeles_show', methods: ['GET'])]
-    public function apiShow(Modeles $modeles, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Modeles $modeles, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($modeles);
+        return $apiQueryBuilder->returnShow($modeles, $request);
     }
 
 

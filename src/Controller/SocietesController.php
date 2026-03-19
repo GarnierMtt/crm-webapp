@@ -51,30 +51,20 @@ final class SocietesController extends AbstractController
     #[Route('_api',name: 'api_societes_index', methods: ['GET'])]
     public function apiIndex(SocietesRepository $societesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $societesRepository->createQueryBuilder('societes');
-        $qb->leftJoin('societes.fk_contacts', 'contacts')
-           ->addSelect('contacts')
-           ->leftJoin('societes.fk_projets', 'projets')
-           ->addSelect('projets')
-           ->leftJoin('societes.fk_taches', 'taches')
-           ->addSelect('taches')
-           ->leftJoin('societes.fk_sites', 'sites')
-           ->addSelect('sites')
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "societes");
+
+
+        return $apiQueryBuilder->returnIndex($societesRepository, $request, "societes");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_societes_show', methods: ['GET'])]
-    public function apiShow(Societes $societes, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Societes $societes, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($societes);;
+        return $apiQueryBuilder->returnShow($societes, $request);
     }
 
 

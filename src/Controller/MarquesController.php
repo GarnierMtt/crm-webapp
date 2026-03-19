@@ -51,24 +51,20 @@ final class MarquesController extends AbstractController
     #[Route('_api',name: 'api_marques_index', methods: ['GET'])]
     public function apiIndex(MarquesRepository $marquesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $marquesRepository->createQueryBuilder('marques');
-        $qb->leftJoin('marques.fk_modeles', 'modeles')
-           ->addSelect('modeles')
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "marques");
+
+
+        return $apiQueryBuilder->returnIndex($marquesRepository, $request, "marques");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_marques_show', methods: ['GET'])]
-    public function apiShow(Marques $marques, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Marques $marques, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($marques);
+        return $apiQueryBuilder->returnShow($marques, $request);
     }
 
 

@@ -49,6 +49,16 @@
                     </div>
                     
                     <p> Options :</p>
+
+                    <p> ordonner par un champ : <br>
+                        order=champ1,champ2,!champ3 <br>
+                        - le "!" avant le nom du champ indique un ordre décroissant</p>
+
+                    <p> specifier des champs à retourner : <br>
+                        fields=champ1,champ2,!champ3 <br>
+                        - le "!" avant le nom du champ indique qu'on ne veut pas de ce champ <br>
+                        - si aucun champ n'est spécifié, tous les champs sont retournés sauf si ils sont marqués avec un "!"</p>
+
                     <div class="apiForm">
                         <form id="indexForm">
                             <table>
@@ -79,7 +89,7 @@
                     <p>JS code:<p>
                     <div class="jsonDisplay">
                         <div class="indent">
-                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="showId">{id}</span>"</span>, {
+                            fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="showId">{id}</span><span id="showFilter"></span>"</span>, {
                                 <div class="indent">
                                     method: <span class="highlight">"GET"</span>,
                                 </div>
@@ -91,12 +101,22 @@
                     </div>
 
                     <p> Options :</p>
+
+                    <p> specifier des champs à retourner : <br>
+                        fields=champ1,champ2,!champ3 <br>
+                        - le "!" avant le nom du champ indique qu'on ne veut pas de ce champ <br>
+                        - si aucun champ n'est spécifié, tous les champs sont retournés sauf si ils sont marqués avec un "!"</p>
+
                     <div class="apiForm">
                         <form id="showForm">
                             <table>
                                 <tr>
                                     <td><label for="showInputId">id:</label></td>
                                     <td><input type="number" id="showInputId" name="id"></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="showInputFilter">filter:</label></td>
+                                    <td><input type="text" id="showInputFilter" name="filter"></td>
                                 </tr>
 
                                 <tr>
@@ -250,35 +270,35 @@
 
         // *** ENDPOINTS SCRIPTS ***
             // -- INDEX --
-                    // Update display
-                        $("#indexInputFilter").on("input", function() {
-                            if($(this).val() != ""){
-                                $("#indexFilter").html("?"+$(this).val());
-                            }
-                            else{
-                                $("#indexFilter").html("");
-                            }
-                        });
+                // Update display
+                    $("#indexInputFilter").on("input", function() {
+                        if($(this).val() != ""){
+                            $("#indexFilter").html("?"+$(this).val());
+                        }
+                        else{
+                            $("#indexFilter").html("");
+                        }
+                    });
 
-                    // Submit form
-                        $("#indexForm").on('submit', function(e) {
-                            e.preventDefault(); // prevent native submit
+                // Submit form
+                    $("#indexForm").on('submit', function(e) {
+                        e.preventDefault(); // prevent native submit
 
-                            let filter = "";
-                            if($("#indexInputFilter").val() != ""){
-                                filter = "?"+$("#indexInputFilter").val();
-                            }
+                        let filter = "";
+                        if($("#indexInputFilter").val() != ""){
+                            filter = "?"+$("#indexInputFilter").val();
+                        }
 
-                            fetch("{{ path('api_' ~ class ~ '_index') }}" + filter, {
-                                method: "GET",
-                            headers: {
-                                "Accept": "text/html",
-                            },
-                            })
-                            .then((response) => response.text())
-                            .then((html) => displayResponse(html))
-                            .catch((error) => console.error(error));
-                        });
+                        fetch("{{ path('api_' ~ class ~ '_index') }}" + filter, {
+                            method: "GET",
+                        headers: {
+                            "Accept": "text/html",
+                        },
+                        })
+                        .then((response) => response.text())
+                        .then((html) => displayResponse(html))
+                        .catch((error) => console.error(error));
+                    });
 
 
             // -- SHOW --
@@ -286,11 +306,25 @@
                     $("#showInputId").on("input", function() {
                         $("#showId").html($(this).val());
                     });
+                    $("#showInputFilter").on("input", function() {
+                        if($(this).val() != ""){
+                            $("#showFilter").html("?"+$(this).val());
+                        }
+                        else{
+                            $("#showFilter").html("");
+                        }
+                    });
+
                 // Submit form
                     $("#showForm").on('submit', function(e) {
                         e.preventDefault(); // prevent native submit
 
-                        fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#showInputId").val(), {
+                        let filter = "";
+                        if($("#showInputFilter").val() != ""){
+                            filter = "?"+$("#showInputFilter").val();
+                        }
+
+                        fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#showInputId").val() + filter, {
                             method: "GET",
                             headers: {
                                 "Accept": "text/html",

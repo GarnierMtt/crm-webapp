@@ -51,30 +51,20 @@ final class LiensFibreController extends AbstractController
     #[Route('_api',name: 'api_liensFibre_index', methods: ['GET'])]
     public function apiIndex(LiensFibreRepository $liensFibreRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $liensFibreRepository->createQueryBuilder('liensFibre');
-        $qb->leftJoin('liensFibre.fk_projets', 'projets')
-           ->addSelect('projets')
-           ->leftJoin('liensFibre.point_a', 'sitesA')
-           ->addSelect('sitesA')
-           ->leftJoin('liensFibre.point_b', 'sitesB')
-           ->addSelect('sitesB')
-           ->leftJoin('liensFibre.fk_materiels', 'materiels')
-           ->addSelect('materiels')
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "liensFibre");
+
+
+        return $apiQueryBuilder->returnIndex($liensFibreRepository, $request, "liensFibre");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_liensFibre_show', methods: ['GET'])]
-    public function apiShow(LiensFibre $liensFibre, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(LiensFibre $liensFibre, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($liensFibre);
+        return $apiQueryBuilder->returnShow($liensFibre, $request);
     }
 
 

@@ -6,10 +6,10 @@ use App\Entity\Communes;
 use App\Form\CommunesForm;
 use App\Utils\ApiQueryBuilder;
 use App\Repository\CommunesRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Doctrine\ORM\EntityManagerInterface;
 
 #[Route('/communes')]
@@ -51,28 +51,20 @@ final class CommunesController extends AbstractController
     #[Route('_api',name: 'api_communes_index', methods: ['GET'])]
     public function apiIndex(CommunesRepository $communesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $communesRepository->createQueryBuilder('communes');
-        $qb->leftJoin('communes.fk_pays', 'pays')
-           ->addSelect('pays')
-           /*->leftJoin('communes.adresses', 'adresses')
-           ->addSelect('adresses')
-           ->leftJoin('adresses.adresse', 'adresse')
-           ->addSelect('adresse')//*/
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "communes");
+
+
+        return $apiQueryBuilder->returnIndex($communesRepository, $request, "communes");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_communes_show', methods: ['GET'])]
-    public function apiShow(Communes $communes, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Communes $communes, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($communes);
+        return $apiQueryBuilder->returnShow($communes, $request);
     }
 
 

@@ -51,28 +51,20 @@ final class TachesController extends AbstractController
     #[Route('_api',name: 'api_taches_index', methods: ['GET'])]
     public function apiIndex(TachesRepository $tachesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $tachesRepository->createQueryBuilder('taches');
-        $qb->leftJoin('taches.fk_projets', 'projets')
-           ->addSelect('projets')
-           ->leftJoin('taches.fk_societes', 'societes')
-           ->addSelect('societes')
-           ->leftJoin('taches.fk_utilisateurs', 'utilisateurs')
-           ->addSelect('utilisateurs')
-           ;
 
-        
-        return $apiQueryBuilder->returnIndex($qb, $request, "taches");
+
+
+        return $apiQueryBuilder->returnIndex($tachesRepository, $request, "taches");
     }
 
 
             // -show
     #[Route('_api/{id}',name: 'api_taches_show', methods: ['GET'])]
-    public function apiShow(Taches $taches, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Taches $taches, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($taches);
+        return $apiQueryBuilder->returnShow($taches, $request);
     }
 
 

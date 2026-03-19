@@ -51,30 +51,20 @@ final class ProjetsController extends AbstractController
     #[Route('_api', name: 'api_projets_index', methods: ['GET'])]
     public function apiIndex(ProjetsRepository $projetsRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
-        // base query
-        $qb = $projetsRepository->createQueryBuilder('projets');
-        $qb->leftJoin('projets.fk_liens_fibre', 'liens_fibre')
-           ->addSelect('liens_fibre')
-           ->leftJoin('projets.societe_client', 'societes')
-           ->addSelect('societes')
-           ->leftJoin('projets.fk_taches', 'taches')
-           ->addSelect('taches')
-           ->leftJoin('projets.fk_materiels', 'materiels')
-           ->addSelect('materiels')
-           ;
 
 
-        return $apiQueryBuilder->returnIndex($qb, $request, "projets");
+
+        return $apiQueryBuilder->returnIndex($projetsRepository, $request, "projets");
     }
 
 
             // -show
     #[Route('_api/{id}', name: 'api_projets_show', methods: ['GET'])]
-    public function apiShow(Projets $projets, ApiQueryBuilder $apiQueryBuilder): Response
+    public function apiShow(Projets $projets, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
-        return $apiQueryBuilder->returnShow($projets);
+        return $apiQueryBuilder->returnShow($projets, $request);
     }
 
 
