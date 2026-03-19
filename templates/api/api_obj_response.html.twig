@@ -2,7 +2,7 @@
 
 <div id="response">
 
-    <p> Données retournées pour <span style="font-weight:bold">{{ app.request.get('_route') }}</span> :</p>
+    <p> Données retournées pour <span style="font-weight:bold">{{ app.request.attributes.get('_route') }}</span> :</p>
 
     <div class="section">
         <div class="jsonDisplay">
