@@ -1,38 +1,18 @@
 # Symfony Docker
 
-A [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework,
+A CMS that uses a [Docker](https://www.docker.com/)-based installer and runtime for the [Symfony](https://symfony.com) web framework,
 with [FrankenPHP](https://frankenphp.dev) and [Caddy](https://caddyserver.com/) inside!
 
 ![CI](https://github.com/dunglas/symfony-docker/workflows/CI/badge.svg)
+
 
 ## Getting Started
 
 1. If not already done, [install Docker Compose](https://docs.docker.com/compose/install/) (v2.10+)
 2. Run `docker compose build --pull --no-cache` to build fresh images
-3. Run `docker compose up --wait` to set up and start a fresh Symfony project
-4. Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
+3. Run `docker compose --env-file .env.local up --wait` to run composer with customised locals
 5. Run `docker compose down --remove-orphans` to stop the Docker containers.
 
-## Practical info
-
-["ROLE_USER","ROLE_ADMIN"]
-$2y$13$/hM1WMZb.vVl7p2MfOuA..1ebQ.9ok8iW91k8c5CArkHe3LAK2Yjy
-
-docker compose run --rm php chown -R $(id -u):$(id -g) .
-docker exec -it crm-webapp-php-1 bash
-
-docker compose build --pull --no-cache
-docker compose up --wait
-docker compose --env-file .env.local up --wait
-docker compose down --remove-orphans
-        docker compose --env-file .env.local config
-
-php bin/console doctrine:migrations:diff
-php bin/console doctrine:migrations:migrate
-php bin/console cache:clear
-
-php bin/console make:entity
-        php bin/console mailer:test support@horten.fr
 
 ## Features
 
@@ -69,4 +49,5 @@ Symfony Docker is available under the MIT License.
 
 ## Credits
 
-Created by [Kévin Dunglas](https://dunglas.dev), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
+Created by [Matt. Garnier](https://github.com/GarnierMtt),
+based on [symfony-docker](https://github.com/dunglas/symfony-docker) by [Kévin Dunglas](https://dunglas.dev), co-maintained by [Maxime Helias](https://twitter.com/maxhelias) and sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
