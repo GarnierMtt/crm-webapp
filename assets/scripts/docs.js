@@ -12,7 +12,7 @@ function unwrap(coll) {
             </div>
     * -TkT
     */
-      var content = coll.nextElementSibling;
+      const content = coll.nextElementSibling;
       content.classList.toggle("is-open");
 }
 
@@ -31,11 +31,11 @@ function selectUnwrap(coll) {
             </div>
     * -TkT
     */
-      var content = coll.nextElementSibling;
+      const content = coll.nextElementSibling;
       if (content.classList.contains("is-open")) {
           content.classList.toggle("is-open");
       } else {
-          var allColl = document.getElementsByClassName("selectWrapper");
+          const allColl = document.getElementsByClassName("selectWrapper");
           for (i = 0; i < allColl.length; i++) {
               allColl[i].classList.remove("is-open");
           }

@@ -1,9 +1,6 @@
 {% extends 'api/api_base.html.twig' %}
 
 {% block title %} - Index {{ class }}{% endblock %}
-{% block head %}
-    <script src="{{ asset('scripts/docs.js') }}"></script>
-{% endblock %}
 
 
 {% block path %}
@@ -266,6 +263,7 @@
     </div>
 
 
+    <script src="{{ asset('scripts/docs.js') }}"></script>
     <script>
 
         // *** ENDPOINTS SCRIPTS ***
@@ -339,15 +337,15 @@
             // -- CREATE --
                 // Update display
                     $("#createForm").on("input change", function() {
-                        let formData = $(this).serializeArray();
-                        let bodyContent = formData.map(item => `"${item.name}": "${item.value}"`).join(",<br>");
+                        const formData = $(this).serializeArray();
+                        const bodyContent = formData.map(item => `"${item.name}": "${item.value}"`).join(",<br>");
                         $("#crateBody").html(bodyContent);
                     });
                 // Submit form
                     $("#createForm").on('submit', function(e) {
                         e.preventDefault(); // prevent native submit
 
-                        let formData = new FormData(this);
+                        const formData = new FormData(this);
                         fetch("{{ path('api_' ~ class ~ '_new') }}", {
                             method: "POST",
                             headers: {
@@ -381,13 +379,13 @@
                         .then((data) => {
                             // Populate form fields with fetched data
                             //itterate form elements
-                            console.log(data);
-                            for(var key of $("#updateForm")[0]){  
-                                var m;
-                                    console.log(key);
+                            //console.log(data);
+                            for(let key of $("#updateForm")[0]){  
+                                let m;
+                                    //console.log(key);
                                 if(m = key.name.match(/\[([^\[].+)\]/)){
                                     //ignore _token field
-                                    console.log(m);
+                                    //console.log(m);
                                     if(m[1] == "_token"){
                                         continue;
                                     }
@@ -421,7 +419,7 @@
                             console.error(error);
                             // Clear form fields
                             //itterate form elements
-                            for(var key of $("#updateForm")[0]){ 
+                            for(let key of $("#updateForm")[0]){ 
                                 if(!key.name.match(/\[_token\]/) && key.name != ""){
                                     key.value = "";
                                 }
@@ -431,15 +429,15 @@
                         });
                     }); //*/
                     $("#updateForm").on("input", function() {
-                        let formData = $(this).serializeArray();
-                        let bodyContent = formData.map(item => `"${item.name}": "${item.value}"`).join(",<br>");
+                        const formData = $(this).serializeArray();
+                        const bodyContent = formData.map(item => `"${item.name}": "${item.value}"`).join(",<br>");
                         $("#updateBody").html(bodyContent);
                     });
                 // Submit form
                     $("#updateForm").on('submit', function(e) {
                         e.preventDefault(); // prevent native submit
 
-                        let formData = new FormData(this);
+                        const formData = new FormData(this);
                         fetch("{{ path('api_' ~ class ~ '_index') }}/"+$("#updateInputId").val(), {
                             method: "POST",
                             headers: {
@@ -477,11 +475,11 @@
                 function displayResponse(html) {
 
                     // Convert the HTML string into a document object
-                    var parser = new DOMParser();
-                    var doc = parser.parseFromString(html, 'text/html');
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
 
                     // Extract the content inside the 'response' div
-                    var newContent = doc.getElementById('response').innerHTML;
+                    const newContent = doc.getElementById('response').innerHTML;
 
                     // Replace the current 'response' div content with the new content
                     document.getElementById('response').innerHTML = newContent;
