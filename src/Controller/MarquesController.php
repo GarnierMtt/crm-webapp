@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class MarquesController extends AbstractController
 {
     //// api documentation
-    #[Route('_api_docs',name: 'api_marques_documentation', methods: ['GET'])]
+    #[Route('_docs',name: 'api_marques_documentation', methods: ['GET'])]
     public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
@@ -38,7 +38,7 @@ final class MarquesController extends AbstractController
 
 
 
-        return $this->render('api/api_obj_index.html.twig', [
+        return $this->render('api/obj_index.html.twig', [
             'class' => "marques",
             'atributes' => $mappings,
             'form' => $form,
@@ -48,7 +48,7 @@ final class MarquesController extends AbstractController
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_marques_index', methods: ['GET'])]
+    #[Route('',name: 'api_marques_index', methods: ['GET'])]
     public function apiIndex(MarquesRepository $marquesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -59,7 +59,7 @@ final class MarquesController extends AbstractController
 
 
             // -show
-    #[Route('_api/{id}',name: 'api_marques_show', methods: ['GET'])]
+    #[Route('/{id}',name: 'api_marques_show', methods: ['GET'])]
     public function apiShow(Marques $marques, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -69,7 +69,7 @@ final class MarquesController extends AbstractController
 
 
             // -new
-    #[Route('_api/new', name: 'api_marques_new', methods: ['POST'])]
+    #[Route('/new', name: 'api_marques_new', methods: ['POST'])]
     public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $marques = new Marques();
@@ -82,7 +82,7 @@ final class MarquesController extends AbstractController
 
 
             // -edit
-    #[Route('_api/{id}', name: 'api_marques_edit', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_marques_edit', methods: ['POST'])]
     public function apiEdit(Request $request, Marques $marques, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(MarquesForm::class, $marques);
@@ -94,7 +94,7 @@ final class MarquesController extends AbstractController
 
 
             // -delete
-    #[Route('_api/{id}', name: 'api_marques_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_marques_delete', methods: ['DELETE'])]
     public function apiDelete(Marques $marques, ApiQueryBuilder $apiQueryBuilder): Response
     {
        

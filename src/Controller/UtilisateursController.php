@@ -20,7 +20,7 @@ final class UtilisateursController extends AbstractController
     private $ignored = ['password'];
 
     //// api documentation
-    #[Route('_api_docs',name: 'api_utilisateurs_documentation', methods: ['GET'])]
+    #[Route('_docs',name: 'api_utilisateurs_documentation', methods: ['GET'])]
     public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
@@ -42,7 +42,7 @@ final class UtilisateursController extends AbstractController
 
 
 
-        return $this->render('api/api_obj_index.html.twig', [
+        return $this->render('api/obj_index.html.twig', [
             'class' => "utilisateurs",
             'atributes' => $mappings,
             'form' => $form,
@@ -52,7 +52,7 @@ final class UtilisateursController extends AbstractController
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_utilisateurs_index', methods: ['GET'])]
+    #[Route('',name: 'api_utilisateurs_index', methods: ['GET'])]
     public function apiIndex(UtilisateursRepository $utilisateursRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         
@@ -68,7 +68,7 @@ final class UtilisateursController extends AbstractController
 
 
             // -show
-    #[Route('_api/{id}', name: 'api_utilisateurs_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'api_utilisateurs_show', methods: ['GET'])]
     public function apiShow(Utilisateurs $utilisateur, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -79,7 +79,7 @@ final class UtilisateursController extends AbstractController
 
 
             // -new
-    #[Route('_api/new', name: 'api_utilisateurs_new', methods: ['POST'])]
+    #[Route('/new', name: 'api_utilisateurs_new', methods: ['POST'])]
     public function apiNew(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $response = $this->forward('App\Controller\RegistrationController::register', [
@@ -96,7 +96,7 @@ final class UtilisateursController extends AbstractController
     
 
             // -edit
-    #[Route('_api/{id}', name: 'api_utilisateurs_edit', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_utilisateurs_edit', methods: ['POST'])]
     public function apiEdit(Request $request, Utilisateurs $utilisateur, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(UtilisateursForm::class, $utilisateur);
@@ -109,32 +109,12 @@ final class UtilisateursController extends AbstractController
     
 
             // -delete
-    #[Route('_api/{id}', name: 'api_utilisateurs_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_utilisateurs_delete', methods: ['DELETE'])]
     public function apiDelete(Utilisateurs $utilisateur, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
 
 
         return $apiQueryBuilder->returnDelete($utilisateur);
-    }
-
-
-
-
-    //// routes vues
-            // -index
-    #[Route(name: 'app_user_index', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
-    public function index(): Response
-    {
-        return $this->render('user/index.html.twig', []);
-    }
-
-            // -show
-    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    #[IsGranted('ROLE_USER')]
-    public function show(int $id): Response
-    {
-        return $this->render('user/show.html.twig', ['id' => $id]);
     }
 }

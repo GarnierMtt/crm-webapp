@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class SitesController extends AbstractController
 {
     //// api documentation
-    #[Route('_api_docs',name: 'api_sites_documentation', methods: ['GET'])]
+    #[Route('_docs',name: 'api_sites_documentation', methods: ['GET'])]
     public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
@@ -38,7 +38,7 @@ final class SitesController extends AbstractController
 
 
 
-        return $this->render('api/api_obj_index.html.twig', [
+        return $this->render('api/obj_index.html.twig', [
             'class' => "sites",
             'atributes' => $mappings,
             'form' => $form,
@@ -48,7 +48,7 @@ final class SitesController extends AbstractController
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_sites_index', methods: ['GET'])]
+    #[Route('',name: 'api_sites_index', methods: ['GET'])]
     public function apiIndex(SitesRepository $sitesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -59,7 +59,7 @@ final class SitesController extends AbstractController
 
 
             // -show
-    #[Route('_api/{id}',name: 'api_sites_show', methods: ['GET'])]
+    #[Route('/{id}',name: 'api_sites_show', methods: ['GET'])]
     public function apiShow(Sites $sites, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -69,7 +69,7 @@ final class SitesController extends AbstractController
 
 
             // -new
-    #[Route('_api/new', name: 'api_sites_new', methods: ['POST'])]
+    #[Route('/new', name: 'api_sites_new', methods: ['POST'])]
     public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $sites = new Sites();
@@ -82,7 +82,7 @@ final class SitesController extends AbstractController
 
 
             // -edit
-    #[Route('_api/{id}', name: 'api_sites_edit', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_sites_edit', methods: ['POST'])]
     public function apiEdit(Request $request, Sites $sites, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(SitesForm::class, $sites);
@@ -94,29 +94,11 @@ final class SitesController extends AbstractController
 
 
             // -delete
-    #[Route('_api/{id}', name: 'api_sites_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_sites_delete', methods: ['DELETE'])]
     public function apiDelete(Sites $sites, ApiQueryBuilder $apiQueryBuilder): Response
     {
        
 
         return $apiQueryBuilder->returnDelete($sites);
-    }
-
-
-
-
-    //// routes vues
-            // -index
-    #[Route(name: 'app_sites_index', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('sites/index.html.twig', []);
-    }
-
-            // -show
-    #[Route('/{id}', name: 'app_sites_show', methods: ['GET'])]
-    public function show(int $id): Response
-    {
-        return $this->render('sites/show.html.twig', ['id' => $id]);
     }
 }

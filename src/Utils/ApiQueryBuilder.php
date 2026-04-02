@@ -268,7 +268,7 @@ class ApiQueryBuilder extends AbstractController
         // response
         if($_SERVER["HTTP_ACCEPT"] == "text/html"){
             $response->setEncodingOptions( $response->getEncodingOptions() | JSON_PRETTY_PRINT );
-            return $this->render('api/api_obj_response.html.twig', [
+            return $this->render('api/obj_response.html.twig', [
                 'data' => $response,
             ]);
         }

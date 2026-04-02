@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class ContactsController extends AbstractController
 {
     //// api documentation
-    #[Route('_api_docs',name: 'api_contacts_documentation', methods: ['GET'])]
+    #[Route('_docs',name: 'api_contacts_documentation', methods: ['GET'])]
     public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
@@ -38,7 +38,7 @@ final class ContactsController extends AbstractController
 
 
 
-        return $this->render('api/api_obj_index.html.twig', [
+        return $this->render('api/obj_index.html.twig', [
             'class' => "contacts",
             'atributes' => $mappings,
             'form' => $form,
@@ -48,7 +48,7 @@ final class ContactsController extends AbstractController
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_contacts_index', methods: ['GET'])]
+    #[Route('',name: 'api_contacts_index', methods: ['GET'])]
     public function apiIndex(ContactsRepository $contactsRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -59,7 +59,7 @@ final class ContactsController extends AbstractController
 
 
             // -show
-    #[Route('_api/{id}',name: 'api_contacts_show', methods: ['GET'])]
+    #[Route('/{id}',name: 'api_contacts_show', methods: ['GET'])]
     public function apiShow(Contacts $contacts, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -69,7 +69,7 @@ final class ContactsController extends AbstractController
 
 
             // -new
-    #[Route('_api/new', name: 'api_contacts_new', methods: ['POST'])]
+    #[Route('/new', name: 'api_contacts_new', methods: ['POST'])]
     public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $contacts = new Contacts();
@@ -82,7 +82,7 @@ final class ContactsController extends AbstractController
 
 
             // -edit
-    #[Route('_api/{id}', name: 'api_contacts_edit', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_contacts_edit', methods: ['POST'])]
     public function apiEdit(Request $request, Contacts $contacts, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(ContactsForm::class, $contacts);
@@ -94,29 +94,11 @@ final class ContactsController extends AbstractController
 
 
             // -delete
-    #[Route('_api/{id}', name: 'api_contacts_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_contacts_delete', methods: ['DELETE'])]
     public function apiDelete(Contacts $contacts, ApiQueryBuilder $apiQueryBuilder): Response
     {
        
 
         return $apiQueryBuilder->returnDelete($contacts);
-    }
-
-
-
-
-    //// routes vues
-            // -index
-    #[Route(name: 'app_contacts_index', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('contacts/index.html.twig', []);
-    }
-
-            // -show
-    #[Route('/{id}', name: 'app_contacts_show', methods: ['GET'])]
-    public function show(int $id): Response
-    {
-        return $this->render('contacts/show.html.twig', ['id' => $id]);
     }
 }

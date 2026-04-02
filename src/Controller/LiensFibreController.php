@@ -12,11 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 
-#[Route('/lien/fibre')]
+#[Route('/liens-fibre')]
 final class LiensFibreController extends AbstractController
 {
     //// api documentation
-    #[Route('_api_docs',name: 'api_liensFibre_documentation', methods: ['GET'])]
+    #[Route('_docs',name: 'api_liensFibre_documentation', methods: ['GET'])]
     public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
@@ -38,7 +38,7 @@ final class LiensFibreController extends AbstractController
 
 
 
-        return $this->render('api/api_obj_index.html.twig', [
+        return $this->render('api/obj_index.html.twig', [
             'class' => "liensFibre",
             'atributes' => $mappings,
             'form' => $form,
@@ -48,7 +48,7 @@ final class LiensFibreController extends AbstractController
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_liensFibre_index', methods: ['GET'])]
+    #[Route('',name: 'api_liensFibre_index', methods: ['GET'])]
     public function apiIndex(LiensFibreRepository $liensFibreRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -59,7 +59,7 @@ final class LiensFibreController extends AbstractController
 
 
             // -show
-    #[Route('_api/{id}',name: 'api_liensFibre_show', methods: ['GET'])]
+    #[Route('/{id}',name: 'api_liensFibre_show', methods: ['GET'])]
     public function apiShow(LiensFibre $liensFibre, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -69,7 +69,7 @@ final class LiensFibreController extends AbstractController
 
 
             // -new
-    #[Route('_api/new', name: 'api_liensFibre_new', methods: ['POST'])]
+    #[Route('/new', name: 'api_liensFibre_new', methods: ['POST'])]
     public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $liensFibre = new LiensFibre();
@@ -82,7 +82,7 @@ final class LiensFibreController extends AbstractController
 
 
             // -edit
-    #[Route('_api/{id}', name: 'api_liensFibre_edit', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_liensFibre_edit', methods: ['POST'])]
     public function apiEdit(Request $request, LiensFibre $liensFibre, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(LiensFibreForm::class, $liensFibre);
@@ -94,7 +94,7 @@ final class LiensFibreController extends AbstractController
 
 
             // -delete
-    #[Route('_api/{id}', name: 'api_liensFibre_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_liensFibre_delete', methods: ['DELETE'])]
     public function apiDelete(LiensFibre $liensFibre, ApiQueryBuilder $apiQueryBuilder): Response
     {
        

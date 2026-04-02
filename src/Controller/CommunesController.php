@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class CommunesController extends AbstractController
 {
     //// api documentation
-    #[Route('_api_docs',name: 'api_communes_documentation', methods: ['GET'])]
+    #[Route('_docs',name: 'api_communes_documentation', methods: ['GET'])]
     public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
@@ -38,7 +38,7 @@ final class CommunesController extends AbstractController
 
 
 
-        return $this->render('api/api_obj_index.html.twig', [
+        return $this->render('api/obj_index.html.twig', [
             'class' => "communes",
             'atributes' => $mappings,
             'form' => $form,
@@ -48,7 +48,7 @@ final class CommunesController extends AbstractController
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_communes_index', methods: ['GET'])]
+    #[Route('',name: 'api_communes_index', methods: ['GET'])]
     public function apiIndex(CommunesRepository $communesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -59,7 +59,7 @@ final class CommunesController extends AbstractController
 
 
             // -show
-    #[Route('_api/{id}',name: 'api_communes_show', methods: ['GET'])]
+    #[Route('/{id}',name: 'api_communes_show', methods: ['GET'])]
     public function apiShow(Communes $communes, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -69,7 +69,7 @@ final class CommunesController extends AbstractController
 
 
             // -new
-    #[Route('_api/new', name: 'api_communes_new', methods: ['POST'])]
+    #[Route('/new', name: 'api_communes_new', methods: ['POST'])]
     public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $communes = new Communes();
@@ -82,7 +82,7 @@ final class CommunesController extends AbstractController
 
 
             // -edit
-    #[Route('_api/{id}', name: 'api_communes_edit', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_communes_edit', methods: ['POST'])]
     public function apiEdit(Request $request, Communes $communes, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(CommunesForm::class, $communes);
@@ -94,29 +94,11 @@ final class CommunesController extends AbstractController
 
 
             // -delete
-    #[Route('_api/{id}', name: 'api_communes_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_communes_delete', methods: ['DELETE'])]
     public function apiDelete(Communes $communes, ApiQueryBuilder $apiQueryBuilder): Response
     {
        
 
         return $apiQueryBuilder->returnDelete($communes);
-    }
-
-
-
-
-    //// routes vues
-            // -index
-    #[Route(name: 'app_communes_index', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('communes/index.html.twig', []);
-    }
-
-            // -show
-    #[Route('/{id}', name: 'app_communes_show', methods: ['GET'])]
-    public function show(int $id): Response
-    {
-        return $this->render('communes/show.html.twig', ['id' => $id]);
     }
 }

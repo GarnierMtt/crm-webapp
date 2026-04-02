@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class ModelesController extends AbstractController
 {
     //// api documentation
-    #[Route('_api_docs',name: 'api_modeles_documentation', methods: ['GET'])]
+    #[Route('_docs',name: 'api_modeles_documentation', methods: ['GET'])]
     public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
@@ -38,7 +38,7 @@ final class ModelesController extends AbstractController
 
 
 
-        return $this->render('api/api_obj_index.html.twig', [
+        return $this->render('api/obj_index.html.twig', [
             'class' => "modeles",
             'atributes' => $mappings,
             'form' => $form,
@@ -48,7 +48,7 @@ final class ModelesController extends AbstractController
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_modeles_index', methods: ['GET'])]
+    #[Route('',name: 'api_modeles_index', methods: ['GET'])]
     public function apiIndex(ModelesRepository $modelesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -59,7 +59,7 @@ final class ModelesController extends AbstractController
 
 
             // -show
-    #[Route('_api/{id}',name: 'api_modeles_show', methods: ['GET'])]
+    #[Route('/{id}',name: 'api_modeles_show', methods: ['GET'])]
     public function apiShow(Modeles $modeles, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -69,7 +69,7 @@ final class ModelesController extends AbstractController
 
 
             // -new
-    #[Route('_api/new', name: 'api_modeles_new', methods: ['POST'])]
+    #[Route('/new', name: 'api_modeles_new', methods: ['POST'])]
     public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $modeles = new Modeles();
@@ -82,7 +82,7 @@ final class ModelesController extends AbstractController
 
 
             // -edit
-    #[Route('_api/{id}', name: 'api_modeles_edit', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_modeles_edit', methods: ['POST'])]
     public function apiEdit(Request $request, Modeles $modeles, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(ModelesForm::class, $modeles);
@@ -94,29 +94,11 @@ final class ModelesController extends AbstractController
 
 
             // -delete
-    #[Route('_api/{id}', name: 'api_modeles_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_modeles_delete', methods: ['DELETE'])]
     public function apiDelete(Modeles $modeles, ApiQueryBuilder $apiQueryBuilder): Response
     {
        
 
         return $apiQueryBuilder->returnDelete($modeles);
-    }
-
-
-
-
-    //// routes vues
-            // -index
-    #[Route(name: 'app_modeles_index', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('modeles/index.html.twig', []);
-    }
-
-            // -show
-    #[Route('/{id}', name: 'app_modeles_show', methods: ['GET'])]
-    public function show(int $id): Response
-    {
-        return $this->render('modeles/show.html.twig', ['id' => $id]);
     }
 }

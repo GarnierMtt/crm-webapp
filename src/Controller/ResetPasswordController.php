@@ -191,7 +191,7 @@ class ResetPasswordController extends AbstractController
             ;
             $mailer->send($email);
 
-            return $this->redirectToRoute('app_home_index');
+            return $this->redirectToRoute('api_home_index');
         }
 
 

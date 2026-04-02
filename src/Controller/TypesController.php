@@ -16,7 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class TypesController extends AbstractController
 {
     //// api documentation
-    #[Route('_api_docs',name: 'api_types_documentation', methods: ['GET'])]
+    #[Route('_docs',name: 'api_types_documentation', methods: ['GET'])]
     public function documentation(EntityManagerInterface $em, Request $request): Response
     {
         $mappings = array();
@@ -38,7 +38,7 @@ final class TypesController extends AbstractController
 
 
 
-        return $this->render('api/api_obj_index.html.twig', [
+        return $this->render('api/obj_index.html.twig', [
             'class' => "types",
             'atributes' => $mappings,
             'form' => $form,
@@ -48,7 +48,7 @@ final class TypesController extends AbstractController
 
     //// routes pour l'api
             // -index
-    #[Route('_api',name: 'api_types_index', methods: ['GET'])]
+    #[Route('',name: 'api_types_index', methods: ['GET'])]
     public function apiIndex(TypesRepository $typesRepository, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -59,7 +59,7 @@ final class TypesController extends AbstractController
 
 
             // -show
-    #[Route('_api/{id}',name: 'api_types_show', methods: ['GET'])]
+    #[Route('/{id}',name: 'api_types_show', methods: ['GET'])]
     public function apiShow(Types $types, Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
 
@@ -69,7 +69,7 @@ final class TypesController extends AbstractController
 
 
             // -new
-    #[Route('_api/new', name: 'api_types_new', methods: ['POST'])]
+    #[Route('/new', name: 'api_types_new', methods: ['POST'])]
     public function apiNew(Request $request, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $types = new Types();
@@ -82,7 +82,7 @@ final class TypesController extends AbstractController
 
 
             // -edit
-    #[Route('_api/{id}', name: 'api_types_edit', methods: ['POST'])]
+    #[Route('/{id}', name: 'api_types_edit', methods: ['POST'])]
     public function apiEdit(Request $request, Types $types, ApiQueryBuilder $apiQueryBuilder): Response
     {
         $form = $this->createForm(TypesForm::class, $types);
@@ -94,7 +94,7 @@ final class TypesController extends AbstractController
 
 
             // -delete
-    #[Route('_api/{id}', name: 'api_types_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'api_types_delete', methods: ['DELETE'])]
     public function apiDelete(Types $types, ApiQueryBuilder $apiQueryBuilder): Response
     {
        
