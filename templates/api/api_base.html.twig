@@ -63,7 +63,7 @@
                         
                         <ul>
                             {% for item in data %}
-                                <li><a href="{{ path('api_' ~ item ~ '_documentation') }}">{{ item|capitalize }}</a></li>
+                                <li><a class="btn endpoint" href="{{ path('api_' ~ item ~ '_documentation') }}">{{ item|capitalize }}</a></li>
                             {% endfor %}
                         </ul>
                     {% endblock %}

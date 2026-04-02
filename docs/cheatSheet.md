@@ -36,3 +36,4 @@
  - fix index filtering
  - setup materiel tree structure
  - figure out TLS : Open `https://localhost` in your favorite web browser and [accept the auto-generated TLS certificate](https://stackoverflow.com/a/15076602/1352334)
+ - handle login through api

@@ -157,6 +157,21 @@
         color: var(--deleteColour);
     }
 
+    .btn.endpoint {
+        border: 1px solid var(--accentColour);
+        border-bottom: 2px solid var(--accentColour);
+        background-color: var(--objectColour);
+        margin-bottom: .5em;
+        height: 2em;
+        width: 8em;
+        padding: 0 .5em 0 .5em;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+    }.btn.endpoint:hover {
+        background-color: var(--accentColour);
+    }
+
 /**/
 
 
