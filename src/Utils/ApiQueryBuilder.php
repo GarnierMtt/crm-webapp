@@ -62,7 +62,7 @@ class ApiQueryBuilder extends AbstractController
             $data = $repository->findBy($query[0],$query[1],$query[2],$query[3]);
 
         // count elements for meta
-            $total = count($data);
+            $total = count($repository->findBy($query[0],$query[1]));
             $totalPages = $perPage > 0 ? (int) ceil($total / $perPage) : 1;
 
         // get url without filters
@@ -124,7 +124,6 @@ class ApiQueryBuilder extends AbstractController
     public function returnShow($entity, Request $request, $ignored = []): Response
     {
         // set context (sending fields or not)
-
             $context = $this->fieldSelector($request->query->getString("fields"), $ignored);
             
         // set paylod and normalize
