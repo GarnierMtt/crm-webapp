@@ -49,12 +49,19 @@
 
                     <p> ordonner par un champ : <br>
                         order=champ1,champ2,!champ3 <br>
-                        - le "!" avant le nom du champ indique un ordre décroissant</p>
+                        - le "!" avant le nom du champ, indique un ordre décroissant</p>
 
-                    <p> specifier des champs à retourner : <br>
+                    <p> spécifier des champs à retourner : <br>
                         fields=champ1,champ2,!champ3 <br>
-                        - le "!" avant le nom du champ indique qu'on ne veut pas de ce champ <br>
-                        - si aucun champ n'est spécifié, tous les champs sont retournés sauf si ils sont marqués avec un "!"</p>
+                        - le "!" avant le nom du champ, indique qu'on ne veut pas de ce champ <br>
+                        - si aucun champ n'est spécifié, tous les champs sont retournés, sauf s'ils sont marqués avec un "!"</p>
+
+                    <p> paginer le retour : <br>
+                        per_page=*<br>
+                        - avec * égale au nombre d'éléments par page<br>
+                        page=*<br>
+                        - avec * égale à l'index de la page que l'on veut afficher<br>
+                        - si 'per_page' n'est pas saisie, 'page' seras ignorer</p>
 
                     <div class="apiForm">
                         <form id="indexForm">
