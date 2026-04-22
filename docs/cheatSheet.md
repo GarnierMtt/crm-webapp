@@ -8,7 +8,7 @@
         docker compose run --rm php chown -R $(id -u):$(id -g) .
 
  ## enter php container
-        docker exec -it crm-webapp-php-1 bash
+        docker exec -it crm-api-php-1 bash
   ### create DB update from file changes
         php bin/console doctrine:migrations:diff
    #### apply update
