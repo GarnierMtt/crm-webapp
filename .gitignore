@@ -13,5 +13,5 @@ docker/db/data/
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
-core
+/core*
 bolt.db

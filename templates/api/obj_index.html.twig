@@ -36,10 +36,20 @@
                         <div class="indent">
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}<span id="indexFilter"></span>"</span>, {
                                 <div class="indent">
-                                    method: <span class="highlight">"GET"</span>,
+                                    method: <span class="highlight">"GET"</span>, <br>
+      		                        credentials: "include",
                                 </div>
                             }) <br>
-                            .then((response) => response.text()) <br>
+                            .then((response) => {
+                                <div class="indent">
+                                    if(response.status !== <span class="highlight">200</span>) {
+                                        <div class="indent">
+                                            throw response;
+                                        </div>
+                                    } <br>
+                                    return response.json();
+                                </div>
+                            }) <br>
                             .then((result) => console.log(result)) <br>
                             .catch((error) => console.error(error));
                         </div>
@@ -95,10 +105,20 @@
                         <div class="indent">
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="showId">{id}</span><span id="showFilter"></span>"</span>, {
                                 <div class="indent">
-                                    method: <span class="highlight">"GET"</span>,
+                                    method: <span class="highlight">"GET"</span>, <br>
+      		                        credentials: "include",
                                 </div>
                             }) <br>
-                            .then((response) => response.text()) <br>
+                            .then((response) => {
+                                <div class="indent">
+                                    if(response.status !== <span class="highlight">200</span>) {
+                                        <div class="indent">
+                                            throw response;
+                                        </div>
+                                    } <br>
+                                    return response.json();
+                                </div>
+                            }) <br>
                             .then((result) => console.log(result)) <br>
                             .catch((error) => console.error(error));
                         </div>
@@ -149,6 +169,7 @@
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_new') }}"</span>, {
                                 <div class="indent">
                                     method: <span class="highlight">"POST"</span>, <br>
+      		                        credentials: "include", <br>
                                     body: {
                                         <div class="indent">
                                             <span class="highlight" id="crateBody">
@@ -160,7 +181,16 @@
                                     },
                                 </div>
                             }) <br>
-                            .then((response) => response.text()) <br>
+                            .then((response) => {
+                                <div class="indent">
+                                    if(response.status !== <span class="highlight">201</span>) {
+                                        <div class="indent">
+                                            throw response;
+                                        </div>
+                                    } <br>
+                                    return response.json();
+                                </div>
+                            }) <br>
                             .then((result) => console.log(result)) <br>
                             .catch((error) => console.error(error));
                         </div>
@@ -191,6 +221,7 @@
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="updateId">{id}</span>"</span>, {
                                 <div class="indent">
                                     method: <span class="highlight">"POST"</span>, <br>
+      		                        credentials: "include", <br>
                                     body: {
                                         <div class="indent">
                                             <span class="highlight" id="updateBody">
@@ -202,7 +233,16 @@
                                     },
                                 </div>
                             }) <br>
-                            .then((response) => response.text()) <br>
+                            .then((response) => {
+                                <div class="indent">
+                                    if(response.status !== <span class="highlight">202</span>) {
+                                        <div class="indent">
+                                            throw response;
+                                        </div>
+                                    } <br>
+                                    return response.json();
+                                </div>
+                            }) <br>
                             .then((result) => console.log(result)) <br>
                             .catch((error) => console.error(error));
                         </div>
@@ -238,10 +278,20 @@
                         <div class="indent">
                             fetch(<span class="highlight">"{{ url('api_' ~ class ~ '_index') }}/<span id="deleteId">{id}</span>"</span>, {
                                 <div class="indent">
-                                    method: <span class="highlight">"DELETE"</span>,
+                                    method: <span class="highlight">"DELETE"</span>, <br>
+      		                        credentials: "include",
                                 </div>
                             }) <br>
-                            .then((response) => response.text()) <br>
+                            .then((response) => {
+                                <div class="indent">
+                                    if(response.status !== <span class="highlight">204</span>) {
+                                        <div class="indent">
+                                            throw response;
+                                        </div>
+                                    } <br>
+                                    return response.json();
+                                </div>
+                            }) <br>
                             .then((result) => console.log(result)) <br>
                             .catch((error) => console.error(error));
                         </div>
